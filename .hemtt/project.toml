@@ -4,4 +4,78 @@ mainprefix = "z"
 
 [properties]
 author = "MrZorn"
-url = "https://github.com/PulsarNeutronStar/Immersion-Cigs-Hotfix"
+url = "https://github.com/PulsarNeutronStar/CVO-Sandstorm"
+
+[files]
+include = [
+    "mod.cpp",      # These files are copied to the build directory by default
+    "meta.cpp",     # They do not need to be added to your list
+    "LICENSE",
+    "*.paa",
+    "*.bikey"
+]
+exclude = [
+    "*.psd",        # By default this list is empty
+    "*.md",
+    "/.vscode/",
+]
+
+[version]
+major = 0 # Overrides path when set
+minor = 1
+patch = 0
+git_hash = 4 # Default: 8
+
+
+[hemtt.launch.default]
+workshop = [
+    "450814997",  # CBA_A3's Workshop ID
+    "463939057",  # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+    "2018593688", # ZEN ACE Compat
+]
+
+dlc = [
+]
+
+optionals = [
+]
+
+parameters = [
+    "-skipIntro",           # These parameters are passed to the Arma 3 executable
+    "-noSplash",            # They do not need to be added to your list
+    "-showScriptErrors",    # You can add additional parameters here
+    "-debug",
+    "-filePatching",
+    "-window",
+    "-noPause",
+    "-noPauseAudio",
+]
+
+executable = "arma3_x64"        # Default: "arma3_x64"
+
+[hemtt.launch.test]
+workshop = [
+    "450814997", # CBA_A3's Workshop ID
+    "463939057", # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+    "2018593688", # ZEN ACE Compat
+]
+
+parameters = [
+    "C:\\Users\\Dennis Zorn\\Documents\\Arma 3 - Other Profiles\\Overlord%20Zorn\\missions\\test-mission\\test-immersive-cigs-hotfix.Stratis\\mission.sqm",
+    "-skipIntro",           # These parameters are passed to the Arma 3 executable
+    "-noSplash",            # They do not need to be added to your list
+    "-showScriptErrors",    # You can add additional parameters here
+    "-debug",
+    "-filePatching",
+    "-window",
+    "-noPause",
+    "-noPauseAudio",
+]
+dlc = [
+]
+optionals = [
+]
