@@ -1,0 +1,7 @@
+name = "zrn-sandstorm"
+prefix = "zss"
+mainprefix = "z"
+
+[properties]
+author = "MrZorn"
+url = "https://github.com/PulsarNeutronStar/Immersion-Cigs-Hotfix"
