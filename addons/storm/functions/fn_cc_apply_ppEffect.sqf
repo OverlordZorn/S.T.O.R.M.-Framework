@@ -89,7 +89,7 @@ private _applyArray = [     // Index, Default Value
 diag_log format ["[CVO][STORM](LOG)(fnc_cc_apply_ppEffect) - _effectArray: %1", _effectArray];
 
 
-_cc_pp_effect_JIP_handle = [_CC_effectName, _effectArray, _duration] remoteExecCall ["cvo_storm_fnc_cc_remote_ppEffect",0, "CVO_Storm_CC_PP_Effect_JIP_Handle"];
+_cc_pp_effect_JIP_handle = [_CC_effectName, _effectArray, _duration] remoteExecCall ["cvo_storm_fnc_remote_ppEffect",0, "CVO_Storm_CC_PP_Effect_JIP_Handle"];
 
 if (isNil "_cc_pp_effect_JIP_handle") exitWith {
     diag_log format ["[CVO][STORM](Error)(fnc_cc_apply_ppEffect) - Not Successful: %1", _CC_effectName];
