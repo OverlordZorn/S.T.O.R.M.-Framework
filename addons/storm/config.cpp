@@ -31,6 +31,7 @@ class CfgPatches {
 class CVO_PP_Effects
 {
 	#include "CVO_ColorCorrections.hpp"
+	#include "CVO_FilmGrain.hpp"
 };
 
 
@@ -43,7 +44,10 @@ class CfgFunctions
 			file = "z\cvo_storm\addons\storm\functions";
 			class cc_get_from_config {};
 			class cc_apply_ppEffect {};
-			class cc_remote_ppEffect {};
+
+			class fg_get_from_config {};
+
+			class remote_ppEffect {};
 		};
 	}; 
 };

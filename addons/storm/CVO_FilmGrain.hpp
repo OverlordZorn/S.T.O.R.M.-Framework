@@ -1,0 +1,22 @@
+class CVO_FG_Default
+{
+	ppEffectType = "FilmGrain";
+	ppEffectPrio = "2000";
+
+	intensity =   0.005;		// 0..1
+	sharpness =   1.25;			// 1..20
+	grainSize =   2.01;			// 1..8
+	intensityX0 = 0.75;			// -x..0..+x
+	intensityX1 = 1.00;			// -x..0..+x
+	monochromatic = 0;			// 0,1 # 0 Monochromatic # Any other value Color
+};
+
+class CVO_FG_Basic : CVO_FG_Default
+{
+	intensity =   0.1;			// 0..1
+	sharpness =   0.1;			// 1..20
+	grainSize =   2.0;			// 1..8
+	intensityX0 = 0.1;			// -x..0..+x
+	intensityX1 = 0.1;			// -x..0..+x
+	monochromatic = 0;			// 0,1 # 0 Monochromatic # Any other value Color
+};
