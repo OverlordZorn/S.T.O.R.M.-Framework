@@ -1,4 +1,4 @@
-name = "CVO Sandstorm";
+name = "CVO Storm Framework";
 
 author = "Overlord Zorn";
 
@@ -10,20 +10,21 @@ logoSmall       = "img\logo-voron-white_64.paa";                                
 logo            = "img\logo-voron-white_128.paa";                                                                                                   // Logo displayed in the main menu 128x128
 logoOver        = "img\logo-voron-red_128.paa";                                                                                                     // When the mouse is over, in the main menu 128x128
 
-tooltip         = "CVO Sandstorm";
+tooltip         = "CVO Storm Framework";
 tooltipOwned    = "Who sold this to you?";                                                                                                          // Tool tip displayed when the mouse is left over, in the main menu
 overview        = "24th Chorni Voron - Storm Script!";                                                                                              // Overview text, displayed from the extension menu
-description     = "Contains frequently used assets and Scripts used by the 24th Chorni Voron!";                                                     // Probably in context with action
+description     = "Framework for different types of Weather Storms, for example Sandstorms!";                                                     // Probably in context with action
 action          = "http://discord.chornivoron.net/";                                                                                                // Website URL, that can accessed from the expansions menu 
 actionName      = "Discord";                                                                                                                        // label of button/tooltip in extension menu
 
 overviewPicture = "voron_round_olive_texture_1024.paa";
-overviewText = "24th Chorni Auxiliary Mod";
+overviewText = "24th Chorni Voron - Storm Framework";
 
-overviewFootnote = "24th Chorni Auxiliary Mod";
+overviewFootnote = "24th Chorni Voron - Storm Framework";
 
 
 // Color used for DLC stripes and backgrounds (RGBA)
+// CVO Red
 dlcColor[] =
 {
     0.4117647058823529,
