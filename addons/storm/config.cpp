@@ -32,6 +32,7 @@ class CVO_PP_Effects
 {
 	#include "CVO_ColorCorrections.hpp"
 	#include "CVO_FilmGrain.hpp"
+	#include "CVO_DynamicBlur.hpp"
 };
 
 
@@ -42,11 +43,11 @@ class CfgFunctions
 		class Storm           // Category
 		{
 			file = "z\cvo_storm\addons\storm\functions";
-			class cc_get_from_config {};
-			class cc_apply_ppEffect {};
 
-			class fg_get_from_config {};
+			class apply_ppEffect {};
 
+			class get_from_config {};
+			class convert_intensity {};
 			class remote_ppEffect {};
 		};
 	}; 
