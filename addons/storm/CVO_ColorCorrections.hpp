@@ -2,6 +2,7 @@ class CVO_CC_Default
 {
 	ppEffectType = "ColorCorrections";
 	ppEffectPrio = "1500";
+	layer = 0;
 
 	brightness = 1;															
 	contrast = 1;
@@ -11,7 +12,6 @@ class CVO_CC_Default
 	colorization_rgba[] = 	{		1,		1,		1,		1	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
 	desaturation_rgba0[] = 	{	0.299, 	0.587, 	0.114, 		0	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
 	
-	radial_inUse = 0;
 	radial_color[] = {
 		-1,												// 0..1			major axis radius of ellipse
 		-1,												// 0..1			minor axis radius of ellipse
@@ -39,5 +39,27 @@ class CVO_CC_01 : CVO_CC_Default
 	offset = 		0.08;
 	blending_rgba[] = 		{	-0.28,	-0.28, 	-0.81,	-0.04	};			// RGB - Color -- A - Blend Factor (0-> Original Color - 1 -> Blended Color)
 	colorization_rgba[] = 	{	 1.23,	 0.44,	-0.54,	 0.57	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
+	desaturation_rgba0[] = 	{	 0.33,	 0.33,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
+};
+
+class CVO_CC_Orange_Strong : CVO_CC_Default
+{
+	brightness = 	0.80;
+	contrast = 		0.80;
+	offset = 		0.05;
+	blending_rgba[] = 		{	  0.5,	-0.10, 	-0.60,	 0.20	};			// RGB - Color -- A - Blend Factor (0-> Original Color - 1 -> Blended Color)
+	colorization_rgba[] = 	{	 -0.4,	 1.00,	 2.40,	 1.30	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
+	desaturation_rgba0[] = 	{	 0.33,	 0.33,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
+};
+
+class CVO_CC_Test : CVO_CC_Default
+{
+	layer = 1;
+	ppEffectPrio = "1600";
+	brightness = 	0.80;
+	contrast = 		0.80;
+	offset = 		0.05;
+	blending_rgba[] = 		{	  0.5,	-0.10, 	-0.60,	 0.20	};			// RGB - Color -- A - Blend Factor (0-> Original Color - 1 -> Blended Color)
+	colorization_rgba[] = 	{	 -0.4,	 1.00,	 2.40,	 1.30	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
 	desaturation_rgba0[] = 	{	 0.33,	 0.33,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
 };
