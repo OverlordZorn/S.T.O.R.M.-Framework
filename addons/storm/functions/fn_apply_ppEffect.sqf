@@ -28,10 +28,15 @@ if (_PP_effect_Name isEqualTo "") exitWith {false};
 if (_duration <= 0              ) exitWith {false};
 if (_intensity <= 0             ) exitWith {false};
 
+//Check if config Exists
+if !(_PP_effect_Name in (configProperties [configFile >> "CVO_PP_Effects", "true", true] apply { configName _x })) exitWith {
+    diag_log format ["[CVO][STORM](Error)(fnc_apply_ppEffect) - provided PP_Effect_name doesnt exist: %1", _PP_effect_Name];
+    false
+};
 
 private _configPath = (configFile >> "CVO_PP_Effects" >> _PP_effect_Name ); 
 private _ppEffectType = getText (_configPath >> "ppEffectType");
-private _layer = getText (_configPath >> "layer");
+private _layer = getNumber (_configPath >> "layer");
 
 
 
