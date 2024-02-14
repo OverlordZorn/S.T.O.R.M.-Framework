@@ -106,6 +106,7 @@ class CVO_CC_Radial_Blinking_half : CVO_CC_Radial_Default
 };
 class CVO_CC_Radial_Blinking_closed : CVO_CC_Radial_Default
 {
+	brightness = 0.1;
 	radial_color[] = {
 		0.5,												// 0..1			major axis radius of ellipse
 		0.05,												// 0..1			minor axis radius of ellipse
