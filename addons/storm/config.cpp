@@ -9,7 +9,7 @@ class CfgPatches {
         url = "https://github.com/PulsarNeutronStar/CVO-Sandstorm";
 
         // Minimum compatible version. When the game's version is lower, pop-up warning will appear when launching the game.
-        requiredVersion = 2.0;
+        requiredVersion = 2.02;
 
         // Required addons, used for setting load order.
         // When any of the addons is missing, pop-up warning will appear when launching the game.
@@ -30,16 +30,29 @@ class CfgPatches {
 
 class CVO_PP_Effects
 {
-	#include "CVO_ColorCorrections.hpp"
-	#include "CVO_FilmGrain.hpp"
-	#include "CVO_DynamicBlur.hpp"
+	#include "Cfg\CVO_ColorCorrections.hpp"
+	#include "Cfg\CVO_FilmGrain.hpp"
+	#include "Cfg\CVO_DynamicBlur.hpp"
 };
 
 class CVO_Weather_Effects
 {
-	#include "CVO_WeatherPresets.hpp"
-	#include "CVO_RainParams.hpp"
+	class CVO_Weather_Presets
+	{
+		#include "Cfg\CVO_WeatherPresets.hpp"
+	};
+
+	class CVO_Rain_Params
+	{
+		#include "Cfg\CVO_RainParams.hpp"
+	};
 };
+
+class CVO_SubSkills
+{
+	#include "Cfg\CVO_SubSkills.hpp"
+};
+
 
 class CfgFunctions
 {
@@ -57,6 +70,8 @@ class CfgFunctions
 
 			class weather_apply {};
 			class weather_getAvgASL {};
+			class weather_get_WeatherPreset_as_Hash {};
+			class weather_get_rainParams_as_Array {};
 		};
 	}; 
 };
