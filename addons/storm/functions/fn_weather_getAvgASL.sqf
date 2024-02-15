@@ -2,10 +2,11 @@
 *	Author: MrZorn
 *
 *	Description:
-*		x 
+*		Gathers ASL of Ground Beneath Players feet, then, groups them in "brackets", finds the Bracket with the most players, and returns the Average ASL of those Players.
+*
 *
 *	Parameter(s):
-* 		none
+*  0 : _bracketSize 	<NUMBER> Size of bracket in Meters. 
 *
 *	Returns:
 *		<array> <[suggested fogBase, _range from max to min]>
@@ -14,6 +15,10 @@
 *		   _var = call cvo_storm_fnc_weather_getAvgASL;
 *
 */
+
+params [
+	["_bracketSize", 25, [0]]
+];
 
 private _arr = [];
 {_arr pushback (name _x) } forEach allPlayers;
@@ -56,8 +61,6 @@ private _result = [];
 */ 
 
 private _arr2 = [];
-
-private _bracketSize = 25;
 
 _arr2 = [_allASL, {floor (_x/_bracketSize) }] call CBA_fnc_filter;
 _arr2 = _arr2 call BIS_fnc_consolidateArray;
