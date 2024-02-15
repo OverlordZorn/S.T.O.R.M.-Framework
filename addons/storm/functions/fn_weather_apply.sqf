@@ -29,3 +29,9 @@
 // Adjusts Duration to secounds.
 _duration = _duration * 60;
 
+
+
+
+
+// use this for Set rain
+// [_rainParams] remoteExecCall ["BIS_fnc_setRain",2]
