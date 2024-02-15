@@ -13,7 +13,7 @@
  * Note: 
  *
  * Example:
- * [_effectArray, _duration] remoteExecCall ["cvo_storm_fnc_remote_ppEffect",0, "CVO_Storm_CC_PP_Effect_JIP_Handle" ];
+ * [_effectArray, _duration] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",0, "CVO_Storm_CC_PP_Effect_JIP_Handle" ];
  * 
  * Public: No
  */

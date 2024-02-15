@@ -11,7 +11,7 @@
  * Note: 
  *
  * Example:
- * ["CVO_CC_Default"] call cvo_storm_fnc_get_from_config;
+ * ["CVO_CC_Default"] call cvo_storm_fnc_ppEffect_get_from_config;
  * 
  * Public: No
  */
@@ -23,13 +23,13 @@ params [   ["_PP_effect_Name", "", [""]]    ];
 
 //Check if EffectName given
 if (_PP_effect_Name isEqualTo "") exitWith {
-    diag_log format ["[CVO][STORM](Error)(Fnc_get_from_config) - no PP_Effect_name provided: %1", _PP_effect_Name];
+    diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_get_from_config) - no PP_Effect_name provided: %1", _PP_effect_Name];
     false
 };
 
 //Check if config Exists
 if !(_PP_effect_Name in (configProperties [configFile >> "CVO_PP_Effects", "true", true] apply { configName _x })) exitWith {
-    diag_log format ["[CVO][STORM](Error)(Fnc_get_from_config) - provided PP_Effect_name doesnt exist: %1", _PP_effect_Name];
+    diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_get_from_config) - provided PP_Effect_name doesnt exist: %1", _PP_effect_Name];
     false
 };
 
@@ -60,6 +60,6 @@ private _effectArray = [];
 } forEach _properties;
 
 
-diag_log format ["[CVO][STORM](LOG)(Fnc_get_from_config) - success : %1 %2",_pp_effect_name, _effectArray];
+diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_get_from_config) - success : %1 %2",_pp_effect_name, _effectArray];
 
 _effectArray

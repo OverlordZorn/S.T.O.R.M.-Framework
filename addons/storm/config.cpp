@@ -35,6 +35,11 @@ class CVO_PP_Effects
 	#include "CVO_DynamicBlur.hpp"
 };
 
+class CVO_Weather_Effects
+{
+	#include "CVO_WeatherPresets.hpp"
+	#include "CVO_RainParams.hpp"
+};
 
 class CfgFunctions
 {
@@ -44,11 +49,14 @@ class CfgFunctions
 		{
 			file = "z\cvo_storm\addons\storm\functions";
 
-			class apply_ppEffect {};
 
-			class get_from_config {};
-			class convert_intensity {};
-			class remote_ppEffect {};
+			class ppEffect_apply {};
+			class ppEffect_get_from_config {};
+			class ppEffect_convert_intensity {};
+			class ppEffect_remote {};
+
+			class weather_apply {};
+			class weather_getAvgASL {};
 		};
 	}; 
 };
