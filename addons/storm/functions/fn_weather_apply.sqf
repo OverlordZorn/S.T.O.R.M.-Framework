@@ -127,46 +127,54 @@ if ((_hashMap get "change_lightnings") > 0) then {
 // ################### fog params ################### 
 
 // TODO: Refine to have AvgASL applied over time multiple times during the duration.
-/*
+
 if ((_hashMap get "change_fog") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["fogParams", fogParams];
 
    _fogParams = [];
-   _fogParams set [0, (linearConversion [0,1,_intensity, _hashMap get "fog_value_min",_hashMap get "fog_value_max", false])] 
+   _fogParams set [0, (linearConversion [0,1,_intensity, _hashMap get "fog_value_min",_hashMap get "fog_value_max", false])];
    _fogParams set [1,_hashMap get "fog_density"];
    
-   _fogBase = if ((_hashmap get "fog_useAvgASL") > 0 ) then {
+   _fogBase = if ((_hashmap get "fog_use_AvgASL") == 0 ) then {
       // get dynamic value
-
+      ([] call cvo_storm_fnc_weather_getAvgASL)  select 0;
    } else {
       // use fixed value
-      _hashmap get "fog_base"
+      _hashmap get "fog_base";
       };
-
    _fogParams set [2,_fogBase];
 
-   // execute Changes   
-   _duration setFog _fogParams;
+
+   if (_hashmap get "fog_use_AvgASL_continous" > 0) then {
+      // Defines server_global variable to be accessed from the continous
+      CVO_Storm_Fog_Current_Params = _fogParams;
+
+      // Start Function 
+      // TODO: Start Fog_constant_AvgASL 
+   } else {
+      // execute Changes   
+      _duration setFog _fogParams;
+      
+   };   
 };
-*/
+
 
 // ##################################################
 // ################### wind vector ################## 
 
-// TODO: Apply Wind via x/y component and increase over time manually
-/*
 if ((_hashMap get "change_wind") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["wind", wind];
+   // get Value + Intensity
    _target_magnitude = _hashMap get "wind_value";
+   // Start recursive, limted transition.
+   [wind, _target_magnitude, _duration] call cvo_storm_fnc_weather_setWind_recursive;
 };
-*/
 
 // ##################################################
 // ################### Gusts ######################## 
 
-// TODO: Apply Wind via x/y component and increase over time manually
 if ((_hashMap get "change_gusts") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["gusts", gusts];
@@ -179,7 +187,6 @@ if ((_hashMap get "change_gusts") > 0) then {
 // ##################################################
 // ################### Waves ######################## 
 
-// TODO: Apply Wind via x/y component and increase over time manually
 if ((_hashMap get "change_waves") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["waves", waves];
