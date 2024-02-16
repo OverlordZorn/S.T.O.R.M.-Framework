@@ -34,7 +34,7 @@ if (count _allPlayers > 3) then {
 };
 
 {	
-    _value = switch (isTouchingGround _x) do {
+    _value = switch (isTouchingGround vehicle _x) do {
         case true:  {  getPosASL _x select 2 };
         case false: { (getPosASL _x select 2) - (getPos _x select 2)    };
     };
