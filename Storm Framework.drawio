@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-02-16T17:34:28.450Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.0.2 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="qX9Cw3F3viRNt4TPDWAO" version="23.0.2" type="device">
+<mxfile host="Electron" modified="2024-02-16T18:46:17.848Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.0.2 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="APegPDeKzrDPEVlGf2_N" version="23.0.2" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="5292" dy="1204" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -121,7 +121,7 @@
           <mxGeometry x="-2320" y="10" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Znwxz7as3tQza8B5PeCA-14" value="To Be Decided" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;sketch=1;curveFitting=1;jiggle=2;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="-2320" y="80" width="500" height="560" as="geometry" />
+          <mxGeometry x="-2320" y="80" width="660" height="810" as="geometry" />
         </mxCell>
         <mxCell id="Znwxz7as3tQza8B5PeCA-15" value="Blinking when&lt;br&gt;not wearing&lt;br&gt;Eye Protection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;glass=0;sketch=1;curveFitting=1;jiggle=2;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-2300" y="120" width="120" height="60" as="geometry" />
@@ -138,8 +138,11 @@
         <mxCell id="W2RvpuAVs8pKlcEKHl59-1" value="Lightning" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1310" y="520" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="UnbkybWvrtqViDbFcPGk-0" value="Handle&lt;br&gt;Humidity&lt;br&gt;(Footstep sound)&lt;br&gt;If needed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;glass=0;sketch=1;curveFitting=1;jiggle=2;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="UnbkybWvrtqViDbFcPGk-0" value="Handle&lt;br&gt;Humidity&lt;br&gt;(Footstep sound)&lt;br&gt;If needed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;glass=0;sketch=1;curveFitting=1;jiggle=2;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-2300" y="280" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="FVfylj094XFFCRxBFUlB-0" value="continous monitor and adapt playerside Effects based on &quot;insideBuilding&quot;. &lt;br&gt;For example: &lt;br&gt;- Dynamic Blur&lt;br&gt;- Sound Loops&lt;br&gt;- Particle Spawners" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;glass=0;sketch=1;curveFitting=1;jiggle=2;shadow=0;align=left;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;spacingLeft=8;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="-2300" y="360" width="440" height="130" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
