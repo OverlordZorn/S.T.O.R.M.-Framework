@@ -62,39 +62,50 @@ forceWeatherChange;
 
 
 
-/////// TODO: RAIN mechanism that handles rain parameter change when it is currently raining
-/////// TODO: RAIN effects setHumidity (maybe 2-3 times over the duration? set according to Rain Value if rainParams "snow" is >0)
-
-/*
-
-
-// ############################################
-// ################### RAIN ################### 
-
-if ((_hashMap get "change_rainValue") > 0) then {
-   // Save Current
-   CVO_Storm_previous_weather_hashmap set ["rain", rain];
-   // apply Intensity
-   _value = linearConversion [   0,    1, _intensity, 0, _hashMap get "rain_value", true];
-   // execute Changes
-   _duration setRain _value;
-};
-
-// ###################################################
-// ################### RAIN Params ################### 
+// ##########################################################
+// ################### RAIN & RAIN PARAMS ################### 
 
 // use this for Set rain
 // [_rainParams] remoteExecCall ["BIS_fnc_setRain",2]
 
 if ((_hashMap get "change_rainParams") > 0) then {
-   // Save Current
+
+   // Store previous rain Parms
    CVO_Storm_previous_weather_hashmap set ["RainParams", rainParams];
-   // retrieve Params
-   _value = [_hashMap get "rainParams"] call cvo_storm_fnc_weather_get_rainParams_as_Array;
-   // execute Changes
-   _value call BIS_fnc_setRain;
+
+   // Store previous rainValue if rain changes
+   if ((_hashMap get "change_rainValue") > 0) then { CVO_Storm_previous_weather_hashmap set ["rain", rain]; };
+
+   //retrieve RainParms Value and Rain Value with Intensity
+   _valuePara = [ _hashMap get "rainParams" ] call cvo_storm_fnc_weather_get_rainParams_as_Array;
+   _valueRain = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true ];
+
+   // remove the rain to create a no-rain period to change rainParams
+   ( _duration / 3 ) setRain 0;
+
+    // Apply new Rain Parameters during "noRain" period
+   [ { _this call BIS_fnc_setRain; }, _valuePara, ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
+
+    // setRain during the last third of the transition, only if needed. 
+   if ( (_hashMap get "change_rainValue" > 0 )  && (_valueRain > 0) ) then { 
+      [{
+         params ["_duration", "_value"];
+         (_duration * 1/3) setRain _value;
+      }, [_duration,_valueRain],    _duration * 2/3] call CBA_fnc_waitAndExecute;
+   };
+
+} else {
+
+   // Set Rain only
+   if ((_hashMap get "change_rainValue") > 0) then {
+      // Save Current
+      CVO_Storm_previous_weather_hashmap set ["rain", rain];
+      // apply Intensity
+      _value = linearConversion [   0,    1, _intensity, 0, _hashMap get "rain_value", true];
+      // execute Changes
+      _duration setRain _value;
+   };
 };
-*/
 
 
 
