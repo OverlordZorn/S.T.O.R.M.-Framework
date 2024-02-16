@@ -120,3 +120,29 @@ sleep 0.5;
 ["CVO_CC_Radial_Blinking_closed", (1/120), 1] call cvo_storm_fnc_apply_ppeffect;
 sleep 0.5;
 ["CVO_CC_Radial_Blinking_half", (1/120), 1] call cvo_storm_fnc_apply_ppeffect;
+
+
+// ################ Blinking ProtoType
+// restore previous weather from hashmap
+
+params ["_duration", "_hashmap"];
+
+{
+    // key =  ; value = _y
+
+    switch (_x) do {
+        case "overcast":    {_duration setOvercast      _y};
+//      case "rain":        {_duration setRain          _y};    // Use Rain Transition that considers the change of Rain Parameters if present.
+//      case "RainParams":  {  _y call BIS_fnc_setRain    };    // Use Rain Transition that considers the change of Rain Parameters if present.
+        case "lightnings":  {_duration setlightnings    _y};
+        case "fogParams":   {_duration setFog           _y};
+//      case "wind":        { set wind function over time };
+        case "gusts":       {_duration setGusts         _y};
+        case "Waves":       {_duration setWaves         _y};
+    };
+
+} forEach _hashMap;
+
+
+
+// ### Avoid setWindStr because it affects max fog_value.
