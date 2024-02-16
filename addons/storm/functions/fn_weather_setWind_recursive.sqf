@@ -26,7 +26,8 @@
  */
 
 if (!isServer)                              exitWith {_this remoteExecCall ["cvo_storm_fnc_weather_setWind_recursive",2]};
-if (canSuspend)                             exitWith {_this call cvo_storm_fnc_weather_setWind_recursive };
+if (canSuspend)                             exitWith {_this           call   cvo_storm_fnc_weather_setWind_recursive    };
+
 // if (isNil "CVO_WeatherChanges_active")   exitWith {false};
 // if (!CVO_WeatherChanges_active)          exitWith {false};
 
