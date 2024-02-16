@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2024-02-15T11:26:24.345Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.0.2 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="sZkikmQ1xhF8PoUYp8ON" version="23.0.2" type="device">
+<mxfile host="Electron" modified="2024-02-16T17:34:28.450Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.0.2 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="qX9Cw3F3viRNt4TPDWAO" version="23.0.2" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="4951" dy="1195" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="5292" dy="1204" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -13,16 +13,16 @@
         <mxCell id="Znwxz7as3tQza8B5PeCA-17" value="Exit / Cleanup that needs to be handled once the storm is Done" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;shadow=0;glass=0;sketch=1;curveFitting=1;jiggle=2;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-710" y="10" width="690" height="890" as="geometry" />
         </mxCell>
-        <mxCell id="E11lnonPsDXxkd33xf_O-0" value="Overcast" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="E11lnonPsDXxkd33xf_O-0" value="Overcast" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1310" y="310" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="E11lnonPsDXxkd33xf_O-2" value="Fog" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1310" y="250" width="120" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="E11lnonPsDXxkd33xf_O-3" value="Rain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="E11lnonPsDXxkd33xf_O-3" value="Rain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1310" y="380" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="E11lnonPsDXxkd33xf_O-4" value="Wind" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="E11lnonPsDXxkd33xf_O-4" value="Wind" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1310" y="450" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="E11lnonPsDXxkd33xf_O-5" value="particle spawners" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
@@ -31,7 +31,7 @@
         <mxCell id="E11lnonPsDXxkd33xf_O-6" value="Sound Loops" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1470" y="640" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="E11lnonPsDXxkd33xf_O-7" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;PPEffects" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;glass=0;shadow=1;align=left;verticalAlign=middle;labelBackgroundColor=none;labelBorderColor=none;sketch=1;curveFitting=1;jiggle=2;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="E11lnonPsDXxkd33xf_O-7" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;PPEffects" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;glass=0;shadow=1;align=left;verticalAlign=middle;labelBackgroundColor=none;labelBorderColor=none;sketch=1;curveFitting=1;jiggle=2;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1470" y="40" width="320" height="185" as="geometry" />
         </mxCell>
         <mxCell id="E11lnonPsDXxkd33xf_O-9" value="How does the Storm process" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
@@ -135,8 +135,11 @@
         <mxCell id="W2RvpuAVs8pKlcEKHl59-0" value="Lightning Strikes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;glass=0;sketch=1;curveFitting=1;jiggle=2;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-2300" y="200" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="W2RvpuAVs8pKlcEKHl59-1" value="Lightning" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="W2RvpuAVs8pKlcEKHl59-1" value="Lightning" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;glass=0;shadow=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="-1310" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UnbkybWvrtqViDbFcPGk-0" value="Handle&lt;br&gt;Humidity&lt;br&gt;(Footstep sound)&lt;br&gt;If needed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;glass=0;sketch=1;curveFitting=1;jiggle=2;shadow=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="-2300" y="280" width="120" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
