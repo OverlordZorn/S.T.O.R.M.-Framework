@@ -50,7 +50,21 @@ if ((_hashMap get "change_overcast") > 0) then {
    _duration setOvercast _value;
 };
 
-/////// TODO: mechanism that handles rain parameter change when it is currently raining
+/////// freeze current weather changes
+0 setOvercast     overcast;
+0 setRain         rain;
+0 setLightnings   lightnings;
+0 setFog          fogParams;
+  setWind         (wind set [2,true]);
+0 setGusts        gusts;
+0 setWaves        waves;
+forceWeatherChange;
+
+
+
+/////// TODO: RAIN mechanism that handles rain parameter change when it is currently raining
+/////// TODO: RAIN effects setHumidity (maybe 2-3 times over the duration? set according to Rain Value if rainParams "snow" is >0)
+
 /*
 
 
