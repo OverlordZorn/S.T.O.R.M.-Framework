@@ -160,7 +160,9 @@ if ((_hashMap get "change_wind") > 0) then {
 if ((_hashMap get "change_gusts") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["gusts", gusts];
+   // apply Intensity
    _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "gusts_value", true];
+   // execute Changes
    _duration setGusts _value;
 };
 
@@ -171,7 +173,9 @@ if ((_hashMap get "change_gusts") > 0) then {
 if ((_hashMap get "change_waves") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["waves", waves];
+   // apply Intensity
    _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "waves_value", true];
+   // execute Changes
    _duration setWaves _value;
 };
 
