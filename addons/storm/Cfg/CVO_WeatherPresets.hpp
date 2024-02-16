@@ -17,8 +17,9 @@ class CVO_Weather_Default
     fog_value_min = 0;
     fog_value_max = 0;
     fog_density = 0;
-    fog_useAvgASL = 0;
     fog_base = 0;
+    fog_use_AvgASL = 0;
+    fog_use_AvgASL_continous = 0;
 
     change_wind = 0;
     wind_value = 0;
