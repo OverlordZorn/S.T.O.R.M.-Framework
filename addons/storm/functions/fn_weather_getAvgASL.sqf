@@ -29,7 +29,8 @@ private _allASL = [];
 if (count _allPlayers > 3) then {
 	// Removes Zeus players based on zeus.
 	_allPlayers =_allPlayers select {getAssignedCuratorLogic _x isEqualTo objNull};
-
+	// If all Players are Zeus, use allPlayers.
+	if ( count _allPlayers == 0 ) then {_allPlayers = BIS_fnc_listPlayers };
 };
 
 {	
