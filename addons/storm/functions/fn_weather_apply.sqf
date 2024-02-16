@@ -148,8 +148,7 @@ if ((_hashMap get "change_fog") > 0) then {
 if ((_hashMap get "change_wind") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["wind", wind];
-   _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "wind_value", true];
-   _duration setWind [x,y,force] ;
+   _target_magnitude = _hashMap get "wind_value";
 };
 */
 
