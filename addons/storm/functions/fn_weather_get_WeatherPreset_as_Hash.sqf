@@ -17,9 +17,6 @@
 
  params [   ["_weatherPreset_name", "", [""]]    ];
 
-diag_log format ["[CVO][STORM](LOG)(fnc_weather_get_WeatherPreset_as_Hash) - _this : %1",_this];
-
-
 //Check if EffectName given
 if (_weatherPreset_name isEqualTo "") exitWith {
     diag_log format ["[CVO][STORM](Error)(h) - no _weatherPreset_name provided: %1", _weatherPreset_name];
@@ -35,23 +32,15 @@ if !(_weatherPreset_name in (configProperties [configFile >> "CVO_Weather_Effect
 private _configPath = (configFile >> "CVO_Weather_Effects" >> "CVO_Weather_Presets" >> _weatherPreset_name );
 private _properties = (configProperties [(configFile >> "CVO_Weather_Effects" >> "CVO_Weather_Presets" >> "CVO_Weather_Default" ), "true", true] apply { configName _x });
 
-diag_log format ["[CVO][STORM](LOG)(fnc_weather_get_WeatherPreset_as_Hash) - _properties : %1",_properties];
-
-
-
 private _weatherPresetMap = createHashMap;
 
 
 // Create effect Array to be exported
 {
     _value = [_configPath, _x] call BIS_fnc_returnConfigEntry;
-
-    diag_log format ["[CVO][STORM](LOG)(fnc_weather_get_WeatherPreset_as_Hash) - _x - _value : %1 - %2",_x, _value];
-
-
     _weatherPresetMap set [_x,_value];
 } forEach _properties;
 
 diag_log format ["[CVO][STORM](LOG)(fnc_weather_get_WeatherPreset_as_Hash) - success : %1",_weatherPresetMap];
 
-[_weatherPresetMap, _properties];
+_weatherPresetMap
