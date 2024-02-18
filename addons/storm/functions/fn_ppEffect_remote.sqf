@@ -63,6 +63,3 @@ if (_existsVar isEqualto false) then {
 // Apply the effects based the custom variable
 (missionNamespace getVariable _varname) ppEffectAdjust _effectArray;
 (missionNamespace getVariable _varname) ppEffectCommit _duration;
-
-[{    systemChat "effect fully applied"; }, [], _duration] call CBA_fnc_waitAndExecute;
-
