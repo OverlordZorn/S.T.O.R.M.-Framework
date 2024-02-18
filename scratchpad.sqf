@@ -146,3 +146,39 @@ params ["_duration", "_hashmap"];
 
 
 // ### Avoid setWindStr because it affects max fog_value.
+
+
+cvo_debug = true;
+[] spawn {
+    while {cvo_debug} do {
+        sleep 1;
+        systemChat str _variable;
+    };
+};
+
+
+
+
+// create helper obj, attached to vehicle player, relative to player speed vector - windvector 
+
+cvo_debug = false; 
+cvo_debug = true;
+private _test_obj_array = [player, test_dummy];
+
+
+{
+	_x spawn {
+		params ["_objTarget"];
+
+		private _helperObj_class = "Sign_Sphere100cm_F";
+		private _helperObj = createVehicleLocal [_helperObj_class, [0,0,0] ];
+
+		while {cvo_debug} do {
+			_speedVectorRelative = velocityModelSpace vehicle _objTarget;
+			_relPosArray = _speedVectorRelative vectorDiff (	( vehicle _objTarget vectorWorldToModel wind ) vectorMultiply 0.9);
+			_helperObj attachTo [vehicle _objTarget,_relPosArray ];
+			sleep 0.05;
+		};
+		deleteVehicle _helperObj;
+	};
+} forEach _test_obj_array;
