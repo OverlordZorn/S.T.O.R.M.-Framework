@@ -48,6 +48,12 @@ class CVO_Weather_Effects
 	};
 };
 
+class CVO_StormPresets
+{
+	#include "Cfg\CVO_StormPresets.hpp"
+};
+
+
 class CVO_SubSkills
 {
 	#include "Cfg\CVO_SubSkills.hpp"
@@ -73,6 +79,7 @@ class CfgFunctions
 			class weather_get_WeatherPreset_as_Hash {};
 			class weather_get_rainParams_as_Array {};
 			class weather_setWind_recursive {};
+			class weather_setFog_recursive_continous {};
 		};
 	}; 
 };
