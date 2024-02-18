@@ -135,28 +135,20 @@ if ((_hashMap get "change_fog") > 0) then {
    _fogParams = [];
    _fogParams set [0, (linearConversion [0,1,_intensity, _hashMap get "fog_value_min",_hashMap get "fog_value_max", false])];
    _fogParams set [1,_hashMap get "fog_density"];
-   
-   _fogBase = if ((_hashmap get "fog_use_AvgASL") == 0 ) then {
-      // get dynamic value
-      ([] call cvo_storm_fnc_weather_getAvgASL)  select 0;
+   _fogParams set [2,_hashmap get "fog_base"];
+   _fogParams set [3, "no_avg_ASL"];
+
+   _fogBase = if ((_hashmap get "fog_use_AvgASL") == 1 ) then { _fogParams set [3,"use_AvgASL_once"]; };
+   _fogBase = if ((_hashmap get "fog_use_AvgASL_continous") == 1 ) then { _fogParams set [3,"use_AvgASL_continous"]; };
+
+   if (isNil "CVO_Storm_FogParams_target") then {
+      // Establish new setFog-loop
+      CVO_Storm_FogParams_target = _fogParams;
+      ["CVO_Storm_FogParams_target", _duration ] call cvo_storm_fnc_weather_setFog_recursive_continous;
    } else {
-      // use fixed value
-      _hashmap get "fog_base";
-      };
-   _fogParams set [2,_fogBase];
-
-
-   if (_hashmap get "fog_use_AvgASL_continous" > 0) then {
-      // Defines server_global variable to be accessed from the continous
-      CVO_Storm_Fog_Current_Params = _fogParams;
-
-      // Start Function 
-      // TODO: Start Fog_constant_AvgASL 
-   } else {
-      // execute Changes   
-      _duration setFog _fogParams;
-      
-   };   
+      // update already existing setFog-loop
+      CVO_Storm_FogParams_target = _fogParams;
+   };
 };
 
 
