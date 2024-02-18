@@ -12,7 +12,7 @@
 *		<array> <[suggested fogBase, _range from max to min]>
 *
 *	Examples:
-*		   _var = call cvo_storm_fnc_weather_getAvgASL;
+*		   _var = [] call cvo_storm_fnc_weather_getAvgASL;
 *
 */
 
