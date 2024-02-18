@@ -70,5 +70,5 @@ _avgASL = ((_arr2 select 0) select 0) * _bracketSize + _bracketSize * 0.5;
 _avgASL = [_allASL, _avgASL] call BIS_fnc_nearestNum;
 _result = [_avgASL, _range];
 
-diag_log ("[CVO] [ENV] (allPlayersASL) - " + format ["return: %1 - ASLs: %2 - Min: %3 - Max: %4",_result, _allASL, _min, _max]);
+// diag_log ("[CVO] [ENV] (allPlayersASL) - " + format ["return: %1 - ASLs: %2 - Min: %3 - Max: %4",_result, _allASL, _min, _max]);
 _result
