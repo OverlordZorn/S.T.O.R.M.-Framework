@@ -35,6 +35,12 @@ if (canSuspend)                             exitWith {_this           call   cvo
 
 if (_duration isEqualTo 0) exitWith {    diag_log format ["[CVO][STORM](ExitWith) - %1", "duration equal 0"]; false };
 
+
+diag_log format ["[CVO][STORM](weather_setFog_recursive_continous) - _this %1", _this];
+diag_log format ["[CVO][STORM](weather_setFog_recursive_continous) - fogparams_varName: %1 - _duration: %2- _iteration: %3", _fogParams_VarName, _duration, _iteration];
+
+
+
 private _fogParams = missionNamespace getVariable [_fogParams_VarName, "NOT DEFINED"];
 
 
@@ -62,8 +68,8 @@ _fogParams deleteAt 3;
 if !(_fogParams isEqualType [])          exitWith {diag_log format ["[CVO][STORM](ExitWith) - %1", "fogParams isnt an array "];false};
 
 
-
-// ToDo: See if switch statement is more sensible.
+// ##################################################
+// Case 1: Set Fog once without using AvgASL 
 _case1 = {
     // apply Effect
     _duration setFog _fogParams;
@@ -72,7 +78,10 @@ _case1 = {
     // Delete global var
     missionNamespace setVariable [_fogParams_VarName, nil];
 };
+// ##################################################
 
+
+// ##################################################
 // Case 2: set Fog Once, use AvgASL_once
 _case2 = {
     // get Avg_ASL once
@@ -93,7 +102,10 @@ _case2 = {
     missionNamespace setVariable [_fogParams_VarName, nil];
 
 };
+// ##################################################
 
+
+// ##################################################
 // Case 3: Set Fog with AsgASL repeatedly, ether until 
 _case3 = {
     // Defines amount of iterations [Current, Total, time between] - Happens only once
@@ -103,23 +115,16 @@ _case3 = {
         _iteration = [ 1, _total_iterations, _delay ]; 
     };
 
-
     // get Avg_ASL
     private _var = [] call cvo_storm_fnc_weather_getAvgASL;
     _fogBase = _var select 0;
-
 
     // Add fogBase as "minimum value" and adds avg Players 
     // Potential need for Fine Tuning
     _fogParams set [2, (_fogParams select 2) + _fogBase];
 
-
     for "_i" from 0 to 2 do {
-
-        
-        _fogParam set [_i, linearConversion [0,_iteration # 1, _iteration # 0, _previous_FogParams # _i, _fogParams # _i, true] ];
-        
-
+        _fogParam set [_i, linearConversion [0, _iteration # 1, _iteration # 0, _previous_FogParams # _i, _fogParams # _i, true] ];
     };
 
     // apply Effect
@@ -136,6 +141,7 @@ _case3 = {
         },
         [ _fogParams_VarName, _duration, _iteration ], _iteration#2] call CBA_fnc_waitAndExecute;
 };
+// ##################################################
 
 
 switch (_mode) do {
