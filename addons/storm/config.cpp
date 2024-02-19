@@ -28,6 +28,12 @@ class CfgPatches {
 
 };
 
+class CVO_StormPresets
+{
+	#include "Cfg\CVO_StormPresets.hpp"
+};
+
+
 class CVO_PP_Effects
 {
 	#include "Cfg\CVO_ColorCorrections.hpp"
@@ -48,15 +54,14 @@ class CVO_Weather_Effects
 	};
 };
 
-class CVO_StormPresets
-{
-	#include "Cfg\CVO_StormPresets.hpp"
-};
-
-
 class CVO_SubSkills
 {
 	#include "Cfg\CVO_SubSkills.hpp"
+};
+
+class CVO_Particles
+{
+	#include "Cfg\CVO_ParticleEffects.hpp"
 };
 
 
