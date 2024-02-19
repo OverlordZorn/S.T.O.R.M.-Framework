@@ -42,7 +42,7 @@ class CVO_CC_01 : CVO_CC_Default
 	desaturation_rgba0[] = 	{	 0.33,	 0.33,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
 };
 
-class CVO_CC_Orange_Strong : CVO_CC_Default
+class CVO_CC_Mars_Storm : CVO_CC_Default
 {
 	brightness = 	0.80;
 	contrast = 		0.80;
