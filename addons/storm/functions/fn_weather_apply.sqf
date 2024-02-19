@@ -48,6 +48,9 @@ if (_hashMap isEqualTo false) then {   diag_log format ["[CVO][STORM](Weather_Ap
 diag_log format ["[CVO][STORM](Weather_Apply) - hashmap: %1", _hashMap];
 
 
+CVO_Storm_previous_weather_hashmap = createHashMap;
+
+
 // ##########################################################
 // ################### FREEZE CURRENT ####################### 
 
@@ -200,8 +203,11 @@ if ((_hashMap get "change_rainParams") > 0) then {
    if ((_hashMap get "change_rainValue") > 0) then {
       // Save Current
       CVO_Storm_previous_weather_hashmap set ["rain", rain];
+
+      diag_log format ["[CVO][STORM](Weather_Apply) reee - _hashMap get ""rain_value"": %1 - _duration: %2- _intensity: %3", (_hashMap get "rain_value"), _duration, _intensity];
+
       // apply Intensity
-      _value = linearConversion [   0,    1, _intensity, 0, _hashMap get "rain_value", true];
+      _value = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true];
       // execute Changes
       _duration setRain _value;
    };
