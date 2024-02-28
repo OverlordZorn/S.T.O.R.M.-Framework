@@ -13,7 +13,7 @@ class CfgPatches {
 
         // Required addons, used for setting load order.
         // When any of the addons is missing, pop-up warning will appear when launching the game.
-        requiredAddons[] = {"ace_interaction","cba_common"};
+        requiredAddons[] = {"ace_interaction","cba_common","A3_Misc_F_Helpers"};
 
 		// Optional. If this is 1, if any of requiredAddons[] entry is missing in your game the entire config will be ignored and return no error (but in rpt) so useful to make a compat Mod (Since Arma 3 2.14)
 		skipWhenMissingDependencies = 1;
@@ -28,18 +28,8 @@ class CfgPatches {
 
 };
 
-class CVO_StormPresets
-{
-	#include "Cfg\CVO_StormPresets.hpp"
-};
-
-
-class CVO_PP_Effects
-{
-	#include "Cfg\CVO_ColorCorrections.hpp"
-	#include "Cfg\CVO_FilmGrain.hpp"
-	#include "Cfg\CVO_DynamicBlur.hpp"
-};
+#include "Cfg\CVO_StormPresets.hpp"
+#include "Cfg\CVO_PP_Effects.hpp"
 
 class CVO_Weather_Effects
 {
@@ -54,15 +44,12 @@ class CVO_Weather_Effects
 	};
 };
 
-class CVO_SubSkills
-{
-	#include "Cfg\CVO_SubSkills.hpp"
-};
-
-class CVO_Particles
-{
+class CfgCloudlets {
 	#include "Cfg\CVO_ParticleEffects.hpp"
 };
+
+
+#include "Cfg\CVO_SubSkills.hpp"
 
 
 class CfgFunctions
@@ -72,7 +59,6 @@ class CfgFunctions
 		class Storm           // Category
 		{
 			file = "z\cvo_storm\addons\storm\functions";
-
 
 			class ppEffect_apply {};
 			class ppEffect_get_from_config {};
