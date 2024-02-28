@@ -35,14 +35,7 @@ if (canSuspend)                             exitWith {_this           call   cvo
 
 if (_duration isEqualTo 0) exitWith {    diag_log format ["[CVO][STORM](ExitWith) - %1", "duration equal 0"]; false };
 
-
-diag_log format ["[CVO][STORM](weather_setFog_recursive_continous) - _this %1", _this];
-diag_log format ["[CVO][STORM](weather_setFog_recursive_continous) - fogparams_varName: %1 - _duration: %2- _iteration: %3", _fogParams_VarName, _duration, _iteration];
-
-
-
 private _fogParams = missionNamespace getVariable [_fogParams_VarName, "NOT DEFINED"];
-
 
 if  (_fogParams isEqualTo "NOT DEFINED") exitWith {diag_log format ["[CVO][STORM](ExitWith) - %1", "fogparams not defined"]; false};
 
@@ -73,7 +66,7 @@ if !(_fogParams isEqualType [])          exitWith {diag_log format ["[CVO][STORM
 _case1 = {
     // apply Effect
     _duration setFog _fogParams;
-    systemChat format[ "%1 - %2 setFog %3", _mode, _duration, _fogParams ];
+    diag_log format[ "%1 - %2 setFog %3", _mode, _duration, _fogParams ];
 
     // Delete global var
     missionNamespace setVariable [_fogParams_VarName, nil];
@@ -95,7 +88,7 @@ _case2 = {
 
     // apply Effect
     _duration setFog _fogParams;
-    systemChat format[ "%1 - %2 setFog %3", _mode, _duration, _fogParams ];
+    diag_log format[ "%1 - %2 setFog %3", _mode, _duration, _fogParams ];
 
 
     // Delete global var
@@ -112,7 +105,8 @@ _case3 = {
     if (_iteration isEqualTo "UNDEFINED") then {
         _total_iterations = 1 + floor (_duration / 15);
         _delay = _duration / _total_iterations;
-        _iteration = [ 1, _total_iterations, _delay ]; 
+        _iteration = [ 1, _total_iterations, _delay ];
+        diag_log format ["[CVO][STORM](weather_setFog_recursive_continous) - _iteration defined: %1", _iteration];
     };
 
     // get Avg_ASL
@@ -129,7 +123,7 @@ _case3 = {
 
     // apply Effect
     _iteration#2 setFog _fogParams;
-    systemChat format[ "%1 - %2 setFog %3", _mode, _iteration#2, _fogParams ];
+    diag_log format[ "%1 - %2 setFog %3", _mode, _iteration#2, _fogParams ];
 
     // Increases the Iteration cycle
     _iteration set [ 0, (_iteration select 0) + 1 ];
@@ -137,6 +131,7 @@ _case3 = {
     // Recursive Call
     [ 
         {   
+            diag_log format ["recursive Call Fog: _this: ", _this];
             _this call cvo_storm_fnc_weather_setFog_recursive_continous;
         },
         [ _fogParams_VarName, _duration, _iteration ], _iteration#2] call CBA_fnc_waitAndExecute;
