@@ -11,7 +11,7 @@
  * _pp_effect_JIP_handle  <STRING>
  *
  * Example:
- * ["CVO_CC_Alias", 5, 0.5] call CVO_STORM_fnc_weather_apply;
+ * ["CVO_Weather_Sandstorm_01", 5, 0.5] call CVO_STORM_fnc_weather_apply;
  * 
  * Public: No
  */
@@ -44,7 +44,7 @@ diag_log format ["[CVO][STORM](Weather_Apply) - name: %1 - _duration: %2- _inten
 
 // get hashMap, check if its "false", if not, store _hashmap
 private _hashMap  = [_weather_preset_name] call cvo_storm_fnc_weather_get_WeatherPreset_as_Hash;
-if (_hashMap isEqualTo false) then {   diag_log format ["[CVO][STORM](Weather_Apply)(Error) - get_WeatherPreset_as_Hash returned False: %1", _hashMap]; };
+if (_hashMap isEqualTo false) exitWith {   diag_log format ["[CVO][STORM](Weather_Apply)(Error) - get_WeatherPreset_as_Hash returned False: %1", _hashMap]; };
 diag_log format ["[CVO][STORM](Weather_Apply) - hashmap: %1", _hashMap];
 
 
@@ -71,7 +71,7 @@ if ((_hashMap get "change_overcast") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["overcast", overcast];
 
-   diag_log format ["[CVO][STORM](Weather_Apply) - overcast_value: %1", _hashMap get "overcast_value"];
+//   diag_log format ["[CVO][STORM](Weather_Apply) - overcast_value: %1", _hashMap get "overcast_value"];
 
    // apply new
    _value_overcast = linearConversion [   0,    1, _intensity, 0, (_hashMap get "overcast_value"), true];
@@ -89,7 +89,7 @@ if ((_hashMap get "change_wind") > 0) then {
    // get Value + Intensity
    _target_magnitude = _hashMap get "wind_value";
    // Start "recursive", finite  transition.
-   [wind, _target_magnitude, _duration] call cvo_storm_fnc_weather_setWind_recursive;
+   [_target_magnitude, _duration] call cvo_storm_fnc_weather_setWind_recursive;
 };
 
 // ##################################################
