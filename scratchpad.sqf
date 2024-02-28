@@ -124,6 +124,8 @@ sleep 0.5;
 
 
 // ################ Blinking ProtoType
+
+
 // restore previous weather from hashmap
 
 params ["_duration", "_hashmap"];
@@ -171,7 +173,7 @@ private _test_obj_array = [player, test_dummy];
 	_x spawn {
 		params ["_objTarget"];
 
-		private _helperObj_class = "Sign_Sphere100cm_F";
+		private _helperObj_class = "Helper_Base_F";
 		private _helperObj = createVehicleLocal [_helperObj_class, [0,0,0] ];
 
 		while {cvo_debug} do {
@@ -183,3 +185,65 @@ private _test_obj_array = [player, test_dummy];
 		deleteVehicle _helperObj;
 	};
 } forEach _test_obj_array;
+
+
+
+////
+
+cvo_debug_fnc_var_array = {
+    params [
+        [["_ModuleNameArray"], [], []],
+        [["_varNameArray"], [], []],
+    ];
+
+    // creates and returns array for the "format" command.
+    // ["[CVO][MODULE_x0](Module_x1)(Module_xN) _varName_x1: %1 - _varName_xN: %N", _var_x1, _var_xN]
+
+
+    private _finalString = "";
+    private _varArray = [];
+
+    // header
+    {    _str = if (_forEachIndex in [0,1]) then {"[" + _x + "]"} else {"()" + _x + ")"}
+        _finalString = _finalString + _str;
+    } forEach _moduleNameArray;
+
+
+    {
+        _str = " " + _x + ": %" + str (_forEachIndex + 1) + " -";
+        _finalString = _finalString + _str;
+
+        _varArray append [missionNamespace getVariable [_x, "NotFound"]];    
+    } forEach _varNameArray;
+
+    _strArray = _finalString splitString "";
+    _strArray deleteAt [-1,-2];
+    _finalString = _strArray joinString "";
+
+
+
+
+
+    _returnArray = [_finalString];
+    _returnArray append _varArray;
+    _returnArray
+};
+
+
+
+
+
+// Particle Emitter "helper Object classname
+"Helper_Base_F"
+
+
+
+
+
+
+
+/// 
+Some Technically Overdone Remotely-Executed Meteorology-Stuff
+Storms, Technically Optimised, Really Mom, Sheesh!
+System for Tactical Operations during Meteorological Situations
+Scenario-based Tropical Atmosphere Reconstruction Methodology 
