@@ -93,7 +93,7 @@ class CVO_PE_Default : Default
 	smokeIntervalCoef = 4.0;			// for more info see "Changes dependent on distance"
 
 	// additional Meta Data
-	obj = objNull;
+	obj = "objNull";
 };
 
 class CVO_PE_Dust_High : CVO_PE_Default
@@ -148,7 +148,7 @@ class CVO_PE_Dust_High : CVO_PE_Default
 	circleVelocity[] = {-3, -3, 0};
 
 	// setDropInterval
-	interval = 0.5;					    // interval of particle's creation
+	interval = 1.5;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 };
@@ -174,9 +174,9 @@ class CVO_PE_Leafes : CVO_PE_Default
     lifeTime = 27;
 
     position[] = {0, 0, 0};
-    moveVelocity[] =  {50,50,10};
+    moveVelocity[] =  {50,50,5};
 
-    rotationVelocity = 2;
+    rotationVelocity = 0;
     weight = 0.000001;
     volume = 0.0;
     rubbing = 0.1;
@@ -196,13 +196,13 @@ class CVO_PE_Leafes : CVO_PE_Default
     angle = 0;
 
     onSurface = "true";
-	bounceOnSurface = 1;^
+	bounceOnSurface = 1;
 
 	emissiveColor[] = {{0,0,0,0}};
 
 	// setParticleRandom
     lifeTimeVar = 0;
-    positionVar[] = {10, 10, 7};
+    positionVar[] = {10, 10, 13};
     moveVelocityVar[] = {4, 4, 5};
    	rotationVelocityVar = 2;
 	sizeVar = 5;
@@ -215,7 +215,7 @@ class CVO_PE_Leafes : CVO_PE_Default
 	circleVelocity[] = {0, 0, 0};
 
 	// setDropInterval
-	interval = 0.4;					    // interval of particle's creation
+	interval = 12;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 };
