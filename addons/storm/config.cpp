@@ -56,7 +56,7 @@ class CfgFunctions
 {
 	class CVO_Storm            // Tag
 	{
-		class Storm           // Category
+		class PostProcessing   // Category
 		{
 			file = "z\cvo_storm\addons\storm\functions";
 
@@ -64,6 +64,10 @@ class CfgFunctions
 			class ppEffect_get_from_config {};
 			class ppEffect_convert_intensity {};
 			class ppEffect_remote {};
+		};
+		class WeatherSettings   // Category
+		{
+			file = "z\cvo_storm\addons\storm\functions";
 
 			class weather_apply {};
 			class weather_getAvgASL {};
@@ -71,6 +75,14 @@ class CfgFunctions
 			class weather_get_rainParams_as_Array {};
 			class weather_setWind_recursive {};
 			class weather_setFog_recursive_continous {};
+
+		};
+		class ParticleEffects   // Category
+		{
+			file = "z\cvo_storm\addons\storm\functions";
+
+			class particle_get_params_from_config {};
+			class particle_remote {};
 		};
 	}; 
 };
