@@ -16,7 +16,6 @@
  * Public: No
  */
 
-
 params [   ["_PE_effect_name", "", [""]]    ];
 
 
@@ -35,12 +34,12 @@ if !(_PE_effect_name in (configProperties [configFile >> "CfgCloudlets", "true",
 
 private _hash = createHashMap;
 
-_properties = [
+private _properties = [
 	"particleShape",		
 	"particleFSNtieth",		
 	"particleFSIndex",		
 	"particleFSFrameCount",	
-	"particleFSLoop"
+	"particleFSLoop",
 	"animationName",		
 	"particleType",			
 	"timerPeriod",			
@@ -74,49 +73,41 @@ private _configPath = (configFile >> "CfgCloudlets" >> _PE_effect_name );
 
 _returnArray = [
 	[
-		_hash get "particleShape",			/* String */
-		_hash get "particleFSNtieth",		/* Number */
-		_hash get "particleFSIndex",		/* Number */
-		_hash get "particleFSFrameCount",	/* Number */
-		_hash get "particleFSLoop"		/* Optional - Number. Default: 1 */
+		_hash get "particleShape",			
+		_hash get "particleFSNtieth",		
+		_hash get "particleFSIndex",		
+		_hash get "particleFSFrameCount",	
+		_hash get "particleFSLoop"		
 	],
-	_hash get "animationName",			/* String */
-	_hash get "particleType",				/* String - Enum: Billboard, SpaceObject */
-	_hash get "timerPeriod",				/* Number */
-	_hash get "lifeTime",					/* Number */
-	_hash get "position",					/* 3D Array of numbers as relative position to particleSource or (if object at index 18 is set) object. */
-	_hash get "moveVelocity",				/* 3D Array of numbers. */
-	_hash get "rotationVelocity",			/* Number */
-	_hash get "weight",					/* Number */
-	_hash get "volume",					/* Number */
-	_hash get "rubbing",					/* Number */
-	_hash get "size",			            /* Array of Numbers */
-	_hash get "color",					/* Array of Array of RGBA Numbers */
-	_hash get "animationSpeed",			/* Array of Number */
-	_hash get "randomDirectionPeriod",	/* Number */
-	_hash get "randomDirectionIntensity",	/* Number */
-	_hash get "onTimerScript",			/* String */
-	_hash get "beforeDestroyScript",		/* String */
-	_hash get "obj",						/* Object */
-	_hash get "angle",					/* Optional Number - Default: 0 */
-	_hash get "onSurface",				/* Optional Boolean */
-	_hash get "bounceOnSurface",			/* Optional Number */
-	_hash get "emissiveColor"			/* Optional Array of Array of RGBA Numbers */
+	_hash get "animationName",			
+	_hash get "particleType",			
+	_hash get "timerPeriod",			
+	_hash get "lifeTime",				
+	_hash get "position",				
+	_hash get "moveVelocity",			
+	_hash get "rotationVelocity",		
+	_hash get "weight",					
+	_hash get "volume",					
+	_hash get "rubbing",				
+	_hash get "size",			        
+	_hash get "color",					
+	_hash get "animationSpeed",			
+	_hash get "randomDirectionPeriod",	
+	_hash get "randomDirectionIntensity",	
+	_hash get "onTimerScript",			
+	_hash get "beforeDestroyScript",	
+	switch (_hash get "obj") do {
+		case "objNull": { objNull };
+		case "player": { player };
+		case Default { _hash get "obj" };
+	},					
+	_hash get "angle",					
+	switch (_hash get "onSurface") do {
+		case "true": { true };
+		case "false": { false };
+	},				
+	_hash get "bounceOnSurface",		
+	_hash get "emissiveColor"
 ];
 
-_returnArray;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+_returnArray
