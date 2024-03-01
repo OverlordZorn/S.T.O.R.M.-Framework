@@ -81,8 +81,8 @@ class CfgFunctions
 		{
 			file = "z\cvo_storm\addons\storm\functions";
 
-			class particle_get_params_from_config {};
 			class particle_remote {};
+			class particle_apply {};
 		};
 	}; 
 };
