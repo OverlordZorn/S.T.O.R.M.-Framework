@@ -7,12 +7,13 @@
  * 0: _wind_magnitude               <Number> - Magnitute of desired target        of the transition.
  * 1: _duration                     <Number> in Secounds - Total time of Transition
  * 2: _direction        <Optional>  <Number> 0..360 Targeted Winddirection in Degrees - "DEFAULT" takes current wind direction. 
+ * 3: _forceWindEnd     <Optional>  <Boolean> <DEFAULT: false> locks wind in place at the end of the recursive loop. (setWind [x,y, forced]) 
  *
  * !!! Internal Arguments - Dont use
  *
- * 3: _final_vector     <Array> [X,Y,0] - Wind vector at the end of the transition.
- * 4: _wind_start       <ARRAY> [X,Y,0] - Wind vector at the beginning of the transition.
- * 5: _iterations       <Array> [current Iteration, total Iteration, time between Iterations]
+ * 4: _final_vector     <Array> [X,Y,0] - Wind vector at the end of the transition.
+ * 5: _wind_start       <ARRAY> [X,Y,0] - Wind vector at the beginning of the transition.
+ * 6: _iterations       <Array> [current Iteration, total Iteration, time between Iterations]
  *
  * Return Value:
  * none 
@@ -35,6 +36,7 @@ if (canSuspend)                             exitWith {_this           call   cvo
 params [
     ["_wind_magnitude",          0,     [0]       ],
     ["_duration",                0,     [0]       ],
+    ["_forceWindEnd",        false, [false]       ],
     ["_azimuth",         "DEFAULT",  ["",0]       ],
     ["_final_vector",  "UNDEFINED",    [[]], [2,3]],
     ["_wind_start",    "UNDEFINED",    [[]], [2,3]],
@@ -80,9 +82,14 @@ _iteration set [ 0, (_iteration select 0) + 1 ];
 if ( _iteration#0 <= _iteration#1 ) then {
     [
         { _this call cvo_storm_fnc_weather_setWind_recursive; },
-        [ _wind_magnitude, _duration, _azimuth, _final_vector,_wind_start, _iteration ],
+        [ _wind_magnitude, _duration, _forceWindEnd, _azimuth, _final_vector,_wind_start, _iteration ],
         _iteration#2
     ] call CBA_fnc_waitAndExecute;
 } else {
+
+    // applies _forceWindEnd
+    _newWind set [2,_forceWindEnd];
+    setWind _newWind;
+
     diag_log format ["[CVO][STORM](SetWind_recur) - Transition Complete!",""];
 };
