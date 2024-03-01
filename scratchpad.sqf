@@ -230,20 +230,55 @@ cvo_debug_fnc_var_array = {
 };
 
 
-
-
-
 // Particle Emitter "helper Object classname
 "Helper_Base_F"
 
 
-
-
-
-
-
 /// 
+
 Some Technically Overdone Remotely-Executed Meteorology-Stuff
 Storms, Technically Optimised, Really Mom, Sheesh!
 System for Tactical Operations during Meteorological Situations
 Scenario-based Tropical Atmosphere Reconstruction Methodology 
+
+
+///
+
+cvo_debug = false; 
+cvo_debug = true;
+private _test_obj_array = [player];
+
+{
+	_x spawn {
+		params ["_objTarget"];
+		
+		 private _objToBeDeleted = [];
+
+
+		private _ppEffectName = "CVO_PE_Leafes" ;
+		
+		
+		private _source01 = "#particlesource" createVehicleLocal [0,0,0];
+		 _objToBeDeleted pushback _source01;
+
+		_source01 setParticleClass _ppEffectName;
+ 
+		 private _helperObj_class = "Helper_Base_F";
+		 private _helperObj = createVehicleLocal [_helperObj_class, [0,0,0] ];
+		 _objToBeDeleted pushback _helperObj;
+		 _source01 attachTo [_helperObj, [0,0,0]];
+
+	
+		while {cvo_debug} do {
+			_speedVectorRelative = ( velocityModelSpace vehicle ace_player ) vectorMultiply 5;
+			 _windVectorRelative = ( vehicle ace_player vectorWorldToModel wind ) vectorMultiply 0.2;
+			_relPosArray = _speedVectorRelative vectorDiff _windVectorRelative;
+			_relPosArray set [2,0];
+			_helperObj attachTo [vehicle _objTarget,_relPosArray ];
+			sleep 0.01;
+		};
+    	{ deleteVehicle _x } forEach _objToBeDeleted;
+	};
+} forEach _test_obj_array;
+
+
