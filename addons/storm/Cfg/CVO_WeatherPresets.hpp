@@ -23,6 +23,7 @@ class CVO_Weather_Default
 
     change_wind = 0;                                // 0 or 1 - consider it a bool
     wind_value = 0;                                 // Number - 0.. alot, eventhough +200 values getting cray cray
+    forceWindEnd = 0;                               // o or 1 - defines if the wind stays locked in place at the end of the transition; 0 = false; >0 = true;
 
     change_gusts = 0;                               // 0 or 1 - consider it a bool
     gusts_value = 0;                                // 0..1   - wind Gusts, changes in windspeed
