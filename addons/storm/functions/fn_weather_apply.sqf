@@ -27,7 +27,6 @@ params [
 
 if (_weather_preset_name isEqualTo "")    exitWith { false };
 if (_duration isEqualTo 0)                exitWith { false };
-if (_duration isEqualTo 0)                exitWith { false };
 if (_intensity <= 0 )                     exitWith { false };
 
 
@@ -38,9 +37,7 @@ if (isNil "CVO_WeatherChanges_active") then {
 // Adjusts Duration to secounds.
 _duration = _duration * 60;
 
-diag_log format ["[CVO][STORM](Weather_Apply) - _this %1", _this];
 diag_log format ["[CVO][STORM](Weather_Apply) - name: %1 - _duration: %2- _intensity: %3", _weather_preset_name, _duration, _intensity];
-
 
 // get hashMap, check if its "false", if not, store _hashmap
 private _hashMap  = [_weather_preset_name] call cvo_storm_fnc_weather_get_WeatherPreset_as_Hash;
@@ -89,7 +86,13 @@ if ((_hashMap get "change_wind") > 0) then {
    // get Value + Intensity
    _target_magnitude = _hashMap get "wind_value";
    // Start "recursive", finite  transition.
-   [_target_magnitude, _duration] call cvo_storm_fnc_weather_setWind_recursive;
+
+   _forceWindEnd = switch (_hashmap get "forceWindEnd") do {
+      case 1: { true };
+      default { false};
+   };
+   
+   [_target_magnitude, _duration, _forceWindEnd] call cvo_storm_fnc_weather_setWind_recursive;
 };
 
 // ##################################################
