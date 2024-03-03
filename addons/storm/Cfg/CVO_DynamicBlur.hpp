@@ -7,12 +7,27 @@ class CVO_DB_Default
 	blurriness =   0.00;		// 0..
 };
 
-class CVO_DB_Basic : CVO_DB_Default
+class CVO_DB_10 : CVO_DB_Default
 {
 	blurriness =   0.10;
 };
 
-class CVO_DB_Storm : CVO_DB_Default
+class CVO_DB_15 : CVO_DB_Default
+{
+	blurriness =   0.15;
+};
+
+class CVO_DB_20 : CVO_DB_Default
+{
+	blurriness =   0.20;
+};
+
+class CVO_DB_25 : CVO_DB_Default
+{
+	blurriness =   0.25;
+};
+
+class CVO_DB_30 : CVO_DB_Default
 {
 	blurriness =   0.30;
 };
