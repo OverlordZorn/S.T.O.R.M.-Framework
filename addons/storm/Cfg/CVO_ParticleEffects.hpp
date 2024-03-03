@@ -50,7 +50,7 @@ class CVO_PE_Default : Default
 	onTimerScript = "";					// script triggered by timer (in variable "this" is stored position of particle)
 	beforeDestroyScript = "";			// script triggered before destroying of particle (in variable "this" is stored position of particle)
 	lifeTimeVar = 0;					// variability in lifetime of particle
-	position[] = {0, 0, 0};				// defines position of effect
+	position[] = {0, 0, 1};				// defines position of effect
 	positionVar[] = {0, 0, 0};			// variability in position of particle (each part of vector has it is own variability)
 	positionVarConst[] = {0, 0, 0};		// variability in position of particle (variablity of all parts of vector is the same)
 	moveVelocityVar[] = {0, 0, 0};		// variability in direction and speed of particle (each part of vector has it is own variability)
@@ -109,17 +109,17 @@ class CVO_PE_Dust_High : CVO_PE_Default
     timerPeriod = 1;
     lifeTime = 20;
 
-    position[] = {0, 0, 0};
-    moveVelocity[] =  {-1,-1,0};
+    position[] = {0, 0, 2};
+    moveVelocity[] =  {1,1,0};
 
     rotationVelocity = 3;
-    weight = 10.15;
+    weight = 10.20;
     volume = 7.9;
-    rubbing = 0.01;
+    rubbing = 0.002;
 
-    size[] = {5,10,20};
+    size[] = {5,10,20,10};
 
-    color[] = {{0.65, 0.5, 0.5, 0}, {0.65, 0.6, 0.5, 0.5}, {1, 0.95, 0.8, 0}};
+    color[] = {{0.65, 0.5, 0.5, 0}, {0.65, 0.6, 0.5, 0.5}, {0.65, 0.6, 0.5, 0.5}, {1, 0.95, 0.8, 0}};
 
     animationSpeed[] = {0.08};	
 
@@ -145,10 +145,10 @@ class CVO_PE_Dust_High : CVO_PE_Default
 
 	// setParticleCircle
    	circleRadius = 50;
-	circleVelocity[] = {-3, -3, 0};
+	circleVelocity[] = {3, 3, 0};
 
 	// setDropInterval
-	interval = 1.5;					    // interval of particle's creation
+	interval = 1;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 };
@@ -173,7 +173,7 @@ class CVO_PE_Leafes : CVO_PE_Default
     timerPeriod = 1;
     lifeTime = 27;
 
-    position[] = {0, 0, 0};
+    position[] = {0, 0, 3};
     moveVelocity[] =  {50,50,5};
 
     rotationVelocity = 0;
@@ -215,7 +215,7 @@ class CVO_PE_Leafes : CVO_PE_Default
 	circleVelocity[] = {0, 0, 0};
 
 	// setDropInterval
-	interval = 12;					    // interval of particle's creation
+	interval = 5;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 };
