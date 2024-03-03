@@ -164,7 +164,7 @@ class CVO_PE_Dust_High : CVO_PE_Default
 
 class CVO_PE_Dust_Low : CVO_PE_Dust_High 
 {
-    size[] = {3, 4, 7, 4};
+    size[] = {0,3,7,10,7,3,0};
 };
 
 // Twigs
