@@ -107,7 +107,7 @@ class CVO_PE_Dust_High : CVO_PE_Default
     animationName = "";
     particleType = "Billboard";
     timerPeriod = 1;
-    lifeTime = 20;
+    lifeTime = 40;
 
     position[] = {0, 0, 1};
     moveVelocity[] =  {1,1,0};
@@ -117,9 +117,17 @@ class CVO_PE_Dust_High : CVO_PE_Default
     volume = 7.9;
     rubbing = 0.002;
 
-    size[] = {5,10,20,10};
+    size[] = {0,5,10,20,10,5,0};
 
-    color[] = {{0.65, 0.5, 0.5, 0}, {0.65, 0.6, 0.5, 0.5}, {0.65, 0.6, 0.5, 0.5}, {1, 0.95, 0.8, 0}};
+    color[] = {
+		{0.65, 0.5, 0.5, 0.0}, 
+		{0.65, 0.6, 0.5, 0.2}, 
+		{1,   0.95, 0.8, 0.5},
+		{1,   0.95, 0.8, 0.7},
+		{1,   0.95, 0.8, 0.5},
+		{0.65, 0.6, 0.5, 0.3}, 
+		{0.65, 0.6, 0.5, 0.0}
+	};
 
     animationSpeed[] = {0.08};	
 
