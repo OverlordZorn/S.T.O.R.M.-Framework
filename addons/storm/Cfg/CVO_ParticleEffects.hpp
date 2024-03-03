@@ -109,11 +109,11 @@ class CVO_PE_Dust_High : CVO_PE_Default
     timerPeriod = 1;
     lifeTime = 20;
 
-    position[] = {0, 0, 2};
+    position[] = {0, 0, 1};
     moveVelocity[] =  {1,1,0};
 
     rotationVelocity = 3;
-    weight = 10.20;
+    weight = 10.5;
     volume = 7.9;
     rubbing = 0.002;
 
@@ -136,7 +136,7 @@ class CVO_PE_Dust_High : CVO_PE_Default
 	// setParticleRandom
     lifeTimeVar = 10;
     positionVar[] = {0.25, 0.25, 0};
-    moveVelocityVar[] = {1, 1, 0};
+    moveVelocityVar[] = {-1, -1, 1};
    	rotationVelocityVar = 1;
 	sizeVar = 1;
     colorVar[] = {0, 0, 0, 0.1};	
@@ -144,11 +144,11 @@ class CVO_PE_Dust_High : CVO_PE_Default
   	bounceOnSurfaceVar = 0.0;
 
 	// setParticleCircle
-   	circleRadius = 50;
-	circleVelocity[] = {3, 3, 0};
+   	circleRadius = 35;
+	circleVelocity[] = {-3, -3, 0};
 
 	// setDropInterval
-	interval = 1;					    // interval of particle's creation
+	interval = 0.01;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 };
@@ -156,7 +156,7 @@ class CVO_PE_Dust_High : CVO_PE_Default
 
 class CVO_PE_Dust_Low : CVO_PE_Dust_High 
 {
-    size[] = {3, 4, 7};
+    size[] = {3, 4, 7, 4};
 };
 
 // Twigs
@@ -212,10 +212,10 @@ class CVO_PE_Leafes : CVO_PE_Default
 
 	// setParticleCircle
    	circleRadius = 100;
-	circleVelocity[] = {0, 0, 0};
+	circleVelocity[] = {-2, -2, 1};
 
 	// setDropInterval
-	interval = 5;					    // interval of particle's creation
+	interval = 0.1;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 };
