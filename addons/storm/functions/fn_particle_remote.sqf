@@ -20,6 +20,7 @@
  * ["CVO_PE_Leafes", 600, 0.75] remoteExecCall ["cvo_storm_fnc_particle_remote",0, _jip_handle_string];
  * ["CVO_PE_Leafes", 600]       remoteExecCall ["cvo_storm_fnc_particle_remote",0, _jip_handle_string];
  * ["CLEANUP"]                  remoteExecCall ["cvo_storm_fnc_particle_remote",0, _jip_handle_string];
+ * ["CVO_PE_Leafes"]            call cvo_storm_fnc_particle_remote
  * ["CLEANUP"]                  call cvo_storm_fnc_particle_remote
  * 
  * Public: No
@@ -29,7 +30,7 @@
 #define COEF_WIND  0.2
 #define PFEH_ATTACH_DELAY 0
 #define PFEH_INTENSITY_DELAY 4 // _duration /  PFEH_INTENSITY_DELAY == _delay
-#define INTERVAL_MINIMUM 20
+#define DROP_INTERVAL_MIN 20
 
 
 
@@ -44,7 +45,7 @@ params [
 if ( _effectName isEqualTo "CLEANUP")  exitWith {
     if ( missionNamespace getVariable ["CVO_Debug", false] ) then {   CVO_Storm_Local_PE_Spawner_array deleteAt 0;};
     {  
-        [ _x getVariable ["CVO_PE_Spawner_Name", ""] ] call cvo_storm_fnc_particle_remote;
+        [_x#1] call cvo_storm_fnc_particle_remote;
     } forEach CVO_Storm_Local_PE_Spawner_array;
 };
 
@@ -53,18 +54,12 @@ if (_intensityTarget < 0 )      exitWith {};
 if (_duration    isEqualTo  0)  exitWith {};
 
 if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
-    diag_log "Array Created:";
-    diag_log str CVO_Storm_Local_PE_Spawner_array;
     CVO_Storm_Local_PE_Spawner_array = [];
 
     // Adds Debug_Helper Object (arrow)
     if (missionNamespace getVariable ["CVO_Debug", false]) then {
             _helper = createVehicleLocal [ "Sign_Arrow_Large_F", [0,0,0] ];
-            _helper setVariable ["CVO_PE_Spawner_Name", "Debug_helper", false];
-            CVO_Storm_Local_PE_Spawner_array pushback _helper;
-            diag_log "Helper Created:";
-            diag_log str CVO_Storm_Local_PE_Spawner_array;
-
+            CVO_Storm_Local_PE_Spawner_array pushback [_helper, "Debug_Helper"];
     };
 
     // Start pfEH to re-attach all Particle Spawners according to player speed & wind.
@@ -106,40 +101,32 @@ private _spawnerName = toLower (["CVO_Storm_Particle_",_effectName,"_particlesou
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Check if a spawner of that type already exists, 
-// if not, create, setParticleClass, setVariables and add it to the array.
+// if not, create, setParticleClass, store as array [_obj,_name,_intensity] and add it to the array.
 // if already exists, take previous intensity and set as start inensity. 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 private _intensityStart = 0;
 private "_spawner";
-private _index = CVO_Storm_Local_PE_Spawner_array findIf { ( _x getVariable [ "CVO_PE_Spawner_Name" , "" ] ) isEqualTo _spawnerName };
+private _index = CVO_Storm_Local_PE_Spawner_array findIf { _x#1 isEqualTo _spawnerName };
 
-private _DropIntervalStart = INTERVAL_MINIMUM;
-private _DropIntervalMax = ([_effectName] call BIS_fnc_getCloudletParams) select 2; // #0 setParticleParams, #1 setParticleRandom, #2 setDropInterval
-private _DropIntervalTarget = linearConversion [0, 1, _intensityTarget, _DropIntervalStart, _DropIntervalMax, true];
-
-
-
-diag_log format ["_index: %1", _index];
+private _dropIntervalStart = DROP_INTERVAL_MIN;
+private _dropIntervalMax = ([_effectName] call BIS_fnc_getCloudletParams) select 2; // #0 setParticleParams, #1 setParticleRandom, #2 setDropInterval
+private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropIntervalStart, _dropIntervalMax, true];
 
 
 if (_index == -1) then {
 
-    _spawner = "#particlesource" createVehicleLocal [0,0,0];
+    _spawner = createVehicleLocal ["#particlesource", [0,0,0]];
     _spawner setParticleClass _effectName;
 
-    _spawner setVariable ["CVO_PE_Spawner_Name", _spawnerName]; 
-    _spawner setVariable ["CVO_PE_Spawner_Intensity", _intensity];
-    CVO_Storm_Local_PE_Spawner_array pushback _spawner;
+    CVO_Storm_Local_PE_Spawner_array pushback [_spawner,_spawnerName, _intensityTarget ];
 
-    diag_log format ["PES created: %1 - Intensity: %2 - Array: %3", _spawnerName,_intensity,CVO_Storm_Local_PE_Spawner_array];
 } else {
-    _spawner = CVO_Storm_Local_PE_Spawner_array select _index;
-    _intensityStart = _spawner getVariable ["CVO_PE_Spawner_Intensity", 0];
-    diag_log format ["PES Adjsuted: %1 - Intensity: %2 - Array: %3", _spawnerName,_intensity,CVO_Storm_Local_PE_Spawner_array];
+    _spawnerArray = CVO_Storm_Local_PE_Spawner_array select _index;
+    _spawner = _spawnerArray#0; 
+    _intensityStart = _spawnerArray#2;
+    _dropIntervalStart = linearConversion [0, 1, _intensityTarget, DROP_INTERVAL_MIN, _dropIntervalMax, true];
 };
-
-diag_log format ["_intensityStart: %1 - _intensity: %2 - _DropIntervalStart: %3 - _DropIntervalTarget: %4 - _DropIntervalMax: %5", _intensityStart, _intensity, _DropIntervalStart, _DropIntervalTarget, _DropIntervalMax];
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,21 +138,19 @@ diag_log format ["_intensityStart: %1 - _intensity: %2 - _DropIntervalStart: %3 
 
 private _startTime = time;
 private _endTime = _startTime + _duration;
-diag_log format ["Transition _startTime: %1 _endTime: %2", _startTime, _endTime];
 
 
 //// params inside the pfEH
-private _parameters = [ _spawner, _startTime, _endTime, _DropIntervalStart, _DropIntervalTarget, _intensityTarget  ];
+private _parameters = [ _spawner, _startTime, _endTime, _dropIntervalStart, _dropIntervalTarget, _intensityTarget  ];
 
 private _codeToRun = {
-    params [ "_spawner", "_startTime", "_endTime", "_DropIntervalStart", "_DropIntervalTarget", "_intensityTarget"  ];
+    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget"  ];
     _drop = linearConversion [ _startTime, _endTime, time, _dropIntervalStart, _dropIntervalTarget ];
-    diag_log format ["PE: %1 setDropInterval: %2", _spawner getVariable ["CVO_PE_Spawner_Name",""], _drop];
     _spawner setDropInterval _drop;
 }; 
 
 private _exitCode = {   
-    params [ "_spawner", "_startTime", "_endTime", "_DropIntervalStart", "_DropIntervalTarget", "_intensityTarget"  ];
+    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget"  ];
     diag_log "Transition pfEH Exit";
     _spawner setDropInterval  _dropIntervalTarget; 
     if ( _intensityTarget isEqualTo 0) then {
