@@ -109,13 +109,13 @@ class CVO_PE_Dust_High : CVO_PE_Default
     timerPeriod = 1;
     lifeTime = 40;
 
-    position[] = {0, 0, 1};
+    position[] = {0, 0, 1.5};
     moveVelocity[] =  {1,1,0};
 
     rotationVelocity = 3;
-    weight = 10.5;
+    weight = 11;
     volume = 7.9;
-    rubbing = 0.002;
+    rubbing = 0.0015;
 
     size[] = {0,5,10,20,10,5,0};
 
