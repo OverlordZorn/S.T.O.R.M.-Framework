@@ -29,7 +29,7 @@
 #define COEF_SPEED 5
 #define COEF_WIND  0.2
 #define PFEH_ATTACH_DELAY 0
-#define PFEH_INTENSITY_DELAY 4 // _duration /  PFEH_INTENSITY_DELAY == _delay
+#define PFEH_INTENSITY_DELAY 7 // _duration /  PFEH_INTENSITY_DELAY == _delay
 #define DROP_INTERVAL_MIN 20
 
 
@@ -70,11 +70,11 @@ if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
         private _player = vehicle ace_player;  
         private _relPosArray = (( velocityModelSpace _player ) vectorMultiply COEF_SPEED) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply COEF_WIND);
         _relPosArray set [2, (_relPosArray#2) + 1 ];
-        { _x attachTo [_player, _relPosArray]; } forEach CVO_Storm_Local_PE_Spawner_array;
+        { _x#0 attachTo [_player, _relPosArray]; } forEach CVO_Storm_Local_PE_Spawner_array;
     };
     private _exitCode  = { 
     diag_log "reAttach pfEH Exit";
-        { deleteVehicle _x } forEach CVO_Storm_Local_PE_Spawner_array; 
+        { deleteVehicle _x#0 } forEach CVO_Storm_Local_PE_Spawner_array; 
         CVO_Storm_Local_PE_Spawner_array = nil;  
     };
 
@@ -106,7 +106,6 @@ private _spawnerName = toLower (["CVO_Storm_Particle_",_effectName,"_particlesou
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 private _intensityStart = 0;
-private "_spawner";
 private _index = CVO_Storm_Local_PE_Spawner_array findIf { _x#1 isEqualTo _spawnerName };
 
 private _dropIntervalStart = DROP_INTERVAL_MIN;
@@ -114,6 +113,7 @@ private _dropIntervalMax = ([_effectName] call BIS_fnc_getCloudletParams) select
 private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropIntervalStart, _dropIntervalMax, true];
 
 
+private "_spawner";
 if (_index == -1) then {
 
     _spawner = createVehicleLocal ["#particlesource", [0,0,0]];
@@ -155,7 +155,7 @@ private _exitCode = {
     _spawner setDropInterval  _dropIntervalTarget; 
     if ( _intensityTarget isEqualTo 0) then {
         diag_log "Transition pfEH Exit - Intensity == 0 -> Spawner Deleted";
-        CVO_Storm_Local_PE_Spawner_array = CVO_Storm_Local_PE_Spawner_array - [_spawner];   
+        CVO_Storm_Local_PE_Spawner_array deleteAt (CVO_Storm_Local_PE_Spawner_array findIf {_x#0 isEqualTo _spawner});   
         deleteVehicle _spawner;
     };
 };
