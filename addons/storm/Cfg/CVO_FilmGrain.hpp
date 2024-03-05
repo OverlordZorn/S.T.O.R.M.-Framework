@@ -32,3 +32,13 @@ class CVO_FG_Storm : CVO_FG_Default
 	monochromatic = 0;			// 0,1 # 0 Monochromatic # Any other value Color
 };
 
+class CVO_FG_Storm_02 : CVO_FG_Default
+{
+	intensity =   0.78;			// 0..1
+	sharpness =   1.5;			// 1..20
+	grainSize =   1.46;			// 1..8
+	intensityX0 = 0.56;			// -x..0..+x
+	intensityX1 = 0.69;			// -x..0..+x
+	monochromatic = 0;			// 0,1 # 0 Monochromatic # Any other value Color
+};
+
