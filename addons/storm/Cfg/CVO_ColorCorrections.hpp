@@ -42,6 +42,7 @@ class CVO_CC_01 : CVO_CC_Default
 	desaturation_rgba0[] = 	{	 0.33,	 0.33,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
 };
 
+
 class CVO_CC_Mars_Storm : CVO_CC_Default
 {
 	brightness = 	0.80;
@@ -51,6 +52,57 @@ class CVO_CC_Mars_Storm : CVO_CC_Default
 	colorization_rgba[] = 	{	 -0.4,	 1.00,	 2.40,	 1.30	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
 	desaturation_rgba0[] = 	{	 0.33,	 0.33,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
 };
+
+
+class CVO_CC_Muted_Green_Yellow : CVO_CC_Default
+{
+	brightness = 	0.80;
+	contrast = 		1.00;
+	offset = 		0.00;
+	blending_rgba[] = 		{	 0.14,	 1.16, 	 0.26,	 0.04	};			// RGB - Color -- A - Blend Factor (0-> Original Color - 1 -> Blended Color)
+	colorization_rgba[] = 	{	 0.34,	 0.89,	 1.03,	 1.22	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
+	desaturation_rgba0[] = 	{	-0.63,	 1.73,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
+};
+
+class CVO_CC_Muted_Pale_Blue : CVO_CC_Default
+{
+	brightness = 	1.07;
+	contrast = 		0.90;
+	offset = 		0.00;
+	blending_rgba[] = 		{	-0.04,	 0.14, 	 0.26,	 0.04	};			// RGB - Color -- A - Blend Factor (0-> Original Color - 1 -> Blended Color)
+	colorization_rgba[] = 	{	 0.34,	 0.89,	 1.03,	 1.22	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
+	desaturation_rgba0[] = 	{	-0.63,	 1.73,   0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
+};
+
+class CVO_CC_Muted_Pale_Blue : CVO_CC_Default
+{
+	brightness = 	1.07;
+	contrast = 		0.90;
+	offset = 		0.00;
+	blending_rgba[] = 		{	 -0.04,	 0.14, 		>0.67,	 0.12	};			// RGB - Color -- A - Blend Factor (0-> Original Color - 1 -> Blended Color)
+	colorization_rgba[] = 	{	 0.30,	 0.64,	 	0.74,	0.99	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
+	desaturation_rgba0[] = 	{	 0.33,	 0.33,   	0.33,   0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
+};
+
+
+
+
+class CVO_CC_Frosted_Blue_Purple : CVO_CC_Default
+{
+	brightness = 	1.00;
+	contrast = 		0.90;
+	offset = 		0.00;
+	blending_rgba[] = 		{	0.00,	0.00,	0.30,	0.15	};			// RGB - Color -- A - Blend Factor (0-> Original Color - 1 -> Blended Color)
+	colorization_rgba[] = 	{	0.89,	1.28,	1.67,	0.80	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
+	desaturation_rgba0[] = 	{	0.12,	0.67,	0.94,	0.00	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
+};
+
+
+
+
+ 
+
+
 
 class CVO_CC_Radial_Default
 {
