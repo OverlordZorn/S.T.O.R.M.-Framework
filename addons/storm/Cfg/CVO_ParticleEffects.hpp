@@ -50,7 +50,7 @@ class CVO_PE_Default : Default
 	onTimerScript = "";					// script triggered by timer (in variable "this" is stored position of particle)
 	beforeDestroyScript = "";			// script triggered before destroying of particle (in variable "this" is stored position of particle)
 	lifeTimeVar = 0;					// variability in lifetime of particle
-	position[] = {0, 0, 1};				// defines position of effect
+	position[] = {0, 0, 2};				// defines position of effect
 	positionVar[] = {0, 0, 0};			// variability in position of particle (each part of vector has it is own variability)
 	positionVarConst[] = {0, 0, 0};		// variability in position of particle (variablity of all parts of vector is the same)
 	moveVelocityVar[] = {0, 0, 0};		// variability in direction and speed of particle (each part of vector has it is own variability)
@@ -67,15 +67,15 @@ class CVO_PE_Default : Default
 	destroyOnWaterSurface = 0;			// particle can exist - only underwater (-1), only above the water (1), everywhere (0)
 	destroyOnWaterSurfaceOffset = 0;	// offset of water surface in destroyOnWaterSurface parameter
 	destroyAfterCrossing = "false";		// if true, destroy when the whole particle is on the other side of the water surface. Only when _destroyOnWaterSurfaceOffset is enabled, 
-	onSurface = "true";					// placing of particle on (water) surface on start of it is existence, default value is true, works only if circleRadius > 0
-	keepOnSurface = "false";				// true for particle is stay on water surface - see notes below
-	surfaceOffset = 0;					// offset of water surface in keepOnSurface parameter
+	onSurface = "false";				// placing of particle on (water) surface on start of it is existence, default value is true, works only if circleRadius > 0
+	keepOnSurface = "false";			// true for particle is stay on water surface - see notes below
+	surfaceOffset = -10;				// offset of water surface in keepOnSurface parameter
 	bounceOnSurface = 0;				// coef of speed's loosing in collision with ground, 0-1 for collisions, -1 disable collision
 	bounceOnSurfaceVar = 0.0;			// variability in speed's loosing in collision with ground
 	// postEffects = "";					// effect triggered before destroying of particle
 	// particleEffects = "";				// emitter of effect defined in this parameter is attached to each particle
-	ignoreWind = "false";							// if true, wind will not be applied on the particle 
-	blockAIVisibility = "true";					// sets if particles are in the AI visibility tests (default true) - false for better performance but AI is able to see through particles
+	ignoreWind = "false";					// if true, wind will not be applied on the particle 
+	blockAIVisibility = "false";			// sets if particles are in the AI visibility tests (default true) - false for better performance but AI is able to see through particles
 	emissiveColor[] = {{30,30,30,0},{0,0,0,0}};	// sets emissivity of particle, 4th number has no meaning for now
 
 	// --- fire damage related parameters (optional)
@@ -87,13 +87,13 @@ class CVO_PE_Default : Default
 	// --- override of global particle quality params
 	// --- current values are in, for example:
 	// --- getNumber (((configFile >> "CfgVideoOptions" >> "Particles") select particlesQuality) >> "smokeGenMinDist");
-	smokeGenMinDist = 100;				// for more info see "Changes dependent on distance"
-	smokeGenMaxDist = 500;				// for more info see "Changes dependent on distance"
-	smokeSizeCoef = 2.0;				// for more info see "Changes dependent on distance"
-	smokeIntervalCoef = 4.0;			// for more info see "Changes dependent on distance"
+	// smokeGenMinDist = 100;				// for more info see "Changes dependent on distance"
+	// smokeGenMaxDist = 500;				// for more info see "Changes dependent on distance"
+	// smokeSizeCoef = 2.0;				// for more info see "Changes dependent on distance"
+	// smokeIntervalCoef = 4.0;			// for more info see "Changes dependent on distance"
 
 	// additional Meta Data
-	obj = "objNull";
+	// obj = "objNull";
 };
 
 class CVO_PE_Dust_High : CVO_PE_Default
@@ -109,13 +109,13 @@ class CVO_PE_Dust_High : CVO_PE_Default
     timerPeriod = 1;
     lifeTime = 40;
 
-    position[] = {0, 0, 1.5};
-    moveVelocity[] =  {1,1,0};
+    position[] = {0, 0, 5};
+    moveVelocity[] =  {3,3,5};
 
     rotationVelocity = 3;
-    weight = 11;
-    volume = 7.9;
-    rubbing = 0.0015;
+    weight = 1.10;
+    volume = 0.85;
+    rubbing = 0.001;
 
     size[] = {0,5,10,20,10,5,0};
 
@@ -153,13 +153,25 @@ class CVO_PE_Dust_High : CVO_PE_Default
 
 	// setParticleCircle
    	circleRadius = 35;
-	circleVelocity[] = {-3, -3, 0};
+	circleVelocity[] = {-3, -3, 2};
 
 	// setDropInterval
 	interval = 0.01;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 };
+
+
+class CVO_PE_Dust_High_50 : CVO_PE_Dust_High
+{
+   	circleRadius = 50;
+};
+
+class CVO_PE_Dust_High_35 : CVO_PE_Dust_High
+{
+   	circleRadius = 35;
+};
+
 
 
 class CVO_PE_Dust_Low : CVO_PE_Dust_High 
