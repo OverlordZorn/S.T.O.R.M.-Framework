@@ -28,28 +28,31 @@ class CfgPatches {
 
 };
 
+
+
+
 #include "Cfg\CVO_StormPresets.hpp"
 #include "Cfg\CVO_PP_Effects.hpp"
+#include "Cfg\CVO_AI_SubSkills.hpp"
+
+class CfgCloudlets {
+	#include "Cfg\CVO_PE_ParticleEffects.hpp"
+};
 
 class CVO_Weather_Effects
 {
 	class CVO_Weather_Presets
 	{
-		#include "Cfg\CVO_WeatherPresets.hpp"
+		#include "Cfg\CVO_WE_WeatherPresets.hpp"
 	};
 
 	class CVO_Rain_Params
 	{
-		#include "Cfg\CVO_RainParams.hpp"
+		#include "Cfg\CVO_WE_RainParams.hpp"
 	};
 };
 
-class CfgCloudlets {
-	#include "Cfg\CVO_ParticleEffects.hpp"
-};
 
-
-#include "Cfg\CVO_SubSkills.hpp"
 
 
 class CfgFunctions
