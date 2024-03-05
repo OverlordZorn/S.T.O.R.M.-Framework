@@ -4,6 +4,7 @@
  * Intensity will be regulated simply by dropInterval (The bigger the number, the less particles)
  * If the same Effect has already been called, it will instead adjust the already existing PE spawner.
  * If _intensityTarget == 0, the function will ether exit in case the spawner doesnt exist already or transition the spawner to 0 intensity and afterwards, the spawner will be deleted.  
+ * If a transition is currently taking place (CVO_Storm_Local_PE_Spawner_array#_x#3), then the funciton will simply fail silently.
  *
  * Arguments:
  * 0: _EffectName           <STRING> CfgCloudlet Classname of the desired Particle Effect. 
@@ -53,9 +54,9 @@ if ( _effectName isEqualTo "CLEANUP")  exitWith {
     } forEach CVO_Storm_Local_PE_Spawner_array;
 };
 
-if ( _effectName isEqualTo "")  exitWith {};
-if (_intensityTarget < 0     )  exitWith {};
-if (_duration    isEqualTo  0)  exitWith {};
+if ( _effectName isEqualTo "")  exitWith {false};
+if (_intensityTarget < 0     )  exitWith {false};
+if (_duration    isEqualTo  0)  exitWith {false};
 
 if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
     CVO_Storm_Local_PE_Spawner_array = [];
@@ -132,12 +133,17 @@ if (_index == -1) then {
     _spawner = createVehicleLocal ["#particlesource", [0,0,0]];
     _spawner setParticleClass _effectName;
 
-    CVO_Storm_Local_PE_Spawner_array pushback [_spawner, _effectName, _intensityTarget ];
+    _isTransitioning = true;
+    CVO_Storm_Local_PE_Spawner_array pushback [_spawner, _effectName, _intensityTarget,_isTransitioning];
 
 } else {
     _spawnerArray = CVO_Storm_Local_PE_Spawner_array select _index;
+
+    if (_spawnerArray#3) exitWith {false}; // exits when transition of this PE is already in progress.    
+    
     _spawner = _spawnerArray#0; 
     _intensityStart = _spawnerArray#2;
+    _spawnerArray set [3, true];
     _dropIntervalStart = linearConversion [0, 1, _intensityTarget, DROP_INTERVAL_MIN, _dropIntervalMax, true];
 };
 
@@ -156,25 +162,32 @@ private _endTime = _startTime + _duration;
 
 
 //// params inside the pfEH
-private _parameters = [ _spawner, _startTime, _endTime, _dropIntervalStart, _dropIntervalTarget, _intensityTarget  ];
+private _parameters = [ _spawner, _startTime, _endTime, _dropIntervalStart, _dropIntervalTarget, _intensityTarget ];
 
 private _codeToRun = {
-    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget"  ];
+    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget" ];
     _drop = linearConversion [ _startTime, _endTime, time, _dropIntervalStart, _dropIntervalTarget ];
     _spawner setDropInterval _drop;
 }; 
 
 private _exitCode = {   
-    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget"  ];
+    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget" ];
     diag_log "Transition pfEH Exit";
+
+
+    private _index = CVO_Storm_Local_PE_Spawner_array findIf { _x#0 isEqualTo _spawner };
+
+    (CVO_Storm_Local_PE_Spawner_array select _index) set [3, false];
+
+
     _spawner setDropInterval  _dropIntervalTarget; 
     if ( _intensityTarget isEqualTo 0) then {
 
         diag_log "Transition pfEH Exit - Intensity == 0 -> Spawner Deleted";
-        CVO_Storm_Local_PE_Spawner_array deleteAt (CVO_Storm_Local_PE_Spawner_array findIf {_x#0 isEqualTo _spawner});   
+        CVO_Storm_Local_PE_Spawner_array deleteAt _index;   
         deleteVehicle _spawner;
 
-        // 
+
         if ( count CVO_Storm_Local_PE_Spawner_array == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then {
             CVO_particle_isActive = false;
         };
