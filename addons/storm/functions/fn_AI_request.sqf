@@ -76,13 +76,13 @@ private _codeToRun  = {
       
     } forEach _target_mod_map;
 
-    [_current_mod_map, (entities [["Man"], [], true, true])] call CVO_STORM_fnc_AI_setSkill_recursive;
+    [_current_mod_map, (entities [["CAManBase"], [], true, true])] call CVO_STORM_fnc_AI_setSkill_recursive;
 
 };
 
 private _exitCode   = {
     diag_log "[CVO](debug)(fn_AI_request) Exit of PFEH - final adjustment of skill at the end of the transition ";
-    [_this#2, (entities [["Man"], [], true, true])] call CVO_STORM_fnc_AI_setSkill_recursive;
+    [_this#2, (entities [["CAManBase"], [], true, true])] call CVO_STORM_fnc_AI_setSkill_recursive;
 };
 
 private _condition  = { _this#1 > time };
@@ -109,7 +109,7 @@ private _eh_Handle = addMissionEventHandler ["EntityCreated", {
 	params ["_entity"];
     _thisArgs params ["_target_mod_map"];
 
-    if (_entity isKindOf "Man") then {
+    if (_entity isKindOf "CAManBase") then {
 
         diag_log format ['[CVO](debug)(fn_AI_request) Evenhandler: Entitiy Created: %1 - %2', _entity , typeOf _entity ];
         [_target_mod_map, [_entity]] call CVO_STORM_fnc_AI_setSkill_recursive;
@@ -125,7 +125,7 @@ if (_intensity == 0 && missionNamespace getVariable ["CVO_Storm_AI_active", fals
         {
             removeMissionEventHandler ["EntityCreated",_eh_Handle];
             CVO_Storm_AI_active = false;
-            [ ( entities [ ["Man"], [], true, true ] ) ] call fn_AI_cleanup_per_unit_recursive;
+            [ ( entities [ ["CAManBase"], [], true, true ] ) ] call fn_AI_cleanup_per_unit_recursive;
             diag_log "[CVO](debug)(fn_AI_request) EH deleted and Cleanup started"; 
         }, 
         [_eh_Handle], 
