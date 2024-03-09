@@ -11,7 +11,7 @@
  * _pp_effect_JIP_handle  <STRING>
  *
  * Example:
- * ["CVO_Weather_Sandstorm_01", 5, 0.5] call CVO_STORM_fnc_weather_apply;
+ * ["CVO_Weather_Sandstorm_01", 5, 0.5] call CVO_STORM_fnc_weather_request;
  * 
  * Public: No
  */
@@ -37,12 +37,12 @@ if (isNil "CVO_WeatherChanges_active") then {
 // Adjusts Duration to secounds.
 _duration = _duration * 60;
 
-diag_log format ["[CVO][STORM](Weather_Apply) - name: %1 - _duration: %2- _intensity: %3", _weather_preset_name, _duration, _intensity];
+diag_log format ["[CVO][STORM](Weather_request) - name: %1 - _duration: %2- _intensity: %3", _weather_preset_name, _duration, _intensity];
 
 // get hashMap, check if its "false", if not, store _hashmap
 private _hashMap  = [_weather_preset_name] call cvo_storm_fnc_weather_get_WeatherPreset_as_Hash;
-if (_hashMap isEqualTo false) exitWith {   diag_log format ["[CVO][STORM](Weather_Apply)(Error) - get_WeatherPreset_as_Hash returned False: %1", _hashMap]; };
-diag_log format ["[CVO][STORM](Weather_Apply) - hashmap: %1", _hashMap];
+if (_hashMap isEqualTo false) exitWith {   diag_log format ["[CVO][STORM](Weather_request)(Error) - get_WeatherPreset_as_Hash returned False: %1", _hashMap]; };
+diag_log format ["[CVO][STORM](Weather_request) - hashmap: %1", _hashMap];
 
 
 CVO_Storm_previous_weather_hashmap = createHashMap;
@@ -68,7 +68,7 @@ if ((_hashMap get "change_overcast") > 0) then {
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["overcast", overcast];
 
-//   diag_log format ["[CVO][STORM](Weather_Apply) - overcast_value: %1", _hashMap get "overcast_value"];
+//   diag_log format ["[CVO][STORM](Weather_request) - overcast_value: %1", _hashMap get "overcast_value"];
 
    // apply new
    _value_overcast = linearConversion [   0,    1, _intensity, 0, (_hashMap get "overcast_value"), true];
@@ -207,7 +207,7 @@ if ((_hashMap get "change_rainParams") > 0) then {
       // Save Current
       CVO_Storm_previous_weather_hashmap set ["rain", rain];
 
-      diag_log format ["[CVO][STORM](Weather_Apply) reee - _hashMap get ""rain_value"": %1 - _duration: %2- _intensity: %3", (_hashMap get "rain_value"), _duration, _intensity];
+      diag_log format ["[CVO][STORM](Weather_request) reee - _hashMap get ""rain_value"": %1 - _duration: %2- _intensity: %3", (_hashMap get "rain_value"), _duration, _intensity];
 
       // apply Intensity
       _value = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true];
