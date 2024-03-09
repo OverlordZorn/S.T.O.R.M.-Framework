@@ -7,7 +7,7 @@
  *
  * Return Value:
  * [_weatherPresetMap, _properties]
- *          _weatherPresetMap  <HASHMAP> Hashmap of the Weather Preset
+ *          _weatherPresetMap  <HASHMAP> Hashmap of the Weather Preset 
  *          _properties        <ARRAY> Array of all the properties as Strings
  * Example:
  * ["CVO_Weather_Default"] call cvo_storm_fnc_weather_get_WeatherPreset_as_Hash;
