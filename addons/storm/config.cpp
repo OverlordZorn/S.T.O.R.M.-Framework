@@ -28,9 +28,6 @@ class CfgPatches {
 
 };
 
-
-
-
 #include "Cfg\CVO_StormPresets.hpp"
 #include "Cfg\CVO_PP_Effects.hpp"
 #include "Cfg\CVO_AI_SubSkills.hpp"
@@ -59,20 +56,28 @@ class CfgFunctions
 {
 	class CVO_Storm            // Tag
 	{
+		class common   // Category
+		{
+			file = "z\cvo_storm\addons\storm\functions";
+
+			class common_hash_from_config {};
+		};
+		
 		class PostProcessing   // Category
 		{
 			file = "z\cvo_storm\addons\storm\functions";
 
-			class ppEffect_apply {};
+			class ppEffect_request {};
+			class ppEffect_remote {};
 			class ppEffect_get_from_config {};
 			class ppEffect_convert_intensity {};
-			class ppEffect_remote {};
 		};
+		
 		class WeatherSettings   // Category
 		{
 			file = "z\cvo_storm\addons\storm\functions";
 
-			class weather_apply {};
+			class weather_request {};
 			class weather_getAvgASL {};
 			class weather_get_WeatherPreset_as_Hash {};
 			class weather_get_rainParams_as_Array {};
@@ -80,12 +85,22 @@ class CfgFunctions
 			class weather_setFog_recursive_continous {};
 
 		};
+		
 		class ParticleEffects   // Category
 		{
 			file = "z\cvo_storm\addons\storm\functions";
 
+			class particle_request {};
 			class particle_remote {};
-			class particle_apply {};
+		};
+
+		class AI_Skills   // Category
+		{
+			file = "z\cvo_storm\addons\storm\functions";
+
+			class AI_request {};
+			class AI_setSkill_recursive {};
+			class AI_cleanup_recursive {};
 		};
 	}; 
 };
