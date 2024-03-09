@@ -13,7 +13,7 @@
  * Note: 
  *
  * Example:
- * [_storm_preset_name, _duration, _intensity] call cvo_storm_fnc_storm_apply;
+ * [_storm_preset_name, _duration, _intensity] call cvo_storm_fnc_storm_request;
  * 
  * Public: No
  */
