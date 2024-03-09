@@ -11,7 +11,7 @@
  * _pe_effect_JIP_handle  <STRING>
  *
  * Example:
- * ["CVO_PE_Default", 5, 0.5] call cvo_storm_fnc_particle_apply;
+ * ["CVO_PE_Default", 5, 0.5] call cvo_storm_fnc_particle_request;
  * 
  * Public: No
  */
@@ -28,7 +28,7 @@ if (_PE_effect_Name isEqualTo "")         exitWith { false };
 if (_duration isEqualTo 0)                exitWith { false };
 if (_intensity <= 0 )                     exitWith { false };
 
-diag_log format ["[CVO][STORM](Particle_Apply) - name: %1 - _duration: %2- _intensity: %3", _PE_effect_Name, _duration, _intensity];
+diag_log format ["[CVO][STORM](Particle_request) - name: %1 - _duration: %2- _intensity: %3", _PE_effect_Name, _duration, _intensity];
 
 if (isNil "CVO_particle_isActive") then {
    CVO_particle_isActive = true;
@@ -40,8 +40,8 @@ _duration = _duration * 60;
 
 // get particleParams Array, check if its "false": fail or store _array
 private _array  = [_PE_effect_Name] call cvo_storm_fnc_particle_get_params_from_config;
-if (_array isEqualTo false) exitWith {   diag_log format ["[CVO][STORM](Particle_Apply)(Error) - particle_get_params_from_config returned False: %1", _array]; };
-diag_log format ["[CVO][STORM](Weather_Apply) - _array: %1", _array];
+if (_array isEqualTo false) exitWith {   diag_log format ["[CVO][STORM](Particle_request)(Error) - particle_get_params_from_config returned False: %1", _array]; };
+diag_log format ["[CVO][STORM](Weather_request) - _array: %1", _array];
 
 // take the target Array and apply 
 
