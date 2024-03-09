@@ -104,22 +104,22 @@ ppEffectDestroy handle1;
 
 // ################ Blinking ProtoType
 
-["CVO_CC_Radial_Blinking_open", 0.1, 1] call cvo_storm_fnc_ppEffect_apply;
+["CVO_CC_Radial_Blinking_open", 0.1, 1] call cvo_storm_fnc_ppEffect_request;
 sleep 0.1*60;
 systemChat "open established";
 sleep 5;
 systemchat "start squinting";
-["CVO_CC_Radial_Blinking_half", 0.25, 1] call cvo_storm_fnc_ppEffect_apply;
+["CVO_CC_Radial_Blinking_half", 0.25, 1] call cvo_storm_fnc_ppEffect_request;
 sleep 15;
 systemchat "start blinking";
 
-["CVO_CC_Radial_Blinking_closed", (1/120), 1] call cvo_storm_fnc_ppEffect_apply;
+["CVO_CC_Radial_Blinking_closed", (1/120), 1] call cvo_storm_fnc_ppEffect_request;
 sleep 0.5;
-["CVO_CC_Radial_Blinking_half", (1/120), 1] call cvo_storm_fnc_ppEffect_apply;
+["CVO_CC_Radial_Blinking_half", (1/120), 1] call cvo_storm_fnc_ppEffect_request;
 sleep 0.5;
-["CVO_CC_Radial_Blinking_closed", (1/120), 1] call cvo_storm_fnc_ppEffect_apply;
+["CVO_CC_Radial_Blinking_closed", (1/120), 1] call cvo_storm_fnc_ppEffect_request;
 sleep 0.5;
-["CVO_CC_Radial_Blinking_half", (1/120), 1] call cvo_storm_fnc_ppEffect_apply;
+["CVO_CC_Radial_Blinking_half", (1/120), 1] call cvo_storm_fnc_ppEffect_request;
 
 
 
