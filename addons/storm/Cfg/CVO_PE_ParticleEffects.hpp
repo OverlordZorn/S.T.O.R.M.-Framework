@@ -162,6 +162,11 @@ class CVO_PE_Dust_High : CVO_PE_Default
 };
 
 
+class CVO_PE_Dust_High_100 : CVO_PE_Dust_High
+{
+   	circleRadius = 100;
+};
+
 class CVO_PE_Dust_High_50 : CVO_PE_Dust_High
 {
    	circleRadius = 50;
