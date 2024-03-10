@@ -58,8 +58,5 @@ if (count _array_units == 0) exitWith {
 // Hands off the remaining array with same parameters to the next iteration
 diag_log format ["[CVO](debug)(fn_AI_setSkill) [%3] Done: %1 Remaining: %2", _iteration, count _array_units, diag_frameno];
 
-_statement = { 
-    _this call CVO_STORM_fnc_AI_setSkill_recursive; };
-_parameters = [_array_mod, _array_units, _iteration];
-[_statement, _parameters] call CBA_fnc_execNextFrame;
-true
+_statement = {     [{_this call CVO_STORM_fnc_AI_setSkill_recursive; }, _this] call CBA_fnc_execNextFrame;  };
+[_statement, [_array_mod, _array_units, _iteration]] call CBA_fnc_execNextFrame;
