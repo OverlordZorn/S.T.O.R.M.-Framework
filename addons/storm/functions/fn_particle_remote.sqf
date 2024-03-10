@@ -27,6 +27,7 @@
  * Public: No
  */
 
+#define COEF_SPEED_HELI 9
 #define COEF_SPEED 6
 #define COEF_WIND  0.2
 #define PFEH_ATTACH_DELAY 0
@@ -74,8 +75,12 @@ if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
     private _codeToRun = {
         private _player = vehicle ace_player;  
         //_SpeedVector vectorDiff _windVector
-        private _relPosArray = (( velocityModelSpace _player ) vectorMultiply COEF_SPEED) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply COEF_WIND);
-        _relPosArray set [2, (_relPosArray#2) + 1 ];
+        
+        private _isHeli = typeof vehicle player isKindOf "Helicopter";
+        _coef_speed = [COEF_SPEED, COEF_SPEED_HELI] select (_isHeli);
+        private _relPosArray = (( velocityModelSpace _player ) vectorMultiply _coef_speed) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply COEF_WIND);
+        _heliOffset = [0, 10 ] select _isHeli; 
+        _relPosArray set [2, (_relPosArray#2) + 1 + _heliOffset];
         { _x#0 attachTo [_player, _relPosArray]; } forEach CVO_Storm_Local_PE_Spawner_array;
     };
 
