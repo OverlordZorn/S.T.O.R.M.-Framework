@@ -56,7 +56,7 @@ class CVO_Weather_Sandstorm_01 : CVO_Weather_Default
     fog_use_AvgASL_continous = 1;                   // 0 or 1 - consider it a bool
 
     change_wind = 1;                                // 0 or 1 - consider it a bool
-    wind_value = 60;                                // Number - 0.. alot, eventhough +100 values getting cray cray
+    wind_value = 45;                                // Number - 0.. alot, eventhough +100 values getting cray cray
     forceWindEnd = 1;                               // 0 or 1 - consider it a bool
 
     change_gusts = 1;                               // 0 or 1 - consider it a bool
