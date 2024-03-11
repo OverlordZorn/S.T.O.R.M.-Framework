@@ -230,7 +230,7 @@ class CVO_PE_Leafes : CVO_PE_Default
     positionVar[] = {10, 10, 13};
     moveVelocityVar[] = {4, 4, 5};
    	rotationVelocityVar = 2;
-	sizeVar = 5;
+	sizeVar = 4;
     colorVar[] = {0, 0, 0, 0.5};	
     angleVar = 1;
   	bounceOnSurfaceVar = 1;
