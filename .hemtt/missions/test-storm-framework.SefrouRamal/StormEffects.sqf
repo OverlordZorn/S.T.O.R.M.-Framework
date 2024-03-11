@@ -1,5 +1,7 @@
 duration = 1;
-intensity = 1;
+intensity = 0.05 + 0.01 * ceil random 95;
+
+systemChat format ["Intensity set to: %1", intensity];
 
 
 ["CVO_PE_Leafes",               60 *    duration, intensity] call CVO_STORM_fnc_particle_remote;

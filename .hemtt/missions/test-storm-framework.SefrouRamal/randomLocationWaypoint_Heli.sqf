@@ -45,7 +45,7 @@ while {0 isEqualTo count _filteredLocations} do {
     _radius = _radius + 5000;
     _nearLocations = nearestLocations [player,_locationTypes, _radius];
     _filteredLocations = _nearLocations - _previousLocations;
-    systemChat format ['[CVO](debug)(randomLocationWaypoint) _radius: %1 - count _nearLocations: %2 - count _filteredLocations: %3 ', _radius , count _nearLocations ,count _filteredLocations];
+    // systemChat format ['[CVO](debug)(randomLocationWaypoint) _radius: %1 - count _nearLocations: %2 - count _filteredLocations: %3 ', _radius , count _nearLocations ,count _filteredLocations];
 };
 
 _nextLocation = selectRandom _filteredLocations;
@@ -86,44 +86,45 @@ _wp setWaypointPosition [_wpPos, -1];
 
 _wp waypointAttachObject _helperObj;
 
-//_statement ='vehicle this land "GET OUT";';
-//_wp setWaypointStatements ["true", _statement];
+_statement ='vehicle this land "GET OUT";';
+_wp setWaypointStatements ["true", _statement];
 
 
 
 [   { (vehicle (_this#0) distance2D (_this#1)) < 3000 },
     {  vehicle (_this#0) limitSpeed 200; vehicle (_this#0) flyInHeight [50, true];
-        systemChat "Heli - Within 3000 -> 200kph 50m";
+        // systemChat "Heli - Within 3000 -> 200kph 50m";
         diag_log format ['[CVO](debug)(randomLocationWaypoint_Heli) _this#0: %1 - _this#1: %2', _this#0 , _this#1];
 
 
         [   { (vehicle (_this#0) distance2D (_this#1)) < 2000 },
             {  vehicle (_this#0) limitSpeed 150; vehicle (_this#0) flyInHeight [30, true];
-                systemChat "Heli - Within 2000 -> 150kph 30m";
+                // systemChat "Heli - Within 2000 -> 150kph 30m";
                 
             
                 [   { (vehicle (_this#0) distance2D (_this#1)) < 1000 },
                     {  vehicle (_this#0) limitSpeed 100; vehicle (_this#0) flyInHeight [20, true];
-                        systemChat "Heli - Within 1000 -> 100kph 20m";
+                        // systemChat "Heli - Within 1000 -> 100kph 20m";
                         
 
 
                         [   { (vehicle (_this#0) distance2D (_this#1)) < 250 },
                             {  vehicle (_this#0) limitSpeed 50; vehicle (_this#0) flyInHeight [10, true];
-                                systemChat "Heli - Within 50 -> 50kph 10m";
+                                // systemChat "Heli - Within 50 -> 50kph 10m";
                                 
                                     [   { (vehicle (_this#0) distance2D (_this#1)) < 30 },
                                         {  
-                                            systemChat "Heli - Within 30 -> land order";
-
+                                     
                                             [   { (vehicle (_this#0) distance2D (_this#1)) < 5 },
-                                        {  
-                                            systemChat "Heli - Within 5 -> 30s to Take Off";
 
-                                            [{[_this#0] execVM "randomLocationWaypoint_Heli.sqf";}, [_this#0], 30] call CBA_fnc_waitAndExecute;
-                            
-                                        },
-                                        [_this#0, _this#1]] call CBA_fnc_waitUntilAndExecute;
+
+                                            {  
+                                                // systemChat "Heli - Within 5 -> 30s to Take Off";
+
+                                                [{[_this#0] execVM "randomLocationWaypoint_Heli.sqf";}, [_this#0], 30] call CBA_fnc_waitAndExecute;
+                                
+                                            },
+                                            [_this#0, _this#1]] call CBA_fnc_waitUntilAndExecute;
                            
                                         },
                                     [_this#0, _this#1]] call CBA_fnc_waitUntilAndExecute;

@@ -44,7 +44,7 @@ while {0 isEqualTo count _filteredLocations} do {
     _radius = _radius + 1000;
     _nearLocations = nearestLocations [player,_locationTypes, _radius];
     _filteredLocations = _nearLocations - _previousLocations;
-    systemChat format ['[CVO](debug)(randomLocationWaypoint) _radius: %1 - count _nearLocations: %2 - count _filteredLocations: %3 ', _radius , count _nearLocations ,count _filteredLocations];
+    // systemChat format ['[CVO](debug)(randomLocationWaypoint) _radius: %1 - count _nearLocations: %2 - count _filteredLocations: %3 ', _radius , count _nearLocations ,count _filteredLocations];
 };
 
 _nextLocation = selectRandom _filteredLocations;
@@ -87,23 +87,23 @@ _wp waypointAttachObject _helperObj;
 
 [   { (vehicle (_this#0) distance (_this#1)) < 1500 },
     {  vehicle (_this#0) limitSpeed 250; //vehicle (_this#0) flyInHeight [100, false];
-        systemChat "Within 1500 -> 200kph 100m";
+        // systemChat "Within 1500 -> 200kph 100m";
 
         [   { (vehicle (_this#0) distance (_this#1)) < 500 },
             {  vehicle (_this#0) limitSpeed 200; // vehicle (_this#0) flyInHeight [50, true];
-                systemChat "Within 500 -> 150kph 50m";
+                // systemChat "Within 500 -> 150kph 50m";
             
                 [   { (vehicle (_this#0) distance (_this#1)) < 300 },
                     {  vehicle (_this#0) limitSpeed 150; // vehicle (_this#0) flyInHeight [30, true];
-                        systemChat "Within 200 -> 100kph 50m";
+                        // systemChat "Within 200 -> 100kph 50m";
                     
                         [   { (vehicle (_this#0) distance (_this#1)) < 50 },
                             {  vehicle (_this#0) limitSpeed 75; // vehicle (_this#0) flyInHeight [15, true];
-                                systemChat "Within 50 -> 50kph 30m";
+                                // systemChat "Within 50 -> 50kph 30m";
 
                                     [   { (vehicle (_this#0) distance (_this#1)) < 10 },
                                         {  
-                                            systemChat "Within 50 -> 50kph 30m";
+                                            // systemChat "Within 50 -> 50kph 30m";
                                             [{[_this#0] execVM "randomLocationWaypoint_Vehicle.sqf";}, [_this#0], 15] call CBA_fnc_waitAndExecute;
 
 
