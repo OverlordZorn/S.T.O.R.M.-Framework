@@ -94,6 +94,7 @@ class CVO_PE_Default : Default
 
 	// additional Meta Data
 	// obj = "objNull";
+	interval_max = 1;
 };
 
 class CVO_PE_Dust_High : CVO_PE_Default
@@ -158,6 +159,8 @@ class CVO_PE_Dust_High : CVO_PE_Default
 	// setDropInterval
 	interval = 0.01;					    // interval of particle's creation
 	// 0.01+random 0.1
+
+	interval_max = 1;
 
 };
 
