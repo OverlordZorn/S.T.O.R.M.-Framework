@@ -47,8 +47,10 @@ if (_base_Ai_Skill_Hash isEqualTo false) then {
 // set Skill based on _array_mod
 
 
-{   _unit setSkill [_x, (_base_Ai_Skill_Hash get _x) * _y];
-    } forEach _array_mod;
+{   
+    _value = ( _base_Ai_Skill_Hash get _x ) * _y;
+    _unit setSkill [_x, _value];
+} forEach _array_mod;
 
 // Handle Exit of self-calling function
 if (count _array_units == 0) exitWith {
