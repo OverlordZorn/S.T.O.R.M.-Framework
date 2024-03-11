@@ -8,7 +8,7 @@
  * 2: _intensity              <NUMBER> 0..1 Factor of Intensity for the PP Effect 
  *
  * Return Value:
- * none - intended to be remoteExecCall -> returns JIP Handle
+ * none
  *
  * Note: 
  *
@@ -24,4 +24,4 @@
     publicVariable "CVO_Storm_isActive";
  };
 
- 
+ CVO_Storm_JIP_Array = [];
