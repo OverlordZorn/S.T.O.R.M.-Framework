@@ -76,12 +76,17 @@ if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
         private _player = vehicle ace_player;  
         //_SpeedVector vectorDiff _windVector
         
-        private _isHeli = typeof vehicle player isKindOf "Helicopter";
+        private _isHeli = typeof vehicle player isKindOf "Air";
+
         _coef_speed = [COEF_SPEED, COEF_SPEED_HELI] select (_isHeli);
         private _relPosArray = (( velocityModelSpace _player ) vectorMultiply _coef_speed) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply COEF_WIND);
-        _heliOffset = [0, 10 ] select _isHeli; 
-        _relPosArray set [2, (_relPosArray#2) + 1 + _heliOffset];
-        { _x#0 attachTo [_player, _relPosArray]; } forEach CVO_Storm_Local_PE_Spawner_array;
+
+        _relPosArray set [2, (_relPosArray#2) + 1];
+        { 
+            if (_isHeli) then { if (typeOf (_x#0) == "Sign_Arrow_Large_F" ) then {    detach (_x#0) ;   continue    }  };
+           
+            _x#0 attachTo [_player, _relPosArray];
+             } forEach CVO_Storm_Local_PE_Spawner_array;
     };
 
     private _exitCode  = { 
