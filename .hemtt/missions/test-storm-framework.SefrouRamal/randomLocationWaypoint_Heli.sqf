@@ -78,7 +78,7 @@ _wpPos = getPosASL _helperObj;
 
 _wp = _group addWaypoint [(AGLToASL _wpPos), -1];
 
-diag_log format ['[CVO](debug)(randomLocationWaypoint_Heli) _wp: %1 - _wppos: %2 - _helperObj: %3 - _group: %4 - _groupLeader: %5 - _nextLocation: %6 - _pos: %7 - _wpPos: %8', _wp , _wppos ,_helperObj , _group , _groupLeader , _nextLocation , _pos , _wpPos ];
+// diag_log format ['[CVO](debug)(randomLocationWaypoint_Heli) _wp: %1 - _wppos: %2 - _helperObj: %3 - _group: %4 - _groupLeader: %5 - _nextLocation: %6 - _pos: %7 - _wpPos: %8', _wp , _wppos ,_helperObj , _group , _groupLeader , _nextLocation , _pos , _wpPos ];
 
 _wp setWaypointType "MOVE";
 _wp setWaypointPosition [_wpPos, -1];
@@ -94,7 +94,7 @@ _wp setWaypointStatements ["true", _statement];
 [   { (vehicle (_this#0) distance2D (_this#1)) < 3000 },
     {  vehicle (_this#0) limitSpeed 200; vehicle (_this#0) flyInHeight [50, true];
         // systemChat "Heli - Within 3000 -> 200kph 50m";
-        diag_log format ['[CVO](debug)(randomLocationWaypoint_Heli) _this#0: %1 - _this#1: %2', _this#0 , _this#1];
+        // diag_log format ['[CVO](debug)(randomLocationWaypoint_Heli) _this#0: %1 - _this#1: %2', _this#0 , _this#1];
 
 
         [   { (vehicle (_this#0) distance2D (_this#1)) < 2000 },
