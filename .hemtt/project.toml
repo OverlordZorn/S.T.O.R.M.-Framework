@@ -116,3 +116,33 @@ dlc = [
 ]
 optionals = [
 ]
+
+[hemtt.launch.SefrouRamal]
+workshop = [
+    "450814997", # CBA_A3's Workshop ID
+    "463939057", # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+    "2018593688", # ZEN ACE Compat
+    "1613905318", # Emitter 3Ditor
+]
+
+mission = "test-storm-framework.SefrouRamal"
+
+
+parameters = [
+                            #    "C:\\Users\\Dennis Zorn\\Documents\\Arma 3 - Other Profiles\\Overlord%20Zorn\\missions\\test-mission\\test-storm-framework.stratis\\mission.sqm",
+    "-skipIntro",           # These parameters are passed to the Arma 3 executable
+    "-noSplash",            # They do not need to be added to your list
+    "-showScriptErrors",    # You can add additional parameters here
+    "-debug",
+    "-filePatching",
+    "-window",
+    "-noPause",
+    "-noPauseAudio",
+]
+dlc = [
+    "ws"
+]
+optionals = [
+]
