@@ -92,7 +92,7 @@ if ((_hashMap get "change_wind") > 0) then {
       default { false};
    };
    
-   [_target_magnitude, _duration, _forceWindEnd] call cvo_storm_fnc_weather_setWind_recursive;
+   [_target_magnitude, _duration, _forceWindEnd] call cvo_storm_fnc_weather_setWind;
 };
 
 // ##################################################
