@@ -59,7 +59,7 @@ class CVO_Weather_Sandstorm_01 : CVO_Weather_Default
     wind_value = 45;                                // Number - 0.. alot, eventhough +100 values getting cray cray
     forceWindEnd = 1;                               // 0 or 1 - consider it a bool
 
-    change_gusts = 1;                               // 0 or 1 - consider it a bool
+    change_gusts = 0;                               // 0 or 1 - consider it a bool
     gusts_value = 1;                                // 0..1   - wind Gusts, changes in windspeed
 
     change_waves = 1;                               // 0 or 1 - consider it a bool
