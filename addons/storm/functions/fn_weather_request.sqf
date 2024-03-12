@@ -37,13 +37,15 @@ if (isNil "CVO_WeatherChanges_active") then {
    CVO_WeatherChanges_active = true;
 };
 
-diag_log format ["[CVO][STORM](Weather_request) - name: %1 - _duration: %2- _intensity: %3", _weather_preset_name, _duration, _intensity];
+
+
 
 // get hashMap, check if its "false", if not, store _hashmap
 private _hashMap  = [_weather_preset_name] call cvo_storm_fnc_weather_get_WeatherPreset_as_Hash;
 if (_hashMap isEqualTo false) exitWith {   diag_log format ["[CVO][STORM](Weather_request)(Error) - get_WeatherPreset_as_Hash returned False: %1", _hashMap]; };
-diag_log format ["[CVO][STORM](Weather_request) - hashmap: %1", _hashMap];
+// Diag_log format ["[CVO][STORM](Weather_request) - hashmap: %1", _hashMap];
 
+diag_log format ["[CVO][STORM](Weather_request) Weather sucessfully Requested: %1 - _duration: %2 - _intensity: %3", _weather_preset_name, _duration, _intensity];
 
 CVO_Storm_previous_weather_hashmap = createHashMap;
 
@@ -59,13 +61,13 @@ CVO_Storm_previous_weather_hashmap = createHashMap;
 0 setGusts        gusts;
 0 setWaves        waves;
 forceWeatherChange;
-diag_log "[CVO](debug)(fn_weather_request) Freeze Current Weather Done";
+// Diag_log "[CVO](debug)(fn_weather_request) Freeze Current Weather Done";
 
 // ##########################################################
 // ################### OVERCAST ############################# 
 
 if ((_hashMap get "change_overcast") > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Overcast Requested";
+   Diag_log "[CVO](debug)(fn_weather_request) Set Overcast Requested";
 
 
    // Save Current
@@ -77,7 +79,7 @@ if ((_hashMap get "change_overcast") > 0) then {
    _value_overcast = linearConversion [   0,    1, _intensity, 0, (_hashMap get "overcast_value"), true];
    _duration setOvercast _value_overcast;
 
-   diag_log "[CVO](debug)(fn_weather_request) Set Overcast Done";
+   // Diag_log "[CVO](debug)(fn_weather_request) Set Overcast Done";
 };
 
 // ##################################################
@@ -92,8 +94,9 @@ if ((_hashMap get "change_wind") > 0) then {
    diag_log format ['[CVO](debug)(fn_weather_request) CVO_Storm_previous_weather_hashmap: %1 - "": %2 - "": %3 - "": %4 - "": %5 - "": %6 - "": %7 - "": %8', CVO_Storm_previous_weather_hashmap , "" ,"" , "" , "" , "" , "" , "" ];
 
    // get Value + Intensity
-   _target_magnitude = _hashMap get "wind_value";
-   diag_log format ['[CVO](debug)(fn_weather_request) _target_magnitude: %1 - "": %2 - "": %3 - "": %4 - "": %5 - "": %6 - "": %7 - "": %8', _target_magnitude , "" ,"" , "" , "" , "" , "" , "" ];
+   _target_magnitude = linearConversion[0,1,_intensity,0,_hashMap get "wind_value",true];
+
+   diag_log format ['[CVO](debug)(fn_weather_request) _target_magnitude: %1', _target_magnitude];
    // Start "recursive", finite  transition.
 
    _forceWindEnd = switch (_hashmap get "forceWindEnd") do {
@@ -109,7 +112,7 @@ if ((_hashMap get "change_wind") > 0) then {
 // ################### Gusts ######################## 
 
 if ((_hashMap get "change_gusts") > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Gust Done";
+   Diag_log "[CVO](debug)(fn_weather_request) Set Gust Done";
 
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["gusts", gusts];
@@ -118,7 +121,7 @@ if ((_hashMap get "change_gusts") > 0) then {
    _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "gusts_value", true];
    // execute Changes
    _duration setGusts _value;
-   diag_log "[CVO](debug)(fn_weather_request) Set Gust Done";
+   // Diag_log "[CVO](debug)(fn_weather_request) Set Gust Done";
 };
 
 
@@ -126,7 +129,7 @@ if ((_hashMap get "change_gusts") > 0) then {
 // ################### Waves ######################## 
 
 if ((_hashMap get "change_waves") > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Waves Requested";
+   Diag_log "[CVO](debug)(fn_weather_request) Set Waves Requested";
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["waves", waves];
 
@@ -134,7 +137,7 @@ if ((_hashMap get "change_waves") > 0) then {
    _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "waves_value", true];
    // execute Changes
    _duration setWaves _value;
-   diag_log "[CVO](debug)(fn_weather_request) Set Waves Done ";
+   // Diag_log "[CVO](debug)(fn_weather_request) Set Waves Done ";
 };
 
 
@@ -145,7 +148,7 @@ if ((_hashMap get "change_waves") > 0) then {
 
 
 if ((_hashMap get "change_lightnings") > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Lightning Requested";
+   Diag_log "[CVO](debug)(fn_weather_request) Set Lightning Requested";
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["lightnings", lightnings];
 
@@ -153,7 +156,7 @@ if ((_hashMap get "change_lightnings") > 0) then {
    _value = linearConversion [   0,    1, _intensity, 0, _hashMap get "lightnings_value", true];
    // execute Changes
    _duration setLightnings _value;
-   diag_log "[CVO](debug)(fn_weather_request) Set Lightning Done ";
+   // Diag_log "[CVO](debug)(fn_weather_request) Set Lightning Done ";
 };
 
 
@@ -161,7 +164,7 @@ if ((_hashMap get "change_lightnings") > 0) then {
 // ################### fog params ################### 
 
 if ((_hashMap get "change_fog") > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Fog Requested";
+   Diag_log "[CVO](debug)(fn_weather_request) Set Fog Requested";
    // Save Current
    CVO_Storm_previous_weather_hashmap set ["fogParams", fogParams];
 
@@ -177,14 +180,17 @@ if ((_hashMap get "change_fog") > 0) then {
 
    // Execute
    if (isNil "CVO_Storm_FogParams_target") then {
+
+      // Diag_log "[CVO](debug)(fn_weather_request) fog params - CVO_Storm_FogParams_target isNil! ";
       // Establish new setFog-loop
       CVO_Storm_FogParams_target = _fogParams;
       ["CVO_Storm_FogParams_target", _duration ] call cvo_storm_fnc_weather_setFog_recursive_continous;
    } else {
       // update already existing setFog-loop
       CVO_Storm_FogParams_target = _fogParams;
+      // Diag_log "[CVO](debug)(fn_weather_request) fog params - CVO_Storm_FogParams_target is not Nil! ";
    };
-   diag_log "[CVO](debug)(fn_weather_request) Set Fog Done ";
+   // Diag_log "[CVO](debug)(fn_weather_request) Set Fog Done ";
 };
 
 
@@ -195,7 +201,7 @@ if ((_hashMap get "change_fog") > 0) then {
 // [_rainParams] remoteExecCall ["BIS_fnc_setRain",2]
 
 if ((_hashMap get "change_rainParams") > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Rain Requested - RainParams: true ";
+   Diag_log "[CVO](debug)(fn_weather_request) Set Rain Requested - RainParams: true ";
    // Store previous rain Parms
    CVO_Storm_previous_weather_hashmap set ["RainParams", rainParams];
 
@@ -219,20 +225,23 @@ if ((_hashMap get "change_rainParams") > 0) then {
          (_duration * 1/3) setRain _value;
       }, [_duration,_valueRain],    _duration * 2/3] call CBA_fnc_waitAndExecute;
    };
-   diag_log "[CVO](debug)(fn_weather_request) Set Rain Done - RainParams: true ";
+   // Diag_log "[CVO](debug)(fn_weather_request) Set Rain Done - RainParams: true ";
 } else {
-   diag_log "[CVO](debug)(fn_weather_request) Set Rain Requested";
+   Diag_log "[CVO](debug)(fn_weather_request) Set Rain Requested";
    // Set Rain only
    if ((_hashMap get "change_rainValue") > 0) then {
       // Save Current
       CVO_Storm_previous_weather_hashmap set ["rain", rain];
 
-      diag_log format ["[CVO][STORM](Weather_request) reee - _hashMap get ""rain_value"": %1 - _duration: %2- _intensity: %3", (_hashMap get "rain_value"), _duration, _intensity];
+      // Diag_log format ["[CVO][STORM](Weather_request) reee - _hashMap get ""rain_value"": %1 - _duration: %2- _intensity: %3", (_hashMap get "rain_value"), _duration, _intensity];
 
       // apply Intensity
       _value = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true];
       // execute Changes
       _duration setRain _value;
-   diag_log "[CVO](debug)(fn_weather_request) Set Rain Done";
+   // Diag_log "[CVO](debug)(fn_weather_request) Set Rain Done";
    };
 };
+
+// ##########################################################
+// ##########################################################

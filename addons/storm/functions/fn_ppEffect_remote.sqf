@@ -44,12 +44,12 @@ if (isNil "CVO_Storm_Active_PP_Effects_Array") then {
 // missionNameSpace has only lowercase letters
 private _varName = toLower (["CVO_Storm_",_ppEffectType,"_",_layer,"_PP_Effect_Handle"] joinString "");
 
-diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _varName : %1", _varName];
+// diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _varName : %1", _varName];
 
 // Creates the custom Variable if it doesnt exist yet
 _existsVar = missionNamespace getVariable [_varName, false];
 
-diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _existsVar : %1", _existsVar];
+// diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _existsVar : %1", _existsVar];
 
 if (_existsVar isEqualto false) then {
     missionNamespace setVariable [_varName, (ppEffectCreate [_ppEffectType, _ppEffectPrio]) ];

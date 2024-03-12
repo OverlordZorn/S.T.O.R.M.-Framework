@@ -16,7 +16,7 @@
  * Public: No
  */
 
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - Start : %1", _this];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - Start : %1", _this];
 
  params [
     ["_PP_effect_Name", "", [""]],
@@ -71,7 +71,7 @@ if (configName inheritsFrom _configPath isEqualTo "") then {
 };
 
 
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - _resultArray: %1", _resultArray];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - _resultArray: %1", _resultArray];
 
 _jip_handle_string = ["CVO_STORM",_ppEffectType, _layer,"PP_Effect_JIP_Handle" ] joinString "_";
 
@@ -81,7 +81,8 @@ if (isNil "_pp_effect_JIP_handle") exitWith {
     diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Not Successful: %1", _PP_effect_Name];
 };
 
-diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1 - _duration %2 - _intensity %3", _PP_effect_Name, _duration, _intensity];
+// diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1 - _duration %2 - _intensity %3", _PP_effect_Name, _duration, _intensity];
+// diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1", _PP_effect_Name];
 
 if (isNil "CVO_Storm_Active_JIP_Array") then {
     CVO_Storm_Active_JIP_Array = [];

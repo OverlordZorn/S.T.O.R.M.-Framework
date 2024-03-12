@@ -19,11 +19,11 @@
  * Public: No
  */
 
- params [
+params [
     ["_effectArray",    [],     [[]]],
     ["_intensity",       1,      [0]],
     ["_baseArray",      [],     [[]]]
- ];
+];
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _this];
 
@@ -75,6 +75,6 @@ private _resultArray = [];
 
 } forEach _effectArray;
 
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Final result : %1", _resultArray];
+//diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Final result : %1", _resultArray];
 
 _resultArray

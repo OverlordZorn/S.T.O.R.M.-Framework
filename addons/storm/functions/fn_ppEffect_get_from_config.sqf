@@ -39,7 +39,7 @@ private _ppEffectType = getText (_configPath >> "ppEffectType");
 
 // Get Array of Properties
 /*
- * Wont work because inherited properties will be added in the end but we need strict order, therefore handmade arrays
+ * The following Wont work because inherited properties will be added in the end but we need strict order, therefore handmade arrays
  * private _properties = (configProperties [_configPath , "true", true] apply { configName _x });
  * 
  * Instead: Autogenerate Array based on default class
@@ -60,6 +60,6 @@ private _effectArray = [];
 } forEach _properties;
 
 
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_get_from_config) - success : %1 %2",_pp_effect_name, _effectArray];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_get_from_config) - success : %1 %2",_pp_effect_name, _effectArray];
 
 _effectArray

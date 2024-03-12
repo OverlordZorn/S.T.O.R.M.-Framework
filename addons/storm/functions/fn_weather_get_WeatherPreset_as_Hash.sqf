@@ -41,6 +41,6 @@ private _weatherPresetMap = createHashMap;
     _weatherPresetMap set [_x,_value];
 } forEach _properties;
 
-diag_log format ["[CVO][STORM](LOG)(fnc_weather_get_WeatherPreset_as_Hash) - success : %1",_weatherPresetMap];
+// diag_log format ["[CVO][STORM](LOG)(fnc_weather_get_WeatherPreset_as_Hash) - success : %1",_weatherPresetMap];
 
 _weatherPresetMap
