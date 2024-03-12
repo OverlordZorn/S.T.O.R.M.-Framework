@@ -96,31 +96,23 @@ _wp setWaypointStatements ["true", _statement];
         // systemChat "Heli - Within 3000 -> 200kph 50m";
         // diag_log format ['[CVO](debug)(randomLocationWaypoint_Heli) _this#0: %1 - _this#1: %2', _this#0 , _this#1];
 
-
         [   { (vehicle (_this#0) distance2D (_this#1)) < 2000 },
             {  vehicle (_this#0) limitSpeed 150; vehicle (_this#0) flyInHeight [30, true];
                 // systemChat "Heli - Within 2000 -> 150kph 30m";
-                
-            
+           
                 [   { (vehicle (_this#0) distance2D (_this#1)) < 1000 },
                     {  vehicle (_this#0) limitSpeed 100; vehicle (_this#0) flyInHeight [20, true];
                         // systemChat "Heli - Within 1000 -> 100kph 20m";
                         
-
-
                         [   { (vehicle (_this#0) distance2D (_this#1)) < 250 },
                             {  vehicle (_this#0) limitSpeed 50; vehicle (_this#0) flyInHeight [10, true];
                                 // systemChat "Heli - Within 50 -> 50kph 10m";
                                 
                                     [   { (vehicle (_this#0) distance2D (_this#1)) < 30 },
                                         {  
-                                     
                                             [   { (vehicle (_this#0) distance2D (_this#1)) < 5 },
-
-
                                             {  
                                                 // systemChat "Heli - Within 5 -> 30s to Take Off";
-
                                                 [{[_this#0] execVM "randomLocationWaypoint_Heli.sqf";}, [_this#0], 30] call CBA_fnc_waitAndExecute;
                                 
                                             },

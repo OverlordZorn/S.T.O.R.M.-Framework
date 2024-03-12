@@ -101,10 +101,10 @@ _wp waypointAttachObject _helperObj;
                             {  vehicle (_this#0) limitSpeed 75; // vehicle (_this#0) flyInHeight [15, true];
                                 // systemChat "Within 50 -> 50kph 30m";
 
-                                    [   { (vehicle (_this#0) distance (_this#1)) < 10 },
+                                    [   { (vehicle (_this#0) distance (_this#1)) < 50 },
                                         {  
                                             // systemChat "Within 50 -> 50kph 30m";
-                                            [{[_this#0] execVM "randomLocationWaypoint_Vehicle.sqf";}, [_this#0], 15] call CBA_fnc_waitAndExecute;
+                                            [{[_this#0] execVM "randomLocationWaypoint_Vehicle.sqf";}, [_this#0], 30] call CBA_fnc_waitAndExecute;
 
 
                             
