@@ -60,7 +60,7 @@ CVO_Storm_previous_weather_hashmap = createHashMap;
 0 setRain         rain;
 0 setLightnings   lightnings;
 0 setFog          fogParams;
-  setWind         (wind set [2,true]);
+  setWind         [wind#0, wind#1, true];
 0 setGusts        gusts;
 0 setWaves        waves;
 forceWeatherChange;
