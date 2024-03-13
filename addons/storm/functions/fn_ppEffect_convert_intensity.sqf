@@ -41,9 +41,14 @@ private _resultArray = [];
         private _subResultArray = [];
 
         {
+            private "_value"; 
             _target = _x;
             _base   = _subArrayBase select _forEachIndex;
-            _value = linearConversion [0,1,_intensity, _base,_target,true];
+            if (_base isEqualTo "false") then {
+                _value = target;
+            } else {
+                _value = linearConversion [0,1,_intensity, _base,_target,true];
+            };
     
             // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _value : %1", _value];
 
@@ -58,10 +63,16 @@ private _resultArray = [];
 
         // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _x != array : %1", _x];
 
+        private "_value";
+
         _target = _x;
         _base   = _baseArray select _forEachIndex;
 
-        _value = linearConversion [0,1,_intensity, _base,_target,true];
+        if (_base isEqualTo "false") then {
+            _value = target;
+        } else {
+            _value = linearConversion [0,1,_intensity, _base,_target,true];
+        };
 
         // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _value : %1", _value];
 

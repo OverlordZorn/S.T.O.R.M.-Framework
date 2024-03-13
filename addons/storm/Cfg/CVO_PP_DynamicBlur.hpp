@@ -5,6 +5,8 @@ class CVO_DB_Default
 	layer = 0;
 
 	blurriness =   0.00;		// 0..
+	
+	baseArray[] = {0};
 };
 
 class CVO_DB_10 : CVO_DB_Default

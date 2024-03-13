@@ -58,10 +58,10 @@ if (configName inheritsFrom _configPath isEqualTo "") then {
 } else {
 
     // Non Default Class -> Apply Intensity based of _effectArray and _baseArray (Parent: Default)
-    private   _baseArray = [configName inheritsFrom _configPath] call cvo_storm_fnc_ppEffect_get_from_config;
+    private   _baseArray = getArray (_configPath >> _pp_effect_Name >> "baseArray");
 
     if (_effectArray isEqualTo false) exitWith {false};
-    if (  _baseArray isEqualTo false) exitWith {false};
+    if !( _baseArray isEqualType [] ) exitWith {false};
 
     //  diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - _effectArray: %1 // %2", _effectArray, count _effectArray];
     //  diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) -   _baseArray: %1 // %2", _baseArray, count _baseArray];

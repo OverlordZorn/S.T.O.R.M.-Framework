@@ -46,9 +46,9 @@ private _ppEffectType = getText (_configPath >> "ppEffectType");
 */
 
 private _properties = switch (_ppEffectType) do {
-    case "ColorCorrections": {(configProperties [(configFile >> "CVO_PP_Effects" >> "CVO_CC_Default" ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer"]};
-    case "FilmGrain":        {(configProperties [(configFile >> "CVO_PP_Effects" >> "CVO_FG_Default" ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer"]};
-    case "DynamicBlur":      {(configProperties [(configFile >> "CVO_PP_Effects" >> "CVO_DB_Default" ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer"]};
+    case "ColorCorrections": {(configProperties [(configFile >> "CVO_PP_Effects" >> "CVO_CC_Default" ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer", "baseArray"]};
+    case "FilmGrain":        {(configProperties [(configFile >> "CVO_PP_Effects" >> "CVO_FG_Default" ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer", "baseArray"]};
+    case "DynamicBlur":      {(configProperties [(configFile >> "CVO_PP_Effects" >> "CVO_DB_Default" ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer", "baseArray"]};
 };
 
 private _effectArray = [];
