@@ -89,8 +89,8 @@ private _resultArray = [];
 
 } forEach _effectArray;
 
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _effectArray : %1", _effectArray];
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) -   _baseArray : %1", _baseArray];
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Final result : %1", _resultArray];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _effectArray : %1", _effectArray];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) -   _baseArray : %1", _baseArray];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Final result : %1", _resultArray];
 
 _resultArray
