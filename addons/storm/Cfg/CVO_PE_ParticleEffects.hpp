@@ -94,7 +94,7 @@ class CVO_PE_Default : Default
 
 	// additional Meta Data
 	// obj = "objNull";
-	interval_max = 1;
+	interval_min = 5;
 };
 
 class CVO_PE_Dust_High : CVO_PE_Default
@@ -118,15 +118,15 @@ class CVO_PE_Dust_High : CVO_PE_Default
     volume = 0.85;
     rubbing = 0.001;
 
-    size[] = {0,5,10,20,10,5,0};
+    size[] = {0,3,7,10,7,3,0};
 
     color[] = {
 		{0.65, 0.5, 0.5, 0.0}, 
-		{0.65, 0.6, 0.5, 0.2}, 
-		{1,   0.95, 0.8, 0.5},
-		{1,   0.95, 0.8, 0.7},
-		{1,   0.95, 0.8, 0.5},
-		{0.65, 0.6, 0.5, 0.3}, 
+		{0.65, 0.6, 0.5, 0.1}, 
+		{1,   0.95, 0.8, 0.2},
+		{1,   0.95, 0.8, 0.3},
+		{1,   0.95, 0.8, 0.2},
+		{0.65, 0.6, 0.5, 0.1}, 
 		{0.65, 0.6, 0.5, 0.0}
 	};
 
