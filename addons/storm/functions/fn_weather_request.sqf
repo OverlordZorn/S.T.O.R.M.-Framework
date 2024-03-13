@@ -33,6 +33,9 @@ _duration = _duration * 60;
 _intensity = _intensity max 0;
 _intensity = _intensity min 1;
 
+
+if ( missionNamespace getVariable ["CVO_WeatherChanges_active", false] ) exitWith { diag_log "[CVO](STORM)(fn_weather_request) Request failed - Weather Transition already taking place";};
+
 if (isNil "CVO_WeatherChanges_active") then {
    CVO_WeatherChanges_active = true;
 };
