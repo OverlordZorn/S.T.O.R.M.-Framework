@@ -25,9 +25,12 @@ params [
     ["_baseArray",      [],     [[]]]
 ];
 
-// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _this];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _effectArray];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _baseArray];
+// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _intensity];
 
-if !(_effectArray isEqualTypeArray _baseArray) exitWith {false};
+
+//if !(_effectArray isEqualTypeArray _baseArray) exitWith {false}; // will trigger with the new baseArray approach
 
 private _resultArray = [];
 
@@ -45,7 +48,7 @@ private _resultArray = [];
             _target = _x;
             _base   = _subArrayBase select _forEachIndex;
             if (_base isEqualTo "false") then {
-                _value = target;
+                _value = _target;
             } else {
                 _value = linearConversion [0,1,_intensity, _base,_target,true];
             };
@@ -69,7 +72,7 @@ private _resultArray = [];
         _base   = _baseArray select _forEachIndex;
 
         if (_base isEqualTo "false") then {
-            _value = target;
+            _value = _target;
         } else {
             _value = linearConversion [0,1,_intensity, _base,_target,true];
         };
@@ -86,6 +89,8 @@ private _resultArray = [];
 
 } forEach _effectArray;
 
-//diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Final result : %1", _resultArray];
+diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _effectArray : %1", _effectArray];
+diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) -   _baseArray : %1", _baseArray];
+diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Final result : %1", _resultArray];
 
 _resultArray
