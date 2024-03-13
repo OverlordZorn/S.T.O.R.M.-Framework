@@ -24,6 +24,8 @@
     ["_intensity",      0, [0]]
  ];
 
+// diag_log format ['[CVO](debug)(fn_ppEffect_request) Starting Request: _pp_effect_name: %1 - _duration: %2 - _intensity: %3', _pp_effect_name , _duration ,_intensity];
+
 if (_PP_effect_Name isEqualTo "") exitWith { diag_log "[CVO](debug)(fn_ppEffect_request) failed: No effect name given "; false};
 if (_duration <= 0              ) exitWith { diag_log "[CVO](debug)(fn_ppEffect_request) failed: duration negative or 0 "; false};
 
@@ -46,8 +48,13 @@ if (isNil "CVO_PP_EffectType_inTransition") then {
 };
 private _inTransition_str = ["CVO_STORM",_ppEffectType, _layer] joinString "_";
 
-if (_inTransition_str in CVO_PP_EffectType_inTransition) exitWith diag_log "[CVO](debug)(fn_ppEffect_request) Failed: This Type and Layer is currently Transitioning";
+// diag_log format ['[CVO](debug)(fn_ppEffect_request) _inTrans_inTransition_strition_str: %1 - CVO_PP_EffectType_inTransition: %2', _inTransition_str , CVO_PP_EffectType_inTransition ];
+
+if (_inTransition_str in CVO_PP_EffectType_inTransition) exitWith {diag_log "[CVO](debug)(fn_ppEffect_request) Failed: This Type and Layer is currently Transitioning"};
+
 CVO_PP_EffectType_inTransition pushBack _inTransition_str;
+
+diag_log format ['[CVO](debug)(fn_ppEffect_request) Request Successful: _pp_effect_Name: %1 - _duration: %2 - _intensity: %3', _pp_effect_Name , _duration ,_intensity];
 
 // Adjusts Duration to secounds.
 
@@ -81,7 +88,7 @@ if (configName inheritsFrom _configPath isEqualTo "") then {
 
 };
 
-diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - _resultArray: %1", _resultArray];
+// diag_log format ["[CVO](debug)(fnc_ppEffect_request) - _resultArray: %1", _resultArray];
 
 
 private _jip_handle_string = [_PP_effect_Name, _resultArray, _duration, _intensity] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",0, _jip_handle_string];
@@ -89,7 +96,10 @@ if (isNil "_jip_handle_string") exitWith {
     diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Not Successful: %1", _PP_effect_Name];
     false
 };
-[{    CVO_PP_EffectType_inTransition = CVO_PP_EffectType_inTransition - [_this#0];   }, [_inTransition_str], _duration] call CBA_fnc_waitAndExecute;
+[{  
+    CVO_PP_EffectType_inTransition = CVO_PP_EffectType_inTransition - [_this#0];
+    // diag_log format ['[CVO](debug)(fn_ppEffect_request)Transition compeleted - Item removed: _this#0: %1', _this#0];
+   }, [_inTransition_str], _duration] call CBA_fnc_waitAndExecute;
 
 // diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1 - _duration %2 - _intensity %3", _PP_effect_Name, _duration, _intensity];
 // diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1", _PP_effect_Name];
@@ -99,8 +109,8 @@ if (_intensity == 0) then {
     [{
         CVO_Storm_Active_JIP_Array = CVO_Storm_Active_JIP_Array - [_this#0];
         remoteExec ["", _this#0]; // removes entry from JIP Queue
-        diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Handler cleaned up: %1', _this#0];
-        diag_log format ['[CVO](debug)(fn_ppEffect_request) Remaining JIP Array: %1', CVO_Storm_Active_JIP_Array];
+        // diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Handler cleaned up: %1', _this#0];
+        // diag_log format ['[CVO](debug)(fn_ppEffect_request) Remaining JIP Array: %1', CVO_Storm_Active_JIP_Array];
     }, [_jip_handle_string], _duration] call CBA_fnc_waitAndExecute;
 
     "";
@@ -110,7 +120,7 @@ if (_intensity == 0) then {
     };
 
     CVO_Storm_Active_JIP_Array pushBackUnique _jip_handle_string;
-        diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP added: %1', _jip_handle_string];
-        diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Array: %1', CVO_Storm_Active_JIP_Array];
+        // diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP added: %1', _jip_handle_string];
+        // diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Array: %1', CVO_Storm_Active_JIP_Array];
     _jip_handle_string
 };
