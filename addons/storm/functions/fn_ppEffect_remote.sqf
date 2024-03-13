@@ -35,7 +35,6 @@ private _ppEffectPrio = getNumber (configFile >> "CVO_PP_Effects" >> _effectName
 private _layer        = getNumber (configFile >> "CVO_PP_Effects" >> _effectName >> "layer");
 
 
-
 if (isNil "CVO_Storm_Active_PP_Effects_Array") then {
     CVO_Storm_Active_PP_Effects_Array = [];
 };
@@ -68,5 +67,8 @@ if (_existsVar isEqualto false) then {
 (missionNamespace getVariable _varname) ppEffectCommit _duration;
 
 if (_intensity == 0) then {
-    [ { (missionNamespace getVariable _this#0) ppEffectDestroy }, [_varName], _duration] call CBA_fnc_waitAndExecute;
+    [ {
+        ppEffectDestroy (missionNamespace getVariable _this#0);
+        if (count CVO_Storm_Active_PP_Effects_Array == 0) then { CVO_Storm_Active_PP_Effects_Array = nil; };
+     }, [_varName], _duration] call CBA_fnc_waitAndExecute;
 };
