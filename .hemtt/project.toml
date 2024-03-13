@@ -82,6 +82,7 @@ parameters = [
     "-noPauseAudio",
 ]
 dlc = [
+    "ws"
 ]
 optionals = [
 ]
@@ -111,6 +112,7 @@ parameters = [
     "-noPauseAudio",
 ]
 dlc = [
+    "ws"
 ]
 optionals = [
 ]
@@ -129,7 +131,7 @@ mission = "test-storm-framework.SefrouRamal"
 
 
 parameters = [
-                            #    "C:\\Users\\Dennis Zorn\\Documents\\Arma 3 - Other Profiles\\Overlord%20Zorn\\missions\\test-mission\\test-storm-framework.SefrouRamal\\mission.sqm",
+                            #    "C:\\Users\\Dennis Zorn\\Documents\\Arma 3 - Other Profiles\\Overlord%20Zorn\\missions\\test-mission\\test-storm-framework.stratis\\mission.sqm",
     "-skipIntro",           # These parameters are passed to the Arma 3 executable
     "-noSplash",            # They do not need to be added to your list
     "-showScriptErrors",    # You can add additional parameters here

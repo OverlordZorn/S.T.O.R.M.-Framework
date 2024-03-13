@@ -27,11 +27,12 @@ _locationTypes = ["Airport",
 params ["_vehicle"];
 
 private _groupLeader = leader driver _vehicle;
+_vehicle = vehicle _groupLeader; 
 vehicle _groupLeader limitSpeed 999;
 
 // Aquire Nearest Location
 
-private _previousLocations = missionNamespace getVariable ["previous_locations", false];
+private _previousLocations = _vehicle getVariable ["previous_locations", false];
 if (_previousLocations isEqualTo false) then {
     _previousLocations = [];
 };
@@ -43,13 +44,13 @@ while {0 isEqualTo count _filteredLocations} do {
     _radius = _radius + 1000;
     _nearLocations = nearestLocations [player,_locationTypes, _radius];
     _filteredLocations = _nearLocations - _previousLocations;
-    systemChat format ['[CVO](debug)(randomLocationWaypoint) _radius: %1 - count _nearLocations: %2 - count _filteredLocations: %3 ', _radius , count _nearLocations ,count _filteredLocations];
+    // systemChat format ['[CVO](debug)(randomLocationWaypoint) _radius: %1 - count _nearLocations: %2 - count _filteredLocations: %3 ', _radius , count _nearLocations ,count _filteredLocations];
 };
 
 _nextLocation = selectRandom _filteredLocations;
 
 _previousLocations pushBack _nextLocation;
-missionNamespace setVariable ["previous_locations", _previousLocations];
+_vehicle setVariable ["previous_locations", _previousLocations];
 
 
 // 
@@ -86,24 +87,24 @@ _wp waypointAttachObject _helperObj;
 
 [   { (vehicle (_this#0) distance (_this#1)) < 1500 },
     {  vehicle (_this#0) limitSpeed 250; //vehicle (_this#0) flyInHeight [100, false];
-        systemChat "Within 1500 -> 200kph 100m";
+        // systemChat "Within 1500 -> 200kph 100m";
 
         [   { (vehicle (_this#0) distance (_this#1)) < 500 },
             {  vehicle (_this#0) limitSpeed 200; // vehicle (_this#0) flyInHeight [50, true];
-                systemChat "Within 500 -> 150kph 50m";
+                // systemChat "Within 500 -> 150kph 50m";
             
                 [   { (vehicle (_this#0) distance (_this#1)) < 300 },
                     {  vehicle (_this#0) limitSpeed 150; // vehicle (_this#0) flyInHeight [30, true];
-                        systemChat "Within 200 -> 100kph 50m";
+                        // systemChat "Within 200 -> 100kph 50m";
                     
                         [   { (vehicle (_this#0) distance (_this#1)) < 50 },
                             {  vehicle (_this#0) limitSpeed 75; // vehicle (_this#0) flyInHeight [15, true];
-                                systemChat "Within 50 -> 50kph 30m";
+                                // systemChat "Within 50 -> 50kph 30m";
 
-                                    [   { (vehicle (_this#0) distance (_this#1)) < 10 },
+                                    [   { (vehicle (_this#0) distance (_this#1)) < 50 },
                                         {  
-                                            systemChat "Within 50 -> 50kph 30m";
-                                            [{[_this#0] execVM "randomLocationWaypoint_Vehicle.sqf";}, [_this#0], 15] call CBA_fnc_waitAndExecute;
+                                            // systemChat "Within 50 -> 50kph 30m";
+                                            [{[_this#0] execVM "randomLocationWaypoint_Vehicle.sqf";}, [_this#0], 30] call CBA_fnc_waitAndExecute;
 
 
                             
