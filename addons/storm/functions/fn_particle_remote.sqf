@@ -123,8 +123,11 @@ if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
 private _intensityStart = 0;
 private _index = CVO_Storm_Local_PE_Spawner_array findIf { _x#1 isEqualTo _effectName };
 
-private _dropIntervalStart = DROP_INTERVAL_MIN;
-private _dropIntervalMax = ([_effectName] call BIS_fnc_getCloudletParams) select 2; // #0 setParticleParams, #1 setParticleRandom, #2 setDropInterval
+private _dropIntervalStart = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval_min");
+private _dropIntervalMax   = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval");
+
+//private _dropIntervalStart = DROP_INTERVAL_MIN;
+//private _dropIntervalMax = ([_effectName] call BIS_fnc_getCloudletParams) select 2; // #0 setParticleParams, #1 setParticleRandom, #2 setDropInterval
 private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropIntervalStart, _dropIntervalMax, true];
 
 
