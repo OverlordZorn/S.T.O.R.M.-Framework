@@ -1,22 +1,11 @@
-duration = 1;
-intensity = 0.05 + 0.01 * ceil random 95;
-// intensity = 1;
+["CVO_PE_Leafes", duration * 60, 1] call cvo_storm_fnc_particle_remote;
 
-systemChat format ["Intensity set to: %1", intensity];
+["CVO_PE_Dust_High_50", duration * 60, 1] call cvo_storm_fnc_particle_remote;
 
+["CVO_PE_Dust_High_35", duration * 60, 1] call cvo_storm_fnc_particle_remote;
 
-["CVO_PE_Leafes",               60 *    duration, intensity] call CVO_STORM_fnc_particle_remote;
-["CVO_PE_Dust_High_100",        60 *    duration, intensity] call CVO_STORM_fnc_particle_remote;
-["CVO_PE_Dust_High_50",         60 *    duration, intensity] call CVO_STORM_fnc_particle_remote;
+["CVO_Weather_Sandstorm_01", duration * 60, 1] call cvo_storm_fnc_weather_request;
+["CVO_CC_01", duration, intensity] call cvo_storm_fnc_ppEffect_request;
+["CVO_DB_20", duration, intensity] call cvo_storm_fnc_ppEffect_request;
+["CVO_FG_Storm", duration, intensity] call cvo_storm_fnc_ppEffect_request;
 
-//diag_log "[CVO](debug)(StormEffects) post Particles ";
-
-["CVO_CC_Mars_Storm",                   duration, intensity] call CVO_STORM_fnc_ppEffect_request;
-["CVO_DB_20",                           duration, intensity] call CVO_STORM_fnc_ppEffect_request;
-["CVO_FG_Storm",                        duration, intensity] call CVO_STORM_fnc_ppEffect_request;
-
-//diag_log "[CVO](debug)(StormEffects) Post ppEffects ";
-
-["CVO_Weather_Sandstorm_01",            duration, intensity] call CVO_STORM_fnc_weather_request;
-
-//diag_log "[CVO](debug)(StormEffects) Post Weather ";

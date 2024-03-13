@@ -27,12 +27,11 @@ _locationTypes = ["Airport",
 params ["_vehicle"];
 
 private _groupLeader = leader driver _vehicle;
-_vehicle = vehicle _groupLeader; 
 vehicle _groupLeader limitSpeed 999;
 
 // Aquire Nearest Location
 
-private _previousLocations = _vehicle getVariable ["previous_locations", false];
+private _previousLocations = missionNamespace getVariable ["previous_locations", false];
 if (_previousLocations isEqualTo false) then {
     _previousLocations = [];
 };
@@ -50,7 +49,7 @@ while {0 isEqualTo count _filteredLocations} do {
 _nextLocation = selectRandom _filteredLocations;
 
 _previousLocations pushBack _nextLocation;
-_vehicle setVariable ["previous_locations", _previousLocations];
+missionNamespace setVariable ["previous_locations", _previousLocations];
 
 
 // 
