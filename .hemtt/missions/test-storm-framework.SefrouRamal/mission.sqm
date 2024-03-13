@@ -8,18 +8,18 @@ class EditorData
 	toggles=1025;
 	class ItemIDProvider
 	{
-		nextID=378;
+		nextID=390;
 	};
 	class LayerIndexProvider
 	{
-		nextID=7;
+		nextID=9;
 	};
 	class Camera
 	{
-		pos[]={8081.165,60.23671,8761.5518};
-		dir[]={-0.82968229,-0.50057137,0.24709427};
-		up[]={-0.47974756,0.86569524,0.14287743};
-		aside[]={0.28542867,0,0.95839989};
+		pos[]={8063.1523,48.726761,8829.0371};
+		dir[]={-0.51152813,-0.24249518,-0.82433915};
+		up[]={-0.12785937,0.97015262,-0.20604828};
+		aside[]={-0.84970051,7.4505806e-009,0.52726561};
 	};
 };
 binarizationWanted=0;
@@ -294,7 +294,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=50;
+		items=52;
 		class Item0
 		{
 			dataType="Group";
@@ -307,8 +307,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={8058.3838,40.536884,8785.2754};
-						angles[]={0,4.6012998,0};
+						position[]={8054.6538,42.868034,8818.0098};
+						angles[]={0,3.7952313,-0};
 					};
 					side="West";
 					flags=7;
@@ -1312,7 +1312,7 @@ class Mission
 				};
 			};
 			id=317;
-			atlOffset=43.660038;
+			atlOffset=43.66003;
 		};
 		class Item21
 		{
@@ -1330,7 +1330,7 @@ class Mission
 			};
 			id=318;
 			type="B_Heli_Transport_03_unarmed_F";
-			atlOffset=43.660038;
+			atlOffset=43.66003;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -3923,6 +3923,293 @@ class Mission
 						{
 							singleType="STRING";
 							value="[[[[""FirstAidKit""],[2]],[[],[]],[[],[]],[[],[]]],false]";
+						};
+					};
+				};
+				class Attribute4
+				{
+					property="HNEG_emed_emtrDieout1ID";
+					expression="false";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="0";
+						};
+					};
+				};
+				class Attribute5
+				{
+					property="HNEG_emed_emitterInit";
+					expression=" if (!is3DEN) then { _this call compile _value; }; ";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="true";
+						};
+					};
+				};
+				class Attribute6
+				{
+					property="HNEG_emed_emtrDieout2ID";
+					expression="false";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="0";
+						};
+					};
+				};
+				nAttributes=7;
+			};
+		};
+		class Item50
+		{
+			dataType="Group";
+			side="West";
+			class Entities
+			{
+				items=10;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={7435.606,46.0793,8381.9033};
+						angles[]={6.1519365,0,0.0877726};
+					};
+					side="West";
+					flags=6;
+					class Attributes
+					{
+					};
+					id=380;
+					type="B_Helipilot_F";
+					atlOffset=-0.00015640259;
+				};
+				class Item1
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={7435.4512,47.836605,8381.6729};
+						angles[]={6.1519365,0,0.0877726};
+					};
+					side="West";
+					class Attributes
+					{
+					};
+					id=381;
+					type="B_Helipilot_F";
+					atlOffset=1.8012505;
+				};
+				class Item2
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={7451.3237,50.919231,8150.127};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=382;
+					type="Move";
+				};
+				class Item3
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={7723.6748,52.171421,8041.6904};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=383;
+					type="Move";
+				};
+				class Item4
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={8183.8984,57.226063,8174.084};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=384;
+					type="Move";
+				};
+				class Item5
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={8221.7236,47.29475,8573.7705};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=385;
+					type="Move";
+				};
+				class Item6
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={7900.1978,40.609318,8610.3359};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=386;
+					type="Move";
+				};
+				class Item7
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={7688.3691,49.904373,8498.1162};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=387;
+					type="Move";
+				};
+				class Item8
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={7606.4116,45.697941,8337.9844};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=388;
+					type="Move";
+				};
+				class Item9
+				{
+					dataType="Waypoint";
+					loiterAltitude=-3.4028235e+038;
+					position[]={7714.6641,52.904728,8048.9731};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+					id=389;
+					type="Cycle";
+					atlOffset=-3.8146973e-006;
+				};
+			};
+			class Attributes
+			{
+			};
+			class CrewLinks
+			{
+				class LinkIDProvider
+				{
+					nextID=2;
+				};
+				class Links
+				{
+					items=2;
+					class Item0
+					{
+						linkID=0;
+						item0=380;
+						item1=379;
+						class CustomData
+						{
+							role=1;
+						};
+					};
+					class Item1
+					{
+						linkID=1;
+						item0=381;
+						item1=379;
+						class CustomData
+						{
+							role=2;
+							turretPath[]={0};
+						};
+					};
+				};
+			};
+			id=378;
+		};
+		class Item51
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={7435.4512,47.835323,8381.623};
+				angles[]={6.1519365,0,0.0877726};
+			};
+			side="West";
+			flags=6;
+			class Attributes
+			{
+				init="this flyInHeight [10, true];" \n "this limitSpeed  100;";
+			};
+			id=379;
+			type="B_Heli_Light_01_dynamicLoadout_F";
+			class CustomAttributes
+			{
+				class Attribute0
+				{
+					property="HNEG_emed_emtrDieout3ID";
+					expression="false";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="0";
+						};
+					};
+				};
+				class Attribute1
+				{
+					property="HNEG_emed_emtrDieout4ID";
+					expression="false";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="0";
+						};
+					};
+				};
+				class Attribute2
+				{
+					property="HNEG_emed_aedInit";
+					expression=" if (!is3DEN) then { _this call compile _value; }; ";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="true";
+						};
+					};
+				};
+				class Attribute3
+				{
+					property="ammoBox";
+					expression="[_this,_value] call bis_fnc_initAmmoBox;";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="[[[[""arifle_MXC_F"",""FirstAidKit""],[2,2]],[[""SmokeShell"",""SmokeShellBlue"",""30Rnd_65x39_caseless_mag""],[2,2,4]],[[""ToolKit"",""ItemGPS""],[1,1]],[[],[]]],false]";
 						};
 					};
 				};
