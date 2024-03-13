@@ -20,7 +20,6 @@
 
 
 if (!isServer)                              exitWith {_this remoteExecCall ["cvo_storm_fnc_weather_setFog_recursive_continous",2]};
-if (canSuspend)                             exitWith {_this           call   cvo_storm_fnc_weather_setFog_recursive_continous    };
 
 // if (isNil "CVO_WeatherChanges_active")   exitWith {false};
 // if (!CVO_WeatherChanges_active)          exitWith {false};
@@ -32,12 +31,13 @@ if (canSuspend)                             exitWith {_this           call   cvo
     ["_iteration",     "UNDEFINED",    [[]],   [3]  ]
 ];
 
+// diag_log format ['[CVO](debug)(fn_weather_setFog_recursive_continous) _fogParams_VarName: %1 - _duration: %2 - _iteration: %3 - "": %4 - "": %5 - "": %6 - "": %7 - "": %8', _fogParams_VarName , _duration ,_iteration , "" , "" , "" , "" , "" ];
 
-if (_duration isEqualTo 0) exitWith {    diag_log format ["[CVO][STORM](ExitWith) - %1", "duration equal 0"]; false };
+if (_duration isEqualTo 0) exitWith {    diag_log format ["[CVO][STORM](fn_weather_setFog_recursive_continous) - %1", "duration equal 0"]; false };
 
 private _fogParams = missionNamespace getVariable [_fogParams_VarName, "NOT DEFINED"];
 
-if  (_fogParams isEqualTo "NOT DEFINED") exitWith {diag_log format ["[CVO][STORM](ExitWith) - %1", "fogparams not defined"]; false};
+if  (_fogParams isEqualTo "NOT DEFINED") exitWith {diag_log format ["[CVO][STORM](fn_weather_setFog_recursive_continous) - %1", "fogparams not defined"]; false};
 
 // make copy of array and assign it to the variable to avoid editing the original
 _fogParams = + _fogParams;
@@ -58,7 +58,7 @@ private _mode = _fogParams select 3;
 _fogParams deleteAt 3;
 
 
-if !(_fogParams isEqualType [])          exitWith {diag_log format ["[CVO][STORM](ExitWith) - %1", "fogParams isnt an array "];false};
+if !(_fogParams isEqualType [])          exitWith {diag_log format ["[CVO][STORM](fn_weather_setFog_recursive_continous) - %1", "fogParams isnt an array "];false};
 
 
 // ##################################################
@@ -106,7 +106,6 @@ _case3 = {
         _total_iterations = 1 + floor (_duration / 15);
         _delay = _duration / _total_iterations;
         _iteration = [ 1, _total_iterations, _delay ];
-        diag_log format ["[CVO][STORM](weather_setFog_recursive_continous) - _iteration defined: %1", _iteration];
     };
 
     // get Avg_ASL
@@ -118,12 +117,12 @@ _case3 = {
     _fogParams set [2, (_fogParams select 2) + _fogBase];
 
     for "_i" from 0 to 2 do {
-        _fogParam set [_i, linearConversion [0, _iteration # 1, _iteration # 0, _previous_FogParams # _i, _fogParams # _i, true] ];
+        _fogParams set [_i, linearConversion [0, _iteration # 1, _iteration # 0, _previous_FogParams # _i, _fogParams # _i, true] ];
     };
 
     // apply Effect
     _iteration#2 setFog _fogParams;
-    diag_log format[ "%1 - %2 setFog %3", _mode, _iteration#2, _fogParams ];
+    // diag_log format[ "%1 - %2 setFog %3", _mode, _iteration#2, _fogParams ];
 
     // Increases the Iteration cycle
     _iteration set [ 0, (_iteration select 0) + 1 ];
@@ -131,7 +130,6 @@ _case3 = {
     // Recursive Call
     [ 
         {   
-            diag_log format ["recursive Call Fog: _this: ", _this];
             _this call cvo_storm_fnc_weather_setFog_recursive_continous;
         },
         [ _fogParams_VarName, _duration, _iteration ], _iteration#2] call CBA_fnc_waitAndExecute;
