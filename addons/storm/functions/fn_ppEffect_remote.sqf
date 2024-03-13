@@ -24,7 +24,8 @@ if (!hasInterface) exitWith {};
 params [
     ["_effectName",  "", [""]],
     ["_effectArray", [], [[]]],
-    ["_duration",     5, [0]]
+    ["_duration",     5, [0]],
+    ["_intensity",    0, [0]]
 ];
 
 if (_effectArray isEqualTo []) exitWith {};
@@ -51,6 +52,8 @@ _existsVar = missionNamespace getVariable [_varName, false];
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _existsVar : %1", _existsVar];
 
+if (_existsVar isEqualto false && {_intensity == 0} ) exitWith {};
+
 if (_existsVar isEqualto false) then {
     missionNamespace setVariable [_varName, (ppEffectCreate [_ppEffectType, _ppEffectPrio]) ];
 
@@ -63,3 +66,7 @@ if (_existsVar isEqualto false) then {
 // Apply the effects based the custom variable
 (missionNamespace getVariable _varname) ppEffectAdjust _effectArray;
 (missionNamespace getVariable _varname) ppEffectCommit _duration;
+
+if (_intensity == 0) then {
+    [ { (missionNamespace getVariable _this#0) ppEffectDestroy }, [_varName], _duration] call CBA_fnc_waitAndExecute;
+};
