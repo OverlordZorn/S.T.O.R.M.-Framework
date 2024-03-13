@@ -248,3 +248,11 @@ if ((_hashMap get "change_rainParams") > 0) then {
 
 // ##########################################################
 // ##########################################################
+
+
+[
+   {
+      CVO_WeatherChanges_active = false;
+      Diag_log "[CVO](debug)(fn_weather_request) Transition Complete";
+   },[], _duration
+] call CBA_fnc_waitAndExecute;
