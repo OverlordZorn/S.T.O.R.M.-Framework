@@ -24,15 +24,13 @@
     ["_intensity",      0, [0]]
  ];
 
-if (_PP_effect_Name isEqualTo "") exitWith {false};
-if (_duration <= 0              ) exitWith {false};
-if (_intensity <= 0             ) exitWith {false};
+if (_PP_effect_Name isEqualTo "") exitWith { diag_log "[CVO](debug)(fn_ppEffect_request) failed: No effect name given "; false};
+if (_duration <= 0              ) exitWith { diag_log "[CVO](debug)(fn_ppEffect_request) failed: duration negative or 0 "; false};
+
+_intensity = _intensity max 0 min 1;
 
 //Check if config Exists
-if !(_PP_effect_Name in (configProperties [configFile >> "CVO_PP_Effects", "true", true] apply { configName _x })) exitWith {
-    diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - provided PP_Effect_name doesnt exist: %1", _PP_effect_Name];
-    false
-};
+if !(_PP_effect_Name in (configProperties [configFile >> "CVO_PP_Effects", "true", true] apply { configName _x })) exitWith {    diag_log format ["[CVO][STORM](fnc_ppEffect_request) Failed: provided PP_Effect_name doesnt exist: %1", _PP_effect_Name]; false };
 
 private _configPath = (configFile >> "CVO_PP_Effects" >> _PP_effect_Name ); 
 private _ppEffectType = getText (_configPath >> "ppEffectType");
@@ -42,6 +40,8 @@ private _layer = getNumber (_configPath >> "layer");
 private _jip_handle_string = ["CVO_STORM",_ppEffectType, _layer,"PP_Effect_JIP_Handle" ] joinString "_";
 if ( _intensity == 0 && { isNil "CVO_Storm_Active_JIP_Array" || { !(_jip_handle_string in CVO_Storm_Active_JIP_Array)} } ) exitWith {   diag_log "[CVO](STORM)(fn_ppEffect_request) Failed: _intensity 0 while no previous effect of same type exists"; };
 
+
+missionnamespace getVariable "CVO_PP_Transition"
 
 // Adjusts Duration to secounds.
 _duration = _duration * 60;
@@ -91,6 +91,8 @@ if (_intensity == 0) then {
     [{
         CVO_Storm_Active_JIP_Array = CVO_Storm_Active_JIP_Array - [_this#0];
         remoteExec ["", _this#0]; // removes entry from JIP Queue
+        diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Handler cleaned up: %1', _this#0];
+        diag_log format ['[CVO](debug)(fn_ppEffect_request) Remaining JIP Array: %1', CVO_Storm_Active_JIP_Array];
     }, [_jip_handle_string], _duration] call CBA_fnc_waitAndExecute;
 
     "";
@@ -98,8 +100,10 @@ if (_intensity == 0) then {
     if (isNil "CVO_Storm_Active_JIP_Array") then {
         CVO_Storm_Active_JIP_Array = [];
     };
-    CVO_Storm_Active_JIP_Array pushBackUnique _jip_handle_string;
 
+    CVO_Storm_Active_JIP_Array pushBackUnique _jip_handle_string;
+        diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP added: %1', _jip_handle_string];
+        diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Array: %1', CVO_Storm_Active_JIP_Array];
     _jip_handle_string
 };
 
