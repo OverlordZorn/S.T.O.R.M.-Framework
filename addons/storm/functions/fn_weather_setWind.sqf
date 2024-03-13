@@ -6,8 +6,8 @@
  * Arguments:
  * 0: _wind_magnitude               <Number> - Magnitute of desired target        of the transition.
  * 1: _duration                     <Number> in Secounds - Total time of Transition
- * 2: _direction        <Optional>  <Number> 0..360 Targeted Winddirection in Degrees - "DEFAULT" takes current wind direction. 
- * 3: _forceWindEnd     <Optional>  <Boolean> <DEFAULT: false> locks wind in place at the end of the recursive loop. (setWind [x,y, forced]) 
+ * 2: _direction        <Optional>  <Number> 0..360 Targeted Winddirection in Degrees - "PREV" takes current wind direction. 
+ * 3: _forceWindEnd     <Optional>  <Boolean> <PREV: false> locks wind in place at the end of the recursive loop. (setWind [x,y, forced]) 
  *
  * Return Value:
  * none 
@@ -30,13 +30,18 @@ params [
     ["_wind_magnitude",          0,     [0]       ],
     ["_duration",                0,     [0]       ],
     ["_forceWindEnd",        false, [false]       ],
-    ["_azimuth",         "DEFAULT",  ["",0]       ]
+    ["_azimuth",            "RAND",  ["",0]       ]
 ];
 
 if (_duration isEqualTo 0) exitWith {false};
 
 // Params Sanitization
-if ( _azimuth isEqualTo "DEFAULT" ) then { _azimuth = round windDir };
+
+switch (_azimuth) do {
+    case "PREV": { _azimuth = ceil windDir };
+    case "RAND": { _azimuth = ceil random 360 };
+};
+
 if ( _azimuth isEqualTo 0 )         then { _azimuth = 360      };
 
 // Define Target Vector
