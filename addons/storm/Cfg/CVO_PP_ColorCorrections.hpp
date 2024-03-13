@@ -12,6 +12,7 @@ class CVO_CC_Default
 	colorization_rgba[] = 	{		1,		1,		1,		1	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
 	desaturation_rgba0[] = 	{	0.299, 	0.587, 	0.114, 		0	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
 
+/*
 	radial_color[] = {
 		-1,												// 0..1			major axis radius of ellipse
 		-1,												// 0..1			minor axis radius of ellipse
@@ -21,6 +22,10 @@ class CVO_CC_Default
 		 0,												// 0..1			coefficient for inner radius (where effect is not applied)
 		 1												// 0..			coefficient for color interpolation between inner and outer radius
 	}; 
+*/
+
+	baseArray[] = { 1, 1, 0, {"false","false","false",0},{"false","false","false",1},{"false","false","false",0}  };
+
 };
 
 class CVO_CC_Alias : CVO_CC_Default

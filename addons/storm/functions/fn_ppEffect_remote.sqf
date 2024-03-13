@@ -24,7 +24,8 @@ if (!hasInterface) exitWith {};
 params [
     ["_effectName",  "", [""]],
     ["_effectArray", [], [[]]],
-    ["_duration",     5, [0]]
+    ["_duration",     5, [0]],
+    ["_intensity",    0, [0]]
 ];
 
 if (_effectArray isEqualTo []) exitWith {};
@@ -32,7 +33,6 @@ if (_effectArray isEqualTo []) exitWith {};
 private _ppEffectType = getText   (configFile >> "CVO_PP_Effects" >> _effectName >> "ppEffectType");
 private _ppEffectPrio = getNumber (configFile >> "CVO_PP_Effects" >> _effectName >> "ppEffectPrio");
 private _layer        = getNumber (configFile >> "CVO_PP_Effects" >> _effectName >> "layer");
-
 
 
 if (isNil "CVO_Storm_Active_PP_Effects_Array") then {
@@ -51,6 +51,8 @@ _existsVar = missionNamespace getVariable [_varName, false];
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _existsVar : %1", _existsVar];
 
+if (_existsVar isEqualto false && {_intensity == 0} ) exitWith {};
+
 if (_existsVar isEqualto false) then {
     missionNamespace setVariable [_varName, (ppEffectCreate [_ppEffectType, _ppEffectPrio]) ];
 
@@ -63,3 +65,10 @@ if (_existsVar isEqualto false) then {
 // Apply the effects based the custom variable
 (missionNamespace getVariable _varname) ppEffectAdjust _effectArray;
 (missionNamespace getVariable _varname) ppEffectCommit _duration;
+
+if (_intensity == 0) then {
+    [ {
+        ppEffectDestroy (missionNamespace getVariable _this#0);
+        if (count CVO_Storm_Active_PP_Effects_Array == 0) then { CVO_Storm_Active_PP_Effects_Array = nil; };
+     }, [_varName], _duration] call CBA_fnc_waitAndExecute;
+};
