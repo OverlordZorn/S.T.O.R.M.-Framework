@@ -41,10 +41,18 @@ private _jip_handle_string = ["CVO_STORM",_ppEffectType, _layer,"PP_Effect_JIP_H
 if ( _intensity == 0 && { isNil "CVO_Storm_Active_JIP_Array" || { !(_jip_handle_string in CVO_Storm_Active_JIP_Array)} } ) exitWith {   diag_log "[CVO](STORM)(fn_ppEffect_request) Failed: _intensity 0 while no previous effect of same type exists"; };
 
 
-missionnamespace getVariable "CVO_PP_Transition"
+if (isNil "CVO_PP_EffectType_inTransition") then {
+    CVO_PP_EffectType_inTransition = [];
+};
+private _inTransition_str = ["CVO_STORM",_ppEffectType, _layer] joinString "_";
+
+if (_inTransition_str in CVO_PP_EffectType_inTransition) exitWith diag_log "[CVO](debug)(fn_ppEffect_request) Failed: This Type and Layer is currently Transitioning";
+CVO_PP_EffectType_inTransition pushBack _inTransition_str;
 
 // Adjusts Duration to secounds.
+
 _duration = _duration * 60;
+
 // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - _duration: %1", _duration];
 
 private _effectArray = [_PP_effect_Name] call cvo_storm_fnc_ppEffect_get_from_config;
@@ -77,11 +85,11 @@ diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - _resultArray: %1", _
 
 
 private _jip_handle_string = [_PP_effect_Name, _resultArray, _duration, _intensity] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",0, _jip_handle_string];
-
 if (isNil "_jip_handle_string") exitWith {
     diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Not Successful: %1", _PP_effect_Name];
     false
 };
+[{    CVO_PP_EffectType_inTransition = CVO_PP_EffectType_inTransition - [_this#0];   }, [_inTransition_str], _duration] call CBA_fnc_waitAndExecute;
 
 // diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1 - _duration %2 - _intensity %3", _PP_effect_Name, _duration, _intensity];
 // diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1", _PP_effect_Name];
@@ -106,7 +114,3 @@ if (_intensity == 0) then {
         diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Array: %1', CVO_Storm_Active_JIP_Array];
     _jip_handle_string
 };
-
-
-
-
