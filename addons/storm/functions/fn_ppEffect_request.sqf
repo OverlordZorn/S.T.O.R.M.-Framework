@@ -40,7 +40,7 @@ private _layer = getNumber (_configPath >> "layer");
 
 // Check when _intensity == 0, is there previous effect that can be reverted to 0? If not, Fail
 private _jip_handle_string = ["CVO_STORM",_ppEffectType, _layer,"PP_Effect_JIP_Handle" ] joinString "_";
-if ( _intensity == 0 && { isNil "CVO_Storm_Active_JIP_Array" || { !(_jip_handle_string in CVO_Storm_Active_JIP_Array)} } ) exitWith {   diag_log "[CVO](STORM)(fn_ppEffect_request) Failed: _intensity 0 while no previous effect of same type exists"; };
+if ( _intensity == 0 && { isNil "CVO_PP_active_jips" || { !(_jip_handle_string in CVO_PP_active_jips)} } ) exitWith {   diag_log "[CVO](STORM)(fn_ppEffect_request) Failed: _intensity 0 while no previous effect of same type exists"; };
 
 
 if (isNil "CVO_PP_EffectType_inTransition") then {
@@ -52,9 +52,9 @@ private _inTransition_str = ["CVO_STORM",_ppEffectType, _layer] joinString "_";
 
 if (_inTransition_str in CVO_PP_EffectType_inTransition) exitWith {diag_log "[CVO](debug)(fn_ppEffect_request) Failed: This Type and Layer is currently Transitioning"};
 
-CVO_PP_EffectType_inTransition pushBack _inTransition_str;
 
-diag_log format ['[CVO](debug)(fn_ppEffect_request) Request Successful: _pp_effect_Name: %1 - _duration: %2 - _intensity: %3', _pp_effect_Name , _duration ,_intensity];
+
+diag_log format ['[CVO](debug)(fn_ppEffect_request) Request Passed: _pp_effect_Name: %1 - _duration: %2 - _intensity: %3', _pp_effect_Name , _duration ,_intensity];
 
 // Adjusts Duration to secounds.
 
@@ -91,36 +91,47 @@ if (configName inheritsFrom _configPath isEqualTo "") then {
 // diag_log format ["[CVO](debug)(fnc_ppEffect_request) - _resultArray: %1", _resultArray];
 
 
+/////////////////////////////////////////////////////////////////////////////
+// RemoteExec the request
 private _jip_handle_string = [_PP_effect_Name, _resultArray, _duration, _intensity] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",0, _jip_handle_string];
 if (isNil "_jip_handle_string") exitWith {
     diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Not Successful: %1", _PP_effect_Name];
     false
 };
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Handles In-Transition-Check
+CVO_PP_EffectType_inTransition pushBack _inTransition_str;
 [{  
     CVO_PP_EffectType_inTransition = CVO_PP_EffectType_inTransition - [_this#0];
     // diag_log format ['[CVO](debug)(fn_ppEffect_request)Transition compeleted - Item removed: _this#0: %1', _this#0];
    }, [_inTransition_str], _duration] call CBA_fnc_waitAndExecute;
+/////////////////////////////////////////////////////////////////////////////
 
 // diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1 - _duration %2 - _intensity %3", _PP_effect_Name, _duration, _intensity];
 // diag_log format ["[CVO][STORM](Error)(fnc_ppEffect_request) - Success: _PP_effect_Name %1", _PP_effect_Name];
 
+
+
 if (_intensity == 0) then {
     // Handles Cleanup of JIP in case of decaying(transition-> 0) Effect once transition to 0 is completed.
     [{
-        CVO_Storm_Active_JIP_Array = CVO_Storm_Active_JIP_Array - [_this#0];
+        CVO_PP_active_jips = CVO_PP_active_jips - [_this#0];
         remoteExec ["", _this#0]; // removes entry from JIP Queue
         // diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Handler cleaned up: %1', _this#0];
-        // diag_log format ['[CVO](debug)(fn_ppEffect_request) Remaining JIP Array: %1', CVO_Storm_Active_JIP_Array];
+        // diag_log format ['[CVO](debug)(fn_ppEffect_request) Remaining JIP Array: %1', CVO_PP_active_jips];
     }, [_jip_handle_string], _duration] call CBA_fnc_waitAndExecute;
 
     "";
 } else {
-    if (isNil "CVO_Storm_Active_JIP_Array") then {
-        CVO_Storm_Active_JIP_Array = [];
+    if (isNil "CVO_PP_active_jips") then {
+        CVO_PP_active_jips = [];
     };
 
-    CVO_Storm_Active_JIP_Array pushBackUnique _jip_handle_string;
+    CVO_PP_active_jips pushBackUnique _jip_handle_string;
         // diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP added: %1', _jip_handle_string];
-        // diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Array: %1', CVO_Storm_Active_JIP_Array];
+        // diag_log format ['[CVO](debug)(fn_ppEffect_request) JIP Array: %1', CVO_PP_active_jips];
     _jip_handle_string
 };
