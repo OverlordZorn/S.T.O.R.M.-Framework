@@ -44,22 +44,32 @@ params [
     ["_intensityTarget",    0,        [0]]
 ];
 
+
+// CLEANUP MODE
 if ( _effectName isEqualTo "CLEANUP")  exitWith {
     if ( missionNamespace getVariable ["CVO_Debug", false] ) then {
+        // Deletes Debug Red Arrow
         deleteVehicle (CVO_Storm_Local_PE_Spawner_array#0#0); 
         CVO_Storm_Local_PE_Spawner_array deleteAt 0;
     };
 
+        // Transition to 0 over Default duration for each existing Particle Spawner
     {  
         [_x#1] call cvo_storm_fnc_particle_remote;
     } forEach CVO_Storm_Local_PE_Spawner_array;
 };
 
+
+
+
 if ( _effectName isEqualTo "")  exitWith {false};
 if (_intensityTarget < 0     )  exitWith {false};
 if (_duration    isEqualTo  0)  exitWith {false};
 
+
+
 if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
+    //CVO_Storm_Local_PE_Spawner_array Nested Array of particle spawners [_spawnerObj, "IdentString",_intensity] 
     CVO_Storm_Local_PE_Spawner_array = [];
     CVO_particle_isActive = true;
 
@@ -69,8 +79,10 @@ if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
             CVO_Storm_Local_PE_Spawner_array pushback [_helper, "Debug_Helper"];
     };
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Start pfEH to re-attach all Particle Spawners according to player speed & wind.
-    // watch CVO_particle_isActive, if inactive, delete remaining particle spawners, the particle array and exit the pfH
+    // watch CVO_particle_isActive, if inactive(false), stop/exit the pfH and delete remaining particle spawners + the particle array
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private _codeToRun = {
         private _player = vehicle ace_player;  
@@ -132,11 +144,11 @@ private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropInt
 
 
 private "_spawner";
-if (_index == -1) then {
+if (_index == -1) then { // Index -1: Requested Type of Particle Spawner does not exist yet, therefor, it creates a new one.
 
     // Interrupts cration of a new particle spwaner if the target intensity is 0. 
     if (_intensityTarget == 0) exitWith {
-        // Stops the reAttach pfh there is no other already existing particlesource. 
+        // Stops the reAttach pfh there is no other already existing particlesource. (parseNumber Bool => 0,1 # if Debugmode, expect 1 obj in array to consider it empty, if not, 0 means empty)
         if ( count CVO_Storm_Local_PE_Spawner_array == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then {
             CVO_particle_isActive = false;
         };
@@ -225,12 +237,6 @@ private _delay = _duration / PFEH_INTENSITY_DELAY;
     };
 }, _delay, [_codeToRun, _parameters, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////// ## Notes ##/////////////////////////////////////////////////
-/////////////////// Handling of the Debug_arrow during "CLEANUP" could be optimized, ///////////////
-/////////////////// but its happening so rarely, i dont think its gonna be necessary ///////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// ## Notes ##/////////////////////////////////////////////////
