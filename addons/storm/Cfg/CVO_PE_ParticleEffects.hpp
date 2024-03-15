@@ -247,3 +247,61 @@ class CVO_PE_Leafes : CVO_PE_Default
 	// 0.01+random 0.1
 
 };
+
+
+/*
+
+
+
+class particle_emitter_0: Default
+{
+	interval = 0.03;
+	circleRadius = 50;
+	circleVelocity[] = {0,-1,0};
+	particleFSNtieth = 16;
+	particleFSIndex = 12;
+	particleFSFrameCount = 13;
+	particleFSLoop = 0;
+	angleVar = 0;
+	particleShape = "\A3\data_f\ParticleEffects\Universal\Universal.p3d";
+	particleType = "Billboard";
+	timerPeriod = 1;
+	lifeTime = 15;
+	moveVelocity[] = {2,0,2};
+	rotationVelocity = 1;
+	weight = 0.053;
+	volume = 0.04;
+	rubbing = 0.01;
+	size[] = {13,15};
+	color[] =
+	{
+			{0.08,0.067,0.052,0},
+			{0.6,0.5,0.4,0.2012},
+			{0.42618,0.431949,0.420412,0.183895},
+			{0.6,0.5,0.4,0.166588},
+			{0.6,0.5,0.4,0.15},
+			{0.6,0.5,0.4,0}
+	};
+	animationSpeed[] = {1000};
+	randomDirectionPeriod = 0.1;
+	randomDirectionIntensity = 0.05;
+	onTimerScript = "";
+	beforeDestroyScript = "";
+	lifeTimeVar = 5;
+	positionVar[] = {5,1,5};
+	moveVelocityVar[] = {5,1,5};
+	rotationVelocityVar = 20;
+	sizeVar = 0.3;
+	colorVar[] = {0,0,0,0};
+	randomDirectionPeriodVar = 0;
+	randomDirectionIntensityVar = 0;
+	coreIntensity = 0;
+	coreDistance = 0;
+	damageTime = 0;
+	damageType = "";
+	angle = 0;
+	position[] = {0,0,0};
+};
+
+
+*/
