@@ -22,7 +22,7 @@ if (!isServer) exitWith { _this remoteExecCall [ "CVO_STORM_fnc_weather_request"
 
 params [
    ["_weather_preset_name",    "", [""]],
-   ["_duration",               0,  [0]],
+   ["_duration",               5,  [0]],
    ["_intensity",             0,  [0]]
 ];
 
