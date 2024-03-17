@@ -30,7 +30,7 @@ params [
     ["_wind_magnitude",          0,     [0]       ],
     ["_duration",                0,     [0]       ],
     ["_forceWindEnd",        false, [false]       ],
-    ["_azimuth",            "RAND",  ["",0]       ]
+    ["_azimuth",            "PREV",  ["",0]       ]
 ];
 
 diag_log format ['[CVO](debug)(fn_weather_setWind)(START) _wind_magnitude: %1 - _duration: %2 - _forceWindEnd: %3 - _azimuth: %4', _wind_magnitude , _duration ,_forceWindEnd , _azimuth];
