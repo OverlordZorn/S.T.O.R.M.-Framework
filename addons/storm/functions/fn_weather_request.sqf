@@ -17,7 +17,8 @@
  */
 
 
-if !(isServer) exitWith {};
+if (!isServer) exitWith { _this remoteExecCall [ "CVO_STORM_fnc_weather_request", 2, false]; };
+
 
 params [
    ["_weather_preset_name",    "", [""]],
