@@ -16,7 +16,8 @@
  * Public: No
  */
 
- if !(isServer) exitWith {};
+if (!isServer) exitWith { _this remoteExecCall [ "cvo_storm_fnc_particle_request", 2, false]; };
+
 
 params [
    ["_PE_effect_Name",        "", [""]],
