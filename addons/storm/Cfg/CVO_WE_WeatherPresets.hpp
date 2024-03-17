@@ -18,8 +18,7 @@ class CVO_Weather_Default
     fog_value_max = 0;                              // 0..1   - Maximum Fog Level at 100% intensity
     fog_dispersion = 0;                             // 0..1   - Recommend to stay within 0 .. 0.1
     fog_base = 0;                                   // number - meters +/- above Sea Level
-    fog_use_AvgASL = 0;                             // 0 or 1 - consider it a bool
-    fog_use_AvgASL_continous = 0;                   // 0 or 1 - consider it a bool
+    fog_mode = 0;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
 
     change_wind = 0;                                // 0 or 1 - consider it a bool
     wind_value = 0;                                 // Number - 0.. alot, eventhough +200 values getting cray cray
@@ -52,8 +51,7 @@ class CVO_Weather_Sandstorm_01 : CVO_Weather_Default
     fog_value_max = 0.4;                            // 0..1   - Maximum Fog Level at 100% intensity
     fog_dispersion = 0.015;                         // 0..1   - Recommend to stay within 0 .. 0.1
     fog_base = 100;                                 // number - meters +/- above Sea Level
-    fog_use_AvgASL = 0;                             // 0 or 1 - consider it a bool
-    fog_use_AvgASL_continous = 1;                   // 0 or 1 - consider it a bool
+    fog_mode = 2;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
 
     change_wind = 1;                                // 0 or 1 - consider it a bool
     wind_value = 45;                                // Number - 0.. alot, eventhough +100 values getting cray cray
@@ -86,8 +84,7 @@ class CVO_Weather_Test : CVO_Weather_Default
     fog_value_max = 0.4;                            // 0..1   - Maximum Fog Level at 100% intensity
     fog_dispersion = 0.015;                         // 0..1   - Recommend to stay within 0 .. 0.1
     fog_base = 50;                                  // number - meters +/- above Sea Level
-    fog_use_AvgASL = 0;                             // 0 or 1 - consider it a bool
-    fog_use_AvgASL_continous = 1;                   // 0 or 1 - consider it a bool
+    fog_mode = 1;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
 
     change_wind = 1;                                // 0 or 1 - consider it a bool
     wind_value = 50;                                // Number - 0.. alot, eventhough +100 values getting cray cray
