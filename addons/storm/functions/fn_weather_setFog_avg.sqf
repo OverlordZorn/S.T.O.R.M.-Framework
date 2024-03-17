@@ -4,7 +4,8 @@
  * Applies Fog initially and, if needed updates it based on getAvgASL.
  *
  * Arguments:
- * 0: _fogParams_VarName             <String> Name of the provided global variable name which will be used to update and, if needed, end the fogParams application.
+ * 0: _fogParams_Target
+ * 1: _fogParams_Previous
  * 1: _duration                      <Number> Duration in Secounds over which this effect is to be applied.
  *
  * Return Value:
@@ -13,7 +14,7 @@
  * Note: 
  *
  * Example:
- * [_fogParams_VarName, 120 ] call cvo_storm_fnc_weather_setFog_recursive_continous;
+ * [_fogParams_Target, _setFog, 120 ] call cvo_storm_fnc_weather_setFog_recursive_continous;
  * 
  * Public: No
  */
@@ -21,17 +22,13 @@
 
 if (!isServer)                              exitWith {_this remoteExecCall ["cvo_storm_fnc_weather_setFog_recursive_continous",2]};
 
-// if (isNil "CVO_WeatherChanges_active")   exitWith {false};
-// if (!CVO_WeatherChanges_active)          exitWith {false};
-
-
   params [
-    ["_fogParams_VarName",  "",        [""]         ],
-    ["_duration",            0,         [0]         ],
-    ["_iteration",     "UNDEFINED",    [[]],   [3]  ]
+    ["_param_target",       [0,0,0],    [[]],   [3] ],
+    ["_duration",           0,          [0]         ],
+    ["_continous",          true,       [0]         ]
 ];
 
-// diag_log format ['[CVO](debug)(fn_weather_setFog_recursive_continous) _fogParams_VarName: %1 - _duration: %2 - _iteration: %3 - "": %4 - "": %5 - "": %6 - "": %7 - "": %8', _fogParams_VarName , _duration ,_iteration , "" , "" , "" , "" , "" ];
+
 
 if (_duration isEqualTo 0) exitWith {    diag_log format ["[CVO][STORM](fn_weather_setFog_recursive_continous) - %1", "duration equal 0"]; false };
 
@@ -117,12 +114,13 @@ _case3 = {
     _fogParams set [2, (_fogParams select 2) + _fogBase];
 
     for "_i" from 0 to 2 do {
+        diag_log format ['[CVO](debug)(fn_weather_setFog_recursive_continous) 0: %1 - _iteration # 1: %2 - _iteration # 0: %3 - _previous_FogParams #_i : %4 - _fogParams # _i : %5 - true: %6', 0 , _iteration # 1 ,_iteration # 0 , _previous_FogParams #_i  , _fogParams # _i  , true ];
         _fogParams set [_i, linearConversion [0, _iteration # 1, _iteration # 0, _previous_FogParams # _i, _fogParams # _i, true] ];
     };
 
     // apply Effect
     _iteration#2 setFog _fogParams;
-    // diag_log format[ "%1 - %2 setFog %3", _mode, _iteration#2, _fogParams ];
+    diag_Log format[ "%1 - %2 setFog %3", _mode, _iteration#2, _fogParams ];
 
     // Increases the Iteration cycle
     _iteration set [ 0, (_iteration select 0) + 1 ];
