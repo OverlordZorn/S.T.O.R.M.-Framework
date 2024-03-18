@@ -17,6 +17,6 @@ systemChat format ["Intensity set to: %1", intensity];
 
 // diag_log "[CVO](debug)(StormEffects) Post ppEffects ";
 
-["CVO_Weather_Sandstorm_01",        duration, intensity] call CVO_STORM_fnc_weather_request;
+// ["CVO_Weather_Sandstorm_01",        duration, intensity] call CVO_STORM_fnc_weather_request;
 
 //diag_log "[CVO](debug)(StormEffects) Post Weather";

@@ -12,14 +12,14 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=12;
+		nextID=17;
 	};
 	class Camera
 	{
-		pos[]={8070.043,64.857262,8833.2842};
-		dir[]={-0.56262642,-0.59577572,-0.57316405};
-		up[]={-0.41735366,0.80314642,-0.42517003};
-		aside[]={-0.71364206,-1.1065276e-007,0.70052242};
+		pos[]={8092.0122,69.282898,8821.5273};
+		dir[]={-0.56262285,-0.59577143,-0.57315964};
+		up[]={-0.41734788,0.80315399,-0.42516395};
+		aside[]={-0.71363604,0,0.70051676};
 	};
 };
 binarizationWanted=0;
@@ -114,7 +114,7 @@ class CustomAttributes
 				class data
 				{
 					singleType="STRING";
-					value="if !isMultiplayer then {CVO_Debug = true};" \n "duration = 1;" \n "intensity = 1;" \n "useAISteeringComponent true;";
+					value="if !isMultiplayer then {CVO_Debug = true};";
 				};
 			};
 		};
@@ -127,7 +127,7 @@ class Mission
 	{
 		timeOfChanges=1800.0002;
 		startWeather=0;
-		startFog=0.29150763;
+		startFog=0.14417306;
 		startWind=1;
 		startLightnings=1;
 		startWaves=0.1;
@@ -439,14 +439,14 @@ class Mission
 				{
 					dataType="Waypoint";
 					loiterAltitude=-3.4028235e+038;
-					position[]={8030.6167,41.406178,8811.6494};
+					position[]={8030.6172,41.406357,8811.6494};
 					class Effects
 					{
 					};
 					showWP="NEVER";
 					id=223;
 					type="Move";
-					atlOffset=0.99682236;
+					atlOffset=0.99700165;
 				};
 			};
 			class Attributes
@@ -623,7 +623,7 @@ class Mission
 					};
 					showWP="NEVER";
 					id=210;
-					type="Talk";
+					type="Move";
 					atlOffset=0.49452972;
 					class AttachedTo
 					{
@@ -810,7 +810,7 @@ class Mission
 		class Item18
 		{
 			dataType="Trigger";
-			position[]={7945.6211,41.331501,8810.7695};
+			position[]={8062.8359,42.919044,8844.2383};
 			angle=3.1247504;
 			class Attributes
 			{
@@ -830,33 +830,8 @@ class Mission
 		{
 			dataType="Layer";
 			name="Layer 1";
-			state=1;
-			class Entities
-			{
-				items=1;
-				class Item0
-				{
-					dataType="Trigger";
-					position[]={8061.105,40.591057,8762.6152};
-					angle=3.1247504;
-					class Attributes
-					{
-						onActivation="[] execVM ""StormEffects.sqf"";";
-						sizeA=75.905998;
-						sizeB=81.494003;
-						sizeC=0;
-						activationType="NOT PRESENT";
-						activationBy="ANYPLAYER";
-						isRectangle=1;
-						isServerOnly=1;
-					};
-					id=314;
-					type="EmptyDetectorArea10x10";
-					atlOffset=0.74200058;
-				};
-			};
 			id=315;
-			atlOffset=0.74200058;
+			atlOffset=-70.699997;
 		};
 		class Item20
 		{
