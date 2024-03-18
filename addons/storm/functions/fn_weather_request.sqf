@@ -30,7 +30,7 @@ params [
 if ( missionNamespace getVariable ["CVO_WeatherChanges_active", false] ) exitWith { diag_log "[CVO](STORM)(fn_weather_request) Request failed: Weather Transition already taking place"; false };
 
 // check: Can reset?
-if ( _intensity == 0 && isNil "CVO_Storm_previous_weather_hashMap" ) exitWith { diag_log "[CVO](STORM)(fn_weather_request) Request Failed: _intensity 0 -> Reset while no change of weather exists"; false };
+if ( _intensity == 0 && isNil "CVO_Storm_weather_previous" ) exitWith { diag_log "[CVO](STORM)(fn_weather_request) Request Failed: _intensity 0 -> Reset while no change of weather exists"; false };
 
 if (_intensity == 0) then {   _weather_preset_name = "Reset";  };
 
@@ -38,11 +38,8 @@ if (_intensity == 0) then {   _weather_preset_name = "Reset";  };
 if (_weather_preset_name isEqualTo "")    exitWith { diag_log "[CVO](debug)(fn_weather_request) Request Failed: Weather PresetName = "" "; false };
 
 
-_duration = _duration max 1;
-_duration = _duration * 60;
-
-_intensity = _intensity max 0;
-_intensity = _intensity min 1;
+_duration = 60 * _duration max 1;
+_intensity = _intensity max 0 min 1;
 
 
 if (isNil "CVO_WeatherChanges_active") then {   CVO_WeatherChanges_active = true;   };
@@ -50,7 +47,7 @@ if (isNil "CVO_WeatherChanges_active") then {   CVO_WeatherChanges_active = true
 
 
 private _hashMap = switch (_intensity) do {
-   case 0: { + CVO_Storm_previous_weather_hashMap };
+   case 0: { + CVO_Storm_weather_previous };
    default { [_weather_preset_name] call cvo_storm_fnc_weather_get_WeatherPreset_as_Hash; };
 };
 
@@ -61,12 +58,18 @@ diag_log format ["[CVO][STORM](Weather_request) Weather sucessfully Requested: %
 diag_log format ["[CVO][STORM](Weather_request) hashmap: %1", _hashMap];
 
 
-CVO_Storm_previous_weather_hashMap = createHashMap;
+private _firstWeatherChange = isNil "CVO_Storm_weather_previous";
+
+if (_firstWeatherChange) then {
+   CVO_Storm_weather_previous = createHashMap;
+};
+
 
 
 // ##########################################################
 // ################### FREEZE CURRENT ####################### 
 
+/*
 0 setOvercast     overcast;
 0 setRain         rain;
 0 setLightnings   lightnings;
@@ -77,6 +80,7 @@ CVO_Storm_previous_weather_hashMap = createHashMap;
 forceWeatherChange;
 
 diag_log "[CVO](debug)(fn_weather_request) Freeze Current Weather Done";
+*/
 
 // ##########################################################
 // ################### OVERCAST ############################# 
@@ -85,9 +89,11 @@ if ((_hashMap getOrDefault ["change_overcast",0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Overcast Requested";
 
 
+if (_firstWeatherChange) then {
    // Save Current
-   CVO_Storm_previous_weather_hashMap set ["change_overcast", 1];
-   CVO_Storm_previous_weather_hashMap set ["overcast", overcast];
+   CVO_Storm_weather_previous set ["change_overcast", 1];
+   CVO_Storm_weather_previous set ["overcast_value", overcast];
+};
 
 //   diag_log format ["[CVO][STORM](Weather_request) - overcast_value: %1", _hashMap get "overcast_value"];
 
@@ -98,32 +104,6 @@ if ((_hashMap getOrDefault ["change_overcast",0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Overcast Done";
 };
 
-// ##################################################
-// ################### wind vector ################## 
-
-if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Wind Requested";
-
-
-   // Save Current
-   CVO_Storm_previous_weather_hashMap set ["change_overcast", 1];
-   CVO_Storm_previous_weather_hashMap set ["wind", wind];
-   diag_log format ['[CVO](debug)(fn_weather_request) CVO_Storm_previous_weather_hashMap: %1 - "": %2 - "": %3 - "": %4 - "": %5 - "": %6 - "": %7 - "": %8', CVO_Storm_previous_weather_hashMap , "" ,"" , "" , "" , "" , "" , "" ];
-
-   // get Value + Intensity
-   _target_magnitude = linearConversion[0,1,_intensity,0,_hashMap get "wind_value",true];
-
-   diag_log format ['[CVO](debug)(fn_weather_request) _target_magnitude: %1', _target_magnitude];
-   // Start "recursive", finite  transition.
-
-   _forceWindEnd = switch (_hashMap get "forceWindEnd") do {
-      case 1: { true };
-      default { false};
-   };
-   
-   [_target_magnitude, _duration, _forceWindEnd] call cvo_storm_fnc_weather_setWind;
-   diag_log "[CVO](debug)(fn_weather_request) Set Wind Done";
-};
 
 // ##################################################
 // ################### Gusts ######################## 
@@ -131,9 +111,11 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 if ((_hashMap getOrDefault ["change_gusts", 0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Gust Done";
 
+if (_firstWeatherChange) then {
    // Save Current
-   CVO_Storm_previous_weather_hashMap set ["change_gusts", 1];
-   CVO_Storm_previous_weather_hashMap set ["gusts", gusts];
+   CVO_Storm_weather_previous set ["change_gusts", 1];
+   CVO_Storm_weather_previous set ["gusts_value", gusts];
+};
 
    // apply Intensity
    _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "gusts_value", true];
@@ -148,9 +130,12 @@ if ((_hashMap getOrDefault ["change_gusts", 0]) > 0) then {
 
 if ((_hashMap getOrDefault ["change_waves", 0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Waves Requested";
+
+if (_firstWeatherChange) then {
    // Save Current
-   CVO_Storm_previous_weather_hashMap set ["change_gusts", 1];
-   CVO_Storm_previous_weather_hashMap set ["waves", waves];
+   CVO_Storm_weather_previous set ["change_gusts", 1];
+   CVO_Storm_weather_previous set ["waves_value", waves];
+};
 
    // apply Intensity
    _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "waves_value", true];
@@ -168,9 +153,12 @@ if ((_hashMap getOrDefault ["change_waves", 0]) > 0) then {
 
 if ((_hashMap getOrDefault ["change_lightnings", 0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Lightning Requested";
+
+if (_firstWeatherChange) then {
    // Save Current
-   CVO_Storm_previous_weather_hashMap set ["change_lightnings", 1];
-   CVO_Storm_previous_weather_hashMap set ["lightnings", lightnings];
+   CVO_Storm_weather_previous set ["change_lightnings", 1];
+   CVO_Storm_weather_previous set ["lightnings_value", lightnings];
+};
 
    // apply Intensity
    _value = linearConversion [   0,    1, _intensity, 0, _hashMap get "lightnings_value", true];
@@ -178,47 +166,6 @@ if ((_hashMap getOrDefault ["change_lightnings", 0]) > 0) then {
    _duration setLightnings _value;
    diag_log "[CVO](debug)(fn_weather_request) Set Lightning Done ";
 };
-
-
-// ##################################################
-// ################### fog params ################### 
-
-if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
-   diag_log "[CVO](debug)(fn_weather_request) Set Fog Requested";
-   // Save Current
-   CVO_Storm_previous_weather_hashMap set ["change_fog", 1];
-   CVO_Storm_previous_weather_hashMap set ["fogParams", fogParams];
-
-   // Establish FogParameters for the Transition
-
-   _fog_target = [];
-   _fog_target set [0, (linearConversion [0,1,_intensity, _hashMap get "fog_value_min",_hashMap get "fog_value_max", false])];
-   _fog_target set [1,_hashMap get "fog_dispersion"];
-   _fog_target set [2,_hashMap get "fog_base"];
-   _fogMode = _hashMap get "fog_mode";
-
-   switch (_fogMode) do {
-      case 0: { };
-      default { };
-   };
-
-
-
-   // Execute
-   if (isNil "CVO_Storm_FogParams_target") then {
-
-      diag_log "[CVO](debug)(fn_weather_request) fog params - CVO_Storm_FogParams_target isNil! ";
-      // Establish new setFog-loop
-      CVO_Storm_FogParams_target = _fogParams;
-      ["CVO_Storm_FogParams_target", _duration ] call cvo_storm_fnc_weather_setFog_recursive_continous;
-   } else {
-      // update already existing setFog-loop
-      CVO_Storm_FogParams_target = _fogParams;
-      diag_log "[CVO](debug)(fn_weather_request) fog params - CVO_Storm_FogParams_target is not Nil! ";
-   };
-   diag_log "[CVO](debug)(fn_weather_request) Set Fog Done ";
-};
-
 
 // ##########################################################
 // ################### RAIN & RAIN PARAMS ################### 
@@ -228,15 +175,18 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
 
 if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Rain Requested - RainParams: true ";
-   // Store previous rain Parms
-   CVO_Storm_previous_weather_hashMap set ["change_rainParams", 1];
-   CVO_Storm_previous_weather_hashMap set ["RainParams", rainParams];
 
-   // Store previous rainValue if rain changes
-   if ((_hashMap getOrDefault ["change_rainValue", 0]) > 0) then { 
-      CVO_Storm_previous_weather_hashMap set ["change_rainValue", 1];
-      CVO_Storm_previous_weather_hashMap set ["rain", rain];
+   if (_firstWeatherChange) then {
+      // Store previous rain Parms
+      CVO_Storm_weather_previous set ["change_rainParams", 1];
+      CVO_Storm_weather_previous set ["RainParams", rainParams];
+      // Store previous rainValue if rain changes
+      if ((_hashMap getOrDefault ["change_rainValue", 0]) > 0) then { 
+         CVO_Storm_weather_previous set ["change_rainValue", 1];
+         CVO_Storm_weather_previous set ["rain_value", rain];
+      };
    };
+
 
    //retrieve RainParms Value and Rain Value with Intensity
    _rainParams = [ _hashMap get "rainParams" ] call cvo_storm_fnc_weather_get_rainParams_as_Array;
@@ -260,9 +210,12 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Rain Requested";
    // Set Rain only
    if ((_hashMap getOrDefault ["change_rainValue", 0]) > 0) then {
+
+   if (_firstWeatherChange) then {
       // Save Current
-      CVO_Storm_previous_weather_hashMap set ["change_rainValue", 1];
-      CVO_Storm_previous_weather_hashMap set ["rain", rain];
+      CVO_Storm_weather_previous set ["change_rainValue", 1];
+      CVO_Storm_weather_previous set ["rain_value", rain];
+   };
 
       diag_log format ["[CVO][STORM](Weather_request) reee - _hashMap get ""rain_value"": %1 - _duration: %2- _intensity: %3", (_hashMap get "rain_value"), _duration, _intensity];
 
@@ -274,13 +227,93 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
    };
 };
 
+
+// ##################################################
+// ################### fog params ################### 
+
+// TODO: Needs handling of _intensity = 0 case.
+
+if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
+   diag_log "[CVO](debug)(fn_weather_request) Set Fog Requested";
+  if (_firstWeatherChange) then {
+ // Save Current
+   CVO_Storm_weather_previous set ["change_fog", 1];
+   CVO_Storm_weather_previous set ["fogParams", fogParams];
+   };
+
+
+ // Establish _fog_target for the Transition
+   private ["_fog_target", "_fog_Mode"];
+   switch (_intensity) do {
+      case 0: {
+         // Handles reset 
+         _fog_target = _hashMap getOrDefault ["fogParams", [0,0,0]];
+         _fog_Mode = 0;
+      };
+      default {
+         _fog_target = [];
+         _fog_target set [0, ( linearConversion [0,1,_intensity, _hashMap get "fog_value_min",_hashMap get "fog_value_max", true] )];
+         _fog_target set [1,_hashMap get "fog_dispersion"];
+         _fog_target set [2,_hashMap get "fog_base"];
+         _fog_Mode = _hashMap getOrDefault ["fog_mode", 0];
+      };
+   };
+   diag_log format ['[CVO](debug)(fn_weather_request) _intensity: %1 - _fog_target: %2 - _fog_Mode: %3', _intensity , _fog_target ,_fog_Mode];
+
+ // Executes Transition based on Mode
+   switch (_fog_Mode) do {
+      case 0: {
+         // No fogBase via AvgASL needed. Terminate perFrameHandler if active.
+         if (!isNil "CVO_Storm_fogParams") then {CVO_Storm_fogParams = nil};
+         _duration setFog _fog_target;
+         diag_log "[CVO](debug)(fn_weather_request) FogMode 0 Requested.";
+      };
+      default {
+         // fogBase via AvgASL requested.
+         [_fog_target, _duration] call cvo_Storm_fnc_weather_setFog_avg;
+         diag_log format ['[CVO](debug)(fn_weather_request) cvo_storm_fnc_weather_setFog_avg called # _fog_target: %1 - _duration: %2', _fog_target , _duration];
+         // If fogBase via AvgASL is requested only during initial Tranistion, (Mode=1), perFrameHandler will be terminated after transition.
+         _isContinous = [false, true] select (_fog_Mode - 1);
+         if (!_isContinous) then { [ { CVO_Storm_fogParams = nil; } , [], _duration] call CBA_fnc_waitAndExecute;};
+      };
+   };
+};
+
+// ##################################################
+// ################### wind vector ################## 
+
+if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
+   diag_log "[CVO](debug)(fn_weather_request) Set Wind Requested";
+
+
+   if (_firstWeatherChange) then {
+      // Save Current
+      CVO_Storm_weather_previous set ["change_wind", 1];
+      CVO_Storm_weather_previous set ["wind_value", vectorMagnitude wind];
+   };
+
+   // get Value + Intensity
+   _target_magnitude = linearConversion[0,1,_intensity,0,_hashMap get "wind_value",true];
+
+   diag_log format ['[CVO](debug)(fn_weather_request) _target_magnitude: %1', _target_magnitude];
+   // Start "recursive", finite  transition.
+
+   _forceWindEnd = switch (_hashMap get "forceWindEnd") do {
+      case 1: { true };
+      default { false};
+   };
+   
+   [_target_magnitude, _duration, _forceWindEnd] call cvo_storm_fnc_weather_setWind;
+   diag_log "[CVO](debug)(fn_weather_request) Set Wind Done";
+};
+
 // ##########################################################
 // ##########################################################
 
 
 private _code = switch (_intensity) do {
    case 0: {{
-      CVO_Storm_previous_weather_hashMap = nil;
+      CVO_Storm_weather_previous = nil;
 
       CVO_WeatherChanges_active = false;
       Diag_log "[CVO](debug)(fn_weather_request) Transition Complete";
