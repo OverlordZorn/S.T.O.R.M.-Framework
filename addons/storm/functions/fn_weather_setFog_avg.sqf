@@ -1,11 +1,10 @@
 
 /*
  * Author: [Zorn]
- * Applies Fog initially and, if needed updates it based on getAvgASL.
+ * Initialises or Readjust perFrameHandler which setFogs overtime while fogbase is modified based on average player ASL - based on global variable - if global variable isNil, perFrameHandler stops.
  *
  * Arguments:
  * 0: _fogParams_Target
- * 1: _fogParams_Previous
  * 1: _duration                      <Number> Duration in Secounds over which this effect is to be applied.
  *
  * Return Value:
@@ -14,132 +13,80 @@
  * Note: 
  *
  * Example:
- * [_fogParams_Target, _setFog, 120 ] call cvo_storm_fnc_weather_setFog_recursive_continous;
+ * [_fogParams_Target, _setFog, 120 ] call cvo_storm_fnc_weather_setFog_avg;
  * 
  * Public: No
  */
 
 
-if (!isServer)                              exitWith {_this remoteExecCall ["cvo_storm_fnc_weather_setFog_recursive_continous",2]};
+if (!isServer)                              exitWith {_this remoteExecCall ["cvo_storm_fnc_weather_setFog_avg",2]};
 
   params [
-    ["_param_target",       [0,0,0],    [[]],   [3] ],
-    ["_duration",           0,          [0]         ],
-    ["_continous",          true,       [0]         ]
+    ["_fog_target",         [0,0,0],    [[]],   [3] ],
+    ["_duration",           0,          [0]         ]
 ];
 
 
+if (_duration isEqualTo 0) exitWith {    diag_log format ["[CVO][STORM](fn_weather_setFog_avg) - %1", "duration equal 0"]; false };
 
-if (_duration isEqualTo 0) exitWith {    diag_log format ["[CVO][STORM](fn_weather_setFog_recursive_continous) - %1", "duration equal 0"]; false };
+private _fog_previous = fogParams;
 
-private _fogParams = missionNamespace getVariable [_fogParams_VarName, "NOT DEFINED"];
+private _startTime = time;
+private _endTime = time + _duration;
 
-if  (_fogParams isEqualTo "NOT DEFINED") exitWith {diag_log format ["[CVO][STORM](fn_weather_setFog_recursive_continous) - %1", "fogparams not defined"]; false};
+#define DELAY 20
 
-// make copy of array and assign it to the variable to avoid editing the original
-_fogParams = + _fogParams;
+private _needStart = isNil "CVO_Storm_fogParams";
 
-private _previous_FogParams = CVO_Storm_previous_weather_hashmap get "fogParams";
-
-
-
-// Handles reset to previous fogParams during Hard Reset
-if  (_fogParams isEqualTo false)         exitWith { 
-        diag_log format ["[CVO][STORM](ExitWith) - %1", "_fogParams equal to false"];
-        // if current weather is not already equal to the previous fog (in case of hard stop), apply previous weather over 0.1 * _duration
-        if !(fogParams isEqualTo _previous_FogParams) then { (_duration / 10) setFog _previous_FogParams };
-        missionNamespace setVariable [_fogParams_VarName, nil];
-};
-
-private _mode = _fogParams select 3;
-_fogParams deleteAt 3;
+CVO_Storm_fogParams = [_startTime, _endTime, _fog_previous, _fog_target, DELAY];
 
 
-if !(_fogParams isEqualType [])          exitWith {diag_log format ["[CVO][STORM](fn_weather_setFog_recursive_continous) - %1", "fogParams isnt an array "];false};
+// If the perFrameHandler is already running, we only need to update the array
+if (!_needStart) exitWith {};
 
+private _condition = { !isNil "CVO_Storm_fogParams" };
 
-// ##################################################
-// Case 1: Set Fog once without using AvgASL 
-_case1 = {
-    // apply Effect
-    _duration setFog _fogParams;
-    diag_log format[ "%1 - %2 setFog %3", _mode, _duration, _fogParams ];
+private _codeToRun = {
+    
+    private _avg_ASL = round ([] call cvo_storm_fnc_weather_get_AvgASL);
 
-    // Delete global var
-    missionNamespace setVariable [_fogParams_VarName, nil];
-};
-// ##################################################
-
-
-// ##################################################
-// Case 2: set Fog Once, use AvgASL_once
-_case2 = {
-    // get Avg_ASL once
-    // get Avg_ASL
-    private _var = [] call cvo_storm_fnc_weather_getAvgASL;
-    _fogBase = _var select 0;
-
-    // Add fogBase as "minimum value" and adds avg Players 
-    // Potential need for Fine Tuning
-    _fogParams set [2, (_fogParams select 2) + _fogBase];
-
-    // apply Effect
-    _duration setFog _fogParams;
-    diag_log format[ "%1 - %2 setFog %3", _mode, _duration, _fogParams ];
-
-
-    // Delete global var
-    missionNamespace setVariable [_fogParams_VarName, nil];
-
-};
-// ##################################################
-
-
-// ##################################################
-// Case 3: Set Fog with AsgASL repeatedly, ether until 
-_case3 = {
-    // Defines amount of iterations [Current, Total, time between] - Happens only once
-    if (_iteration isEqualTo "UNDEFINED") then {
-        _total_iterations = 1 + floor (_duration / 15);
-        _delay = _duration / _total_iterations;
-        _iteration = [ 1, _total_iterations, _delay ];
+    private _currentParams = switch (time > CVO_Storm_fogParams#1) do {
+        case true: {
+            // fog_target
+            diag_log "[CVO](debug)(fn_weather_setFog_avg) pfh - past Transition";
+            [
+                CVO_Storm_fogParams#3#0,
+                CVO_Storm_fogParams#3#1,
+               (CVO_Storm_fogParams#3#2) + _avg_ASL
+            ]
+        };
+        case false: {
+            diag_log "[CVO](debug)(fn_weather_setFog_avg) pfh - mid Transition";
+            [
+                linearConversion [CVO_Storm_fogParams#0, CVO_Storm_fogParams#1, time, CVO_Storm_fogParams#2#0, CVO_Storm_fogParams#3#0,             true ],
+                linearConversion [CVO_Storm_fogParams#0, CVO_Storm_fogParams#1, time, CVO_Storm_fogParams#2#1, CVO_Storm_fogParams#3#1,             true ],
+                linearConversion [CVO_Storm_fogParams#0, CVO_Storm_fogParams#1, time, CVO_Storm_fogParams#2#2,(CVO_Storm_fogParams#3#2) + _avg_ASL, true ]
+            ]
+        };
     };
+    diag_log format ['[CVO](debug)(fn_weather_setFog_avg) previous: %1', CVO_Storm_fogParams#2];
+    diag_log format ['[CVO](debug)(fn_weather_setFog_avg)  current: %1', _currentParams];
+    diag_log format ['[CVO](debug)(fn_weather_setFog_avg)   target: %1', CVO_Storm_fogParams#3];
+    diag_log format ['[CVO](debug)(fn_weather_setFog_avg) DELAY: %1', CVO_Storm_fog_Params#4];
+    DELAY setFog _currentParams;
+    diag_log "[CVO](debug)(fn_weather_setFog_avg) setFog successful ";
+};
 
-    // get Avg_ASL
-    private _var = [] call cvo_storm_fnc_weather_getAvgASL;
-    _fogBase = _var select 0;
+_handle = [{
+    params ["_args", "_handle"];
+    _args params ["_codeToRun", "_condition"];
 
-    // Add fogBase as "minimum value" and adds avg Players 
-    // Potential need for Fine Tuning
-    _fogParams set [2, (_fogParams select 2) + _fogBase];
-
-    for "_i" from 0 to 2 do {
-        diag_log format ['[CVO](debug)(fn_weather_setFog_recursive_continous) 0: %1 - _iteration # 1: %2 - _iteration # 0: %3 - _previous_FogParams #_i : %4 - _fogParams # _i : %5 - true: %6', 0 , _iteration # 1 ,_iteration # 0 , _previous_FogParams #_i  , _fogParams # _i  , true ];
-        _fogParams set [_i, linearConversion [0, _iteration # 1, _iteration # 0, _previous_FogParams # _i, _fogParams # _i, true] ];
+    if ([] call _condition) then {
+        diag_log "[CVO](debug)(fn_weather_setFog_avg) PerFrameHandler executing.";
+        [] call _codeToRun;
+    } else {
+        _handle call CBA_fnc_removePerFrameHandler;
+        diag_log "[CVO](debug)(fn_weather_setFog_avg) PerFrameHandler Terminated";
     };
-
-    // apply Effect
-    _iteration#2 setFog _fogParams;
-    diag_Log format[ "%1 - %2 setFog %3", _mode, _iteration#2, _fogParams ];
-
-    // Increases the Iteration cycle
-    _iteration set [ 0, (_iteration select 0) + 1 ];
-
-    // Recursive Call
-    [ 
-        {   
-            _this call cvo_storm_fnc_weather_setFog_recursive_continous;
-        },
-        [ _fogParams_VarName, _duration, _iteration ], _iteration#2] call CBA_fnc_waitAndExecute;
-};
-// ##################################################
-
-
-switch (_mode) do {
-    case "no_avg_ASL":           _case1;
-    case "use_AvgASL_once":      _case2;
-    case "use_AvgASL_continous": _case3;
-};
-
-
+}, DELAY, [_codeToRun,_condition]] call CBA_fnc_addPerFrameHandler;
 
