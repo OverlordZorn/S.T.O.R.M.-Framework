@@ -231,8 +231,6 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 // ##################################################
 // ################### fog params ################### 
 
-// TODO: Needs handling of _intensity = 0 case.
-
 if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
    diag_log "[CVO](debug)(fn_weather_request) Set Fog Requested";
   if (_firstWeatherChange) then {
