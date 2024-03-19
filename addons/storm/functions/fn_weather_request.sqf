@@ -288,6 +288,8 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
       // Save Current
       CVO_Storm_weather_previous set ["change_wind", 1];
       CVO_Storm_weather_previous set ["wind_value", vectorMagnitude wind];
+
+      missionNamespace setVariable ["ace_weather_disableWindSimulation", true];
    };
 
    // get Value + Intensity
@@ -303,6 +305,10 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
    
    [_target_magnitude, _duration, _forceWindEnd] call cvo_storm_fnc_weather_setWind;
    diag_log "[CVO](debug)(fn_weather_request) Set Wind Done";
+
+   if (_intensity == 0) then {
+      [ { missionNamespace setVariable ["ace_weather_disableWindSimulation", nil]; } , [], _duration] call CBA_fnc_waitAndExecute;
+   };
 };
 
 // ##########################################################
