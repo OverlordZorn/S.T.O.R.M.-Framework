@@ -30,10 +30,10 @@ params [
     ["_wind_magnitude",          0,     [0]       ],
     ["_duration",                0,     [0]       ],
     ["_forceWindEnd",        false, [false]       ],
-    ["_azimuth",            "RAND",  ["",0]       ]
+    ["_azimuth",            "PREV",  ["",0]       ]
 ];
 
-diag_log format ['[CVO](debug)(fn_weather_setWind)(START) _wind_magnitude: %1 - _duration: %2 - _forceWindEnd: %3 - _azimuth: %4', _wind_magnitude , _duration ,_forceWindEnd , _azimuth];
+// diag_log format ['[CVO](debug)(fn_weather_setWind)(START) _wind_magnitude: %1 - _duration: %2 - _forceWindEnd: %3 - _azimuth: %4', _wind_magnitude , _duration ,_forceWindEnd , _azimuth];
 
 if (_duration isEqualTo 0) exitWith {false};
 
@@ -65,24 +65,24 @@ private _codeToRun = {
     // diag_log format ['[CVO](debug)(fn_weather_setWind) Pre: _newWind: %1 - vectorMagnitude _newWind: %2', _newWind , vectorMagnitude _newWind ];
     _newWind = [_newWind#0, _newWind#1, true];
     setWind _newWind;
-    diag_log format ['[CVO](debug)(fn_weather_setWind) Post: wind: %1 - vectorMagnitude wind: %2', wind , vectorMagnitude wind ];
+    // diag_log format ['[CVO](debug)(fn_weather_setWind) Post: wind: %1 - vectorMagnitude wind: %2', wind , vectorMagnitude wind ];
 };
 
 private _exitCode = {
     // diag_log format ['[CVO](debug)(fn_weather_setWind)  _this#3: %1 - vectorMagnitude  _this#3: %2',  _this#3 , vectorMagnitude  (_this#3) ];
     _finalWind = + _this#3;
-    diag_log format ['[CVO](debug)(fn_weather_setWind) _finalWind: %1 - vectorMagnitude _finalWind: %2', _finalWind , vectorMagnitude _finalWind ];
+    // diag_log format ['[CVO](debug)(fn_weather_setWind) _finalWind: %1 - vectorMagnitude _finalWind: %2', _finalWind , vectorMagnitude _finalWind ];
     _finalWind = [_finalWind#0, _finalWind#1, _this#4];
     setWind _finalWind;
-    diag_log format ['[CVO](debug)(fn_weather_setWind) Wind: %1 - vectorMagnitude Wind: %2', Wind , vectorMagnitude Wind ];
-    diag_log "[CVO][STORM](fn_weather_setWind) - Transition completed!";
+    // diag_log format ['[CVO](debug)(fn_weather_setWind) Wind: %1 - vectorMagnitude Wind: %2', Wind , vectorMagnitude Wind ];
+    // diag_log "[CVO][STORM](fn_weather_setWind) - Transition completed!";
 };
 
 
 private _condition = { _this#1 > time };
-private _delay = 5;
+private _delay = 1;
 
-diag_log "[CVO][STORM](fn_weather_setWind) - Transition starting!";
+// diag_log "[CVO][STORM](fn_weather_setWind) - Transition starting!";
 [{
     params ["_args", "_handle"];
     _args params ["_codeToRun", "_parameters", "_exitCode", "_condition"];

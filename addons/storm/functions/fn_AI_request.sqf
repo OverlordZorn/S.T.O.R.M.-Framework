@@ -145,7 +145,7 @@ if (_intensity == 0) then {
 
         }, 
         [], 
-        _duration * 1.05
+        _duration * 1.01
     ] call CBA_fnc_waitAndExecute;
 };
 

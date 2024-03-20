@@ -16,7 +16,8 @@
  * Public: No
  */
 
- if !(isServer) exitWith {};
+if (!isServer) exitWith { _this remoteExecCall [ "cvo_storm_fnc_particle_request", 2, false]; };
+
 
 params [
    ["_PE_effect_Name",        "", [""]],
@@ -41,9 +42,8 @@ if !(_PE_effect_Name in (configProperties [configFile >> "CVO_PE_Effects", "true
 private _jip_handle_string = [_PE_effect_Name,"_JIP_HANDLE"] joinString "";
 if ( _intensity == 0 && { isNil "CVO_PE_active_jips" || { !(_jip_handle_string in CVO_PE_active_jips)} } ) exitWith {   diag_log "[CVO](STORM)(Particle_request) Failed: _intensity 0 while no previous effect of same type exists"; };
 
-if (isNil "CVO_PE_inTransition") then {
-    CVO_PE_inTransition = [];
-};
+if (isNil "CVO_PE_inTransition") then { CVO_PE_inTransition = []; };
+
 private _inTransition_str = ["CVO_STORM",_PE_effect_Name] joinString "_";
 if (_inTransition_str in CVO_PE_inTransition) exitWith {diag_log "[CVO](debug)(Particle_request) Failed: This Particle Effect is currently in Transition"};
 diag_log format ['[CVO](debug)(Particle_request) Request Passed: _PE_effect_Name: %1 - _duration: %2 - _intensity: %3', _pp_effect_Name , _duration ,_intensity];

@@ -17,6 +17,8 @@
  */
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_request) - Start : %1", _this];
+ 
+if (!isServer) exitWith { _this remoteExecCall [ "cvo_storm_fnc_ppEffect_request", 2, false]; };
 
  params [
     ["_PP_effect_Name", "", [""]],

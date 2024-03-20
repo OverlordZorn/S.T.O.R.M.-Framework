@@ -79,11 +79,14 @@ class CfgFunctions
 			file = "z\cvo_storm\addons\storm\functions";
 
 			class weather_request {};
-			class weather_getAvgASL {};
 			class weather_get_WeatherPreset_as_Hash {};
+
 			class weather_get_rainParams_as_Array {};
+
+			class weather_get_AvgASL {};
+
 			class weather_setWind {};
-			class weather_setFog_recursive_continous {};
+			class weather_setFog_avg {};
 
 		};
 		
