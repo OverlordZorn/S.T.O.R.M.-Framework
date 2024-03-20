@@ -32,6 +32,8 @@ class CfgPatches {
 #include "Cfg\CVO_PP_Effects.hpp"
 #include "Cfg\CVO_AI_SubSkills.hpp"
 
+#include "sounds\CVO_SFX_Sounds.hpp"
+
 class CfgCloudlets {
 	#include "Cfg\CVO_PE_ParticleEffects.hpp"
 };
@@ -48,7 +50,6 @@ class CVO_Weather_Effects
 		#include "Cfg\CVO_WE_RainParams.hpp"
 	};
 };
-
 
 
 
