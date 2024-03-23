@@ -41,15 +41,8 @@ class CfgCloudlets {
 
 class CVO_Weather_Effects
 {
-	class CVO_Weather_Presets
-	{
-		#include "Cfg\CVO_WE_WeatherPresets.hpp"
-	};
-
-	class CVO_Rain_Params
-	{
-		#include "Cfg\CVO_WE_RainParams.hpp"
-	};
+	#include "Cfg\CVO_WE_WeatherPresets.hpp"
+	#include "Cfg\CVO_WE_RainParams.hpp"
 };
 
 
@@ -58,18 +51,26 @@ class CfgFunctions
 {
 	class CVO_Storm            // Tag
 	{
+		class storm
+		{
+			file = "z\cvo_storm\addons\storm\functions\storm";
+
+			class storm_request {};
+		};
+
 		class common   // Category
 		{
-			file = "z\cvo_storm\addons\storm\functions";
+			file = "z\cvo_storm\addons\storm\functions\common";
 
 			class common_hash_from_config {};
 		};
 		
 		class PostProcessing   // Category
 		{
-			file = "z\cvo_storm\addons\storm\functions";
+			file = "z\cvo_storm\addons\storm\functions\ppEffect";
 
 			class ppEffect_request {};
+
 			class ppEffect_remote {};
 			class ppEffect_get_from_config {};
 			class ppEffect_convert_intensity {};
@@ -77,33 +78,34 @@ class CfgFunctions
 		
 		class WeatherSettings   // Category
 		{
-			file = "z\cvo_storm\addons\storm\functions";
+			file = "z\cvo_storm\addons\storm\functions\weather";
 
 			class weather_request {};
-			class weather_get_WeatherPreset_as_Hash {};
 
+			class weather_get_WeatherPreset_as_Hash {};
 			class weather_get_rainParams_as_Array {};
 
 			class weather_get_AvgASL {};
 
 			class weather_setWind {};
 			class weather_setFog_avg {};
-
 		};
 		
 		class ParticleEffects   // Category
 		{
-			file = "z\cvo_storm\addons\storm\functions";
+			file = "z\cvo_storm\addons\storm\functions\particle";
 
 			class particle_request {};
+
 			class particle_remote {};
 		};
 
 		class AI_Skills   // Category
 		{
-			file = "z\cvo_storm\addons\storm\functions";
+			file = "z\cvo_storm\addons\storm\functions\AI";
 
 			class AI_request {};
+
 			class AI_setSkill_recursive {};
 			class AI_cleanup_recursive {};
 		};
