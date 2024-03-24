@@ -32,7 +32,7 @@ class CfgPatches {
 #include "Cfg\CVO_PP_Effects.hpp"
 #include "Cfg\CVO_AI_SubSkills.hpp"
 
-#include "Cfg\CVO_SFX_Simple.hpp"
+// #include "Cfg\CVO_SFX_SimpleSFXs.hpp"
 #include "data\sounds\CVO_SFX_Cfg.hpp"
 
 class CfgCloudlets {
@@ -109,13 +109,15 @@ class CfgFunctions
 			class AI_setSkill_recursive {};
 			class AI_cleanup_recursive {};
 		};
-		class sound
+		class SFX
 		{
-			file = "z\cvo_storm\addons\storm\functions\sound";
+			file = "z\cvo_storm\addons\storm\functions\SFX";
 
-			class sound_request {};
+			class SFX_request {};
 
-			class sound_remote_distant {};
+			class SFX_remote_3d {};
+			class SFX_local_3d {};
+			class SFX_local_3d_recursive {};
 		};
 	}; 
 };

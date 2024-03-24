@@ -2,7 +2,7 @@
 https://community.bistudio.com/wiki/CfgSFX
 https://community.bistudio.com/wiki/createSoundSource
 
-
+the old shit
 [] spawn {
 	
 	diag_log ("[CVO] [SandStorm] (Wind 1) - Init");

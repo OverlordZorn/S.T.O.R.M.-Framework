@@ -79,7 +79,7 @@ class CfgSounds
 	{
 		name = "CVO Storm Wind Long: 2 - Strong Wind";															// display name
 		sound[] = { "z\cvo_storm\addons\storm\data\sounds\strong_wind.ogg", "db+3", 1, 5000 };	// file, volume, pitch, maxDistance
-		duration 70;
+		duration = 70;
 	};
 
 	class CVO_SFX_SS_WindBurst1 : CVO_SFX_SS_Base
