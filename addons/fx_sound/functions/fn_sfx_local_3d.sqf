@@ -11,7 +11,7 @@
 * None
 *
 * Example:
-* [_soundName,_soundPreset, _direction, _maxDistance, _minDistance, _intensity] call cvo_storm_fnc_sfx_local_3d
+* [_soundName,_soundPreset, _direction, _distance, _intensity, _maxDistance] call cvo_storm_fnc_sfx_local_3d;
 *
 * Public: Yes
 */
@@ -35,8 +35,12 @@ params [
 
 
 if (_soundName == "") exitWith {};
-
 if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWith {diag_log format ['[CVO](debug)(fn_sound_remote_spacial) failed: _Direction invalid: %1', _direction]; };
+
+diag_log "[CVO](debug)(fn_sfx_local_3d) Started ";
+
+diag_log format ['[CVO](debug)(fn_sfx_local_3d) _this: %1', _this];
+diag_log format ['[CVO](debug)(fn_sfx_local_3d) _soundName: %1 - _soundPreset: %2 - _direction: %3 - _distance: %4 - _intensity: %5 - "": %6 - "": %7 - "": %8', _soundName , _soundPreset ,_direction , _distance , _intensity , "" , "" , "" ];
 
 if ( ! missionNamespace getVariable ["CVO_SFX_3D_helper_array", false] ) then {    CVO_SFX_3D_helper_array = [];    };
 
@@ -62,6 +66,7 @@ if (_direction isEqualType "") then {
         default { 0 };
     };
 };
+diag_log format ['[CVO](debug)(fn_sfx_local_3d) Adapted: _direction: %1', _direction];
 
 private _pos = player getPos [_distance, _direction];
 _pos = [_pos#0, _pos#1, ABOVEGROUND + (getPosASL player # 2)];
@@ -70,7 +75,12 @@ _helperObj setPosASL _pos;
 
 private _range = (RANGE_MOD * _maxDistance) min ABSOLUTE_MAXRANGE;
 
-_sayObj = _helperObj say3D [_soundName, _range, ((1 - RND_PITCH) + random RND_PITCH), ISSPEECH, OFFSET /*, true */];      // additional bool argument once 2.18 hits
+
+private _sayObj = if (__GAME_VER_MAJ__ >= 2 && { __GAME_VER_MIN__ >= 18 }) then {
+    _helperObj say3D [_soundName, _range, ((1 - RND_PITCH) + random RND_PITCH), ISSPEECH, OFFSET, true];      // additional bool argument once 2.18 hits
+} else {
+    _helperObj say3D [_soundName, _range, ((1 - RND_PITCH) + random RND_PITCH), ISSPEECH, OFFSET];      // additional bool argument once 2.18 hits
+};
 
 
 // Deletes the Local Helper Obj once intensity has reached 0;

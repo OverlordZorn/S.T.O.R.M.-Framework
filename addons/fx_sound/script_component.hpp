@@ -1,5 +1,5 @@
-#define COMPONENT particle
-#define COMPONENT_BEAUTIFIED Particle Effects
+#define COMPONENT fx_sound
+#define COMPONENT_BEAUTIFIED Sound Effects Module
 
 #include "\z\cvo_storm\addons\based\script_macros.hpp"
 

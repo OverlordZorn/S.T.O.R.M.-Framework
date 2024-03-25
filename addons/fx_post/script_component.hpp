@@ -1,5 +1,5 @@
-#define COMPONENT ppEffect
-#define COMPONENT_BEAUTIFIED Post Processing Effects
+#define COMPONENT fx_post
+#define COMPONENT_BEAUTIFIED Post Processing Effects Module
 
 #include "\z\cvo_storm\addons\based\script_macros.hpp"
 

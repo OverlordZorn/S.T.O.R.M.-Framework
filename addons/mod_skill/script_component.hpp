@@ -1,5 +1,5 @@
-#define COMPONENT weather
-#define COMPONENT_BEAUTIFIED Weather Effects Module
+#define COMPONENT mod_skill
+#define COMPONENT_BEAUTIFIED AI SubSkill Modifier Module
 
 #include "\z\cvo_storm\addons\based\script_macros.hpp"
 

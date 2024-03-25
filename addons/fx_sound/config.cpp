@@ -32,7 +32,7 @@ class CfgFunctions
 {
 	class PREFIX            // Tag
 	{
-        class component { 
+        class COMPONENT { 
 			file = PATH_TO_FNC;
 
 			class SFX_request {};
