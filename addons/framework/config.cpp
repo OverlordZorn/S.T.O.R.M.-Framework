@@ -32,16 +32,16 @@ class CfgFunctions
 {
 	class PREFIX            // Tag
 	{
-		class common   // Category
+		class Common   // Category
 		{
-//			file = PATH_TO_FNC;
+			file = PATH_TO_FNC;
 
 			class common_hash_from_config {};
 		};
 
-		class storm
+		class Storm
 		{
-//			file = PATH_TO_FNC;
+			file = PATH_TO_FNC;
 
 			class storm_request {};
 		};
