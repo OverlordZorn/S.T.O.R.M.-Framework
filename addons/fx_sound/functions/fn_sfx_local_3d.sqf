@@ -41,9 +41,6 @@ if (_soundName == "") exitWith {};
 if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWith {diag_log format ['[CVO](debug)(fn_sound_remote_spacial) failed: _Direction invalid: %1', _direction]; };
 
 
-diag_log format ['[CVO](debug)(fn_sfx_local_3d) _this: %1', _this];
-diag_log format ['[CVO](debug)(fn_sfx_local_3d) _soundName: %1 - _soundPreset: %2 - _direction: %3 - _distance: %4 - _intensity: %5 - "": %6 - "": %7 - "": %8', _soundName , _soundPreset ,_direction , _distance , _intensity , "" , "" , "" ];
-
 if ( ! missionNamespace getVariable ["CVO_SFX_3D_helper_array", false] ) then {    CVO_SFX_3D_helper_array = [];    };
 
 _HelperName = ["CVO_SFX_3D",_soundPreset,"helperOBJ"] joinString "_";

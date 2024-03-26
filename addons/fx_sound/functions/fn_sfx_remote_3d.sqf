@@ -28,7 +28,7 @@ params [
     ["_intensity",      0,      [0]     ]
 ];
 
-ZRN_LOG_MSG(FNC Start);
+
 
 
 #define DELAY 1
