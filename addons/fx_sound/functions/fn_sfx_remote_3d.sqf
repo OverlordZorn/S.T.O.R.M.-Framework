@@ -28,10 +28,9 @@ params [
     ["_intensity",      0,      [0]     ]
 ];
 
+ZRN_LOG_MSG_1(start,_this);
 
-
-
-#define DELAY 1
+#define DELAY 5
 
 if (_PresetName isEqualTo "") exitWith {};
 
@@ -39,7 +38,6 @@ if ( _intensity == 0 && { missionNamespace getVariable ["CVO_SFX_3D_Active", fal
 
 _duration = _duration min 60;
 _intensity = _intensity max 0 min 1;
-
 
 // array of all active SFX spacial preset Types - [_presetName, _isInTransition, _previousIntensity, _currentIntensity, _targetIntensity]
 if (missionNamespace getVariable ["CVO_SFX_3D_Active", false] isEqualTo false) then {  missionNamespace setVariable ["CVO_SFX_3D_Active", []]; };
@@ -61,6 +59,7 @@ if (_index == -1) then {
     _currentIntensity = 0;
     _targetIntensity = _intensity;
     _exitDueTransitionActive = false;
+    ZRN_LOG_MSG_1(New Entry,CVO_SFX_3D_Active);
 } else {
     // retrieve old Entry
     _arr = CVO_SFX_3D_Active select _index;
@@ -68,7 +67,9 @@ if (_index == -1) then {
     _currentIntensity = _arr select 2;
     _targetIntensity = _intensity;
     _exitDueTransitionActive = _arr select 1;
+    ZRN_LOG_MSG_3(Old Entry,_arr,_index,CVO_SFX_3D_Active);
 };
+
 if _exitDueTransitionActive exitWith {diag_log format ['[CVO](debug)(fn_sound_remote_spatial) failed - Transition already taking place: %1', _presetName]; false };
 
 
@@ -83,6 +84,7 @@ private _condition = { _this#1 > time };
 private _parameters = [_startTime, _endTime, _presetName];
 
 private _codeToRun = {
+    
     private _index = CVO_SFX_3D_Active findIf { _x#0 == _this#2 };
     if (_index == -1) exitWith {};
     private _arr = CVO_SFX_3D_Active select _index;
@@ -97,7 +99,7 @@ private _exitCode = {
     _arr set [1,false];
     _arr set [2,_tgtInt];
     _arr set [3,_tgtInt];
-    diag_log format ['[CVO](debug)(fn_sfx_remote_3d) Transition Complete: %1', _arr];
+    ZRN_LOG_MSG_3(Transition completed!,_arr,_this#1,time);
 };
 
 private _delay = DELAY;
@@ -120,10 +122,11 @@ private _delay = DELAY;
 //////////////////////////////////////////////////
 ///////// Starts recursive function  /////////////
 //////////////////////////////////////////////////
-if (_startRecursive) then {
 
+if (_startRecursive) then {
+    ZRN_LOG_MSG_1(Starting Recursive Function,_presetName);
+    [_presetName] call fn_sfx_local_3d_recursive
 };
 
-
 //////////////////////////////////////////////////
-
+ZRN_LOG_MSG_1(END, _startRecursive);

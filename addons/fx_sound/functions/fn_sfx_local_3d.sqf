@@ -44,17 +44,22 @@ if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWi
 if ( ! missionNamespace getVariable ["CVO_SFX_3D_helper_array", false] ) then {    CVO_SFX_3D_helper_array = [];    };
 
 _HelperName = ["CVO_SFX_3D",_soundPreset,"helperOBJ"] joinString "_";
+ZRN_LOG_1(_helperName);
 
 private _helperObj = missionNamespace getVariable [_HelperName, objNull ];
+ZRN_LOG_1(_helperObj);
 
 if (_intensity == 0 && { _helperObj isEqualTo objNull }) exitWith {diag_log "[CVO](debug)(fn_sound_remote_distant) failed: Intensity 0: Cleanup not possible while no previous sound execution";};
 
 
 if (_helperObj isEqualTo objNull) then {
         _helperClass = ["Helper_Base_F", "Sign_Arrow_Large_F"]select missionNamespace getVariable ["CVO_Debug", false];
+        ZRN_LOG_1(_helperClass);
         _helperObj  = createVehicleLocal [_helperClass, [0,0,0]];
+        ZRN_LOG_1(_helperObj);
         missionNamespace setVariable [_HelperName, _helperObj];
         CVO_SFX_3D_helper_array pushBack _helperObj;
+        ZRN_LOG_1(CVO_SFX_3D_helper_array);
 };
 
 // Define Mode of Operation regarding Direction of sound source.

@@ -9,7 +9,7 @@
 * None
 *
 * Example:
-* ['something', player] call cvo_storm_fnc_sfx_local_3d_recursive;
+* [_presetName] call cvo_storm_fnc_sfx_local_3d_recursive;
 *
 * Public: Yes
 */
