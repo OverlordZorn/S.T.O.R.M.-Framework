@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: [Zorn]
  * Function to apply the PPEffects on each client locally.

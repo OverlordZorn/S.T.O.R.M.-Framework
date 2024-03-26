@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
 * Author: Zorn
 * Establishes pfH for the transition of the intensity + Starts a recursive loop for the actual execution.
@@ -17,7 +19,8 @@
 * Public: Yes
 */
 
-#define DELAY 1
+
+
 
 params [
     ["_presetName",     "",     [""]    ],
@@ -25,6 +28,10 @@ params [
     ["_intensity",      0,      [0]     ]
 ];
 
+ZRN_LOG_MSG(FNC Start);
+
+
+#define DELAY 1
 
 if (_PresetName isEqualTo "") exitWith {};
 
@@ -42,6 +49,7 @@ private _index = -1;
 if (count CVO_SFX_3D_Active > 0) then { _index = CVO_SFX_3D_Active findIf { _x#0 == _presetName }; };
 
 private ["_arr", "_previousIntensity", "_currentIntensity", "_targetIntensity", "_exitDueTransitionActive"];
+
 
 private _startRecursive = false;
 if (_index == -1) then {
@@ -80,7 +88,6 @@ private _codeToRun = {
     private _arr = CVO_SFX_3D_Active select _index;
     _currentIntensity = linearConversion [_this#0, _this#1, time, _arr#2, _arr#4, true];
     _arr set [3, _currentIntensity];
-    systemChat str _arr;
 };
 private _exitCode = {
     private _index = CVO_SFX_3D_Active findIf { _x#0 == _this#2 };
@@ -90,7 +97,7 @@ private _exitCode = {
     _arr set [1,false];
     _arr set [2,_tgtInt];
     _arr set [3,_tgtInt];
-    systemChat "exit" + str _arr;
+    diag_log format ['[CVO](debug)(fn_sfx_remote_3d) Transition Complete: %1', _arr];
 };
 
 private _delay = DELAY;

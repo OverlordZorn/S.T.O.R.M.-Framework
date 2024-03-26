@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: Zorn
  * Retrieves the RainParticle Class from Config and Exports it as Array because of the wierd ass bool in the class.

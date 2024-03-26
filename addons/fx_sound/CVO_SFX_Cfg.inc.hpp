@@ -1,3 +1,4 @@
+
 class CfgSFX
 {
 
@@ -12,11 +13,11 @@ class CfgSFX
         description = "~10s Sound Effects for the Storm SFX Module - Most of them are originally from the Alias Dust Storm Script";
 
         // {soundPath, soundVolume, soundPitch, maxDistance, probability, minDelay, midDelay, maxDelay}
-		sound0[] = { "z\cvo_storm\addons\storm\data\sounds\sandstorm.ogg", "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
-		sound1[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_1.ogg", "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
-		sound2[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_2.ogg", "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
-		sound3[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_3_dr.ogg", "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
-		sound4[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_4_st.ogg", "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
+		sound0[] = { PATH_TO_ADDON_2(data,sandstorm.ogg), "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
+		sound1[] = { PATH_TO_ADDON_2(data,windburst_1.ogg), "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
+		sound2[] = { PATH_TO_ADDON_2(data,windburst_2.ogg), "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
+		sound3[] = { PATH_TO_ADDON_2(data,windburst_3_dr.ogg), "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
+		sound4[] = { PATH_TO_ADDON_2(data,windburst_4_st.ogg), "db-0", 1.0, 500, 1, 5, 15, 30 };	// path to addon sound
 		sounds[] = { "sound0", "sound1", "sound2","sound3","sound4" };
 	};
 
@@ -26,8 +27,8 @@ class CfgSFX
         description = "~60s Sound Effects for the Storm SFX Module - Most of them are originally from the Alias Dust Storm Script";
 
         // {soundPath, soundVolume, soundPitch, maxDistance, probability, minDelay, midDelay, maxDelay}
-		sound0[] = { "z\cvo_storm\addons\storm\data\sounds\hurricane.ogg", "db-0", 1.0, 50000, 1, 0, 3, 5 };	// path to addon sound
-		sound1[] = { "z\cvo_storm\addons\storm\data\sounds\strong_wind.ogg", "db-0", 1.0, 50000, 1, 0, 3, 5 };	// path to addon sound
+		sound0[] = { PATH_TO_ADDON_2(data,hurricane.ogg), "db-0", 1.0, 50000, 1, 0, 3, 5 };	// path to addon sound
+		sound1[] = { PATH_TO_ADDON_2(data,strong_wind.ogg), "db-0", 1.0, 50000, 1, 0, 3, 5 };	// path to addon sound
 		sounds[] = { "sound0", "sound1" };
 	};
 };
@@ -71,49 +72,49 @@ class CfgSounds
 	class CVO_SFX_SS_WindLong1 : CVO_SFX_SS_Base
 	{
 		name = "CVO Storm Wind Long: 1 - Hurricane";															// display name
-		sound[] = { "z\cvo_storm\addons\storm\data\sounds\hurricane.ogg", "db+3", 1, 5000 };	// file, volume, pitch, maxDistance
+		sound[] = { PATH_TO_ADDON_2(data,hurricane.ogg), "db+3", 1, 5000 };	// file, volume, pitch, maxDistance
 		duration = 60;
 	};
 	
 	class CVO_SFX_SS_WindLong2 : CVO_SFX_SS_Base
 	{
 		name = "CVO Storm Wind Long: 2 - Strong Wind";															// display name
-		sound[] = { "z\cvo_storm\addons\storm\data\sounds\strong_wind.ogg", "db+3", 1, 5000 };	// file, volume, pitch, maxDistance
+		sound[] = { PATH_TO_ADDON_2(data,strong_wind.ogg), "db+3", 1, 5000 };	// file, volume, pitch, maxDistance
 		duration = 70;
 	};
 
 	class CVO_SFX_SS_WindBurst1 : CVO_SFX_SS_Base
 	{
 		name = "CVO Storm Wind Burst: 1";															// display name
-		sound[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_1.ogg", "db+3", 1, 250};		// path to addon sound // 05
+		sound[] = { PATH_TO_ADDON_2(data,windburst_1.ogg), "db+3", 1, 250};		// path to addon sound // 05
 		duration = 5;
 	};
 
 	class CVO_SFX_SS_WindBurst2 : CVO_SFX_SS_Base
 	{
 		name = "CVO Storm Wind Burst: 2";															// display name
-		sound[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_2.ogg", "db+3", 1, 250};		// path to addon sound
+		sound[] = { PATH_TO_ADDON_2(data,windburst_2.ogg), "db+3", 1, 250};		// path to addon sound
 		duration = 8;
 	};
 
 	class CVO_SFX_SS_WindBurst3 : CVO_SFX_SS_Base
 	{
 		name = "CVO Storm Wind Burst: 3";															// display name
-		sound[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_3_dr.ogg", "db+3", 1, 250};		// path to addon sound // 05
+		sound[] = { PATH_TO_ADDON_2(data,windburst_3_dr.ogg), "db+3", 1, 250};		// path to addon sound // 05
 		duration = 4;
 	};
 
 	class CVO_SFX_SS_WindBurst4 : CVO_SFX_SS_Base
 	{
 		name = "CVO Storm Wind Burst: 4";															// display name
-		sound[] = { "z\cvo_storm\addons\storm\data\sounds\windburst_4_st.ogg", "db+3", 1, 250};		// path to addon sound
+		sound[] = { PATH_TO_ADDON_2(data,windburst_4_st.ogg), "db+3", 1, 250};		// path to addon sound
 		duration = 4;
 	};
 
 	class CVO_SFX_SS_WindBurst5 : CVO_SFX_SS_Base
 	{
 		name = "CVO Storm Wind Burst: 5 Sandstorm";															// display name
-		sound[] = { "z\cvo_storm\addons\storm\data\sounds\sandstorm.ogg", "db+3", 1, 250};		// path to addon sound // 05
+		sound[] = { PATH_TO_ADDON_2(data,sandstorm.ogg), "db+3", 1, 250};		// path to addon sound // 05
 		duration = 16;
 	};
 };

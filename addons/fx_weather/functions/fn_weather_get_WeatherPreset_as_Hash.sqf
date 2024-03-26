@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: Zorn
  * Retrieves the Weather Preset Class from Config and Exports it as a HashMap.

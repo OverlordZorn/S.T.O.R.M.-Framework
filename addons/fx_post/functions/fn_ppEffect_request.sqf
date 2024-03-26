@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: Zorn
  * Creates, Adjusts and ppEffects over time with intensity. 

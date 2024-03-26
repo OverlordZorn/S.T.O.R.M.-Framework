@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: [Zorn]
  * Extracts properties from Config Class and returns hashMap.
@@ -17,7 +19,6 @@
  * 
  * Public: No
  */
-
 
 params [   
     "_configPath",

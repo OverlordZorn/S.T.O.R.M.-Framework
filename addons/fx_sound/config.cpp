@@ -45,6 +45,6 @@ class CfgFunctions
 };
 
 
-#include "CVO_SFX_Cfg.hpp"
+#include "CVO_SFX_Cfg.inc.hpp"
 #include "CVO_SFX_SoundPresets.hpp"
 

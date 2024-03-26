@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
 * Author: Zorn
 * Takes an Array of Units to apply setskill to one per frame.

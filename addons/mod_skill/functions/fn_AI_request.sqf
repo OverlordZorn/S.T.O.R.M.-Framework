@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: Zorn
  * Takes care of AI Skill changes over time. Especially for Storm Events that reduce player visibliity, it is highly recommended to adjust AI Skill to keep the experience of the weather balanced.

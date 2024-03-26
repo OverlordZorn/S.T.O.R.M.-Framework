@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: [Zorn]
  * Extracts Effect Parameters from Config Class in suitable format for ppEffectAdjust command.

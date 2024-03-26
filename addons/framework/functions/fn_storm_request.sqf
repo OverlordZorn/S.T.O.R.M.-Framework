@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: [Zorn]
  * Function to apply the Storm Preset, which will take care off all needed groups of effect, be it Post Processing, Weather, Particles etc.

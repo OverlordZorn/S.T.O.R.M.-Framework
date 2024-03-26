@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
  * Author: [Zorn]
  * Function to apply the Particle Effects - Handles creation, deletion and adjustment of intensity of particlespawners on each client locally.

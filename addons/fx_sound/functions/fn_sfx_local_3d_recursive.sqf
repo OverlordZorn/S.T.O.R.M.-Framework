@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
 * Author: Zorn
 * "Recursive" Function that loops until the entry is not present anymore in 

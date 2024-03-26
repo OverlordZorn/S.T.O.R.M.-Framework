@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+
 /*
 * Author: Zorn
 * Function to play a single distant CfgSound with the help of a Helper Object in 3D Space (say3d).
@@ -15,6 +17,7 @@
 *
 * Public: Yes
 */
+diag_log "[CVO](debug)(fn_sfx_local_3d) Started";
 
 params [
     ["_soundName",      "",         [""]    ],
@@ -37,7 +40,6 @@ params [
 if (_soundName == "") exitWith {};
 if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWith {diag_log format ['[CVO](debug)(fn_sound_remote_spacial) failed: _Direction invalid: %1', _direction]; };
 
-diag_log "[CVO](debug)(fn_sfx_local_3d) Started ";
 
 diag_log format ['[CVO](debug)(fn_sfx_local_3d) _this: %1', _this];
 diag_log format ['[CVO](debug)(fn_sfx_local_3d) _soundName: %1 - _soundPreset: %2 - _direction: %3 - _distance: %4 - _intensity: %5 - "": %6 - "": %7 - "": %8', _soundName , _soundPreset ,_direction , _distance , _intensity , "" , "" , "" ];
