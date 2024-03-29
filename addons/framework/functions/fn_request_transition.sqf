@@ -55,31 +55,25 @@ _arr set [3, _hashMap];
 if (isNil QPVAR(isActive)) then { missionNameSpace setVariable [ QPVAR(isActive), _arr, true] };
 
 private _result = [];
+private "_var";
 
 _var = [_hashMap get "mod_skill_preset",  _duration, _intensity * (_hashMap get "mod_skill_coef")]  call EFUNC(mod_skill,request);
-_result pushback [_hashMap get "mod_skill_preset", var];
+_result pushback [_hashMap get "mod_skill_preset", _var];
 
 _var = [_hashMap get "fx_weather_preset", _duration, _intensity * (_hashMap get "fx_weather_coef")] call EFUNC(fx_weather,request);
-_result pushback [_hashMap get "fx_weather_preset", var];
+_result pushback [_hashMap get "fx_weather_preset", _var];
 
-{
-   _var = [_x, _duration, _intensity * (_hashMap get "fx_sound_coef")   ] call EFUNC(fx_sound,request);
+{   _var = [_x, _duration, _intensity * (_hashMap get "fx_sound_coef")   ] call EFUNC(fx_sound,request);
    _result pushback [_x, _var];
-} forEach _hashMap get "fx_sound_presets";
+} forEach (_hashMap get "fx_sound_presets");
 
-
-{
-   _var = [_x, _duration, _intensity * (_hashMap get "fx_particle_coef")] call EFUNC(fx_particle,request);
+{   _var = [x, _duration, _intensity * (_hashMap get "fx_particle_coef")] call EFUNC(fx_particle,request);
    _result pushback [_x, _var];
+} forEach (_hashMap get "fx_particle_presets");
 
-} forEach _hashMap get "fx_particle_presets";
-
-
-{
-   _var = [_x, _duration, _intensity * (_hashMap get "fx_post_coef")    ] call EFUNC(fx_post,request);
+{   _var = [_x, _duration, _intensity * (_hashMap get "fx_post_coef")    ] call EFUNC(fx_post,request);
    _result pushback [_x, _var];
-} forEach _hashMap get "fx_post_presets";
-
+} forEach (_hashMap get "fx_post_presets");
 
 
 _code = if (_intensity == 0 ) then {
