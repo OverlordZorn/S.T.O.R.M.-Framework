@@ -29,6 +29,10 @@
 #define FUNC(var1) TRIPLES(ADDON,fnc,var1)
 #define QFUNC(var1) QUOTE(FUNC(var1))
 
+#define PFUNC(var1) TRIPLES(PREFIX,fnc,var1)
+#define QPFUNC(var1) QUOTE(FUNC(var1))
+
+
 #define FUNC_INNER(var1,var2) TRIPLES(DOUBLES(PREFIX,var1),fnc,var2)
 #define EFUNC(var1,var2) FUNC_INNER(var1,var2)
 #define QEFUNC(var1,var2) Q(EFUNC(var1,var2))
@@ -57,9 +61,6 @@
 #define PVAR(var1) DOUBLES(PREFIX,var1)
 #define QPVAR(var1) QUOTE(PVAR(var1))
 #define QQPVAR(var1) QUOTE(PVAR(var1))
-
-#define PFUNC(var1) TRIPLES(PREFIX,fnc,var1)
-#define QPFUNC(var1) QUOTE(FUNCMAIN(var1))
 
 #define P_CFG_COMP TRIPLES(PREFIX,CFG,COMPONENT)
 

@@ -11,7 +11,7 @@
 * None
 *
 * Example:
-* [allUnits] call cvo_storm_fnc_AI_cleanup_recursive;
+* [allUnits] call storm_mod_skill_fnc_cleanup_recursive;
 *
 * Public: No 
 */
@@ -23,10 +23,10 @@ params [
 private _unit = _array_units deleteAt 0;
 
 if (count _array_units > 0) then {
-    _statement = { _this call cvo_storm_fnc_AI_cleanup_recursive; };
+    _statement = { _this call FUNC(cleanup_recursive); };
     _parameters = [_array_units];
     [_statement, _parameters] call CBA_fnc_execNextFrame;
-} else {    diag_log format ["[CVO](debug)(cvo_fnc_AI_cleanup_recursive) %1 done", _iteration]; };
+} else {ZRN_LOG_MSG(Cleanup done);};
 
 /*
 if (_unit isKindOf "Man")   exitWith {};

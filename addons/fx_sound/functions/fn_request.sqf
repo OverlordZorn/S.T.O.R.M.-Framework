@@ -5,7 +5,7 @@
 * To be executed on the server, will remoteExecute all needed Fnc Calls and Handle JIP
 *
 * Arguments:
-*	0:	_presetName		<STRING>	Name of desired preset from CVO SFX Soundpresets
+*	0:	_effectName		<STRING>	Name of desired preset from CVO SFX Soundpresets
 *	1:	_duration		<NUMBER>	Duration in Minutes - Time of the transition from current to target
 *	2:	_intensity		<Number>	0..1 Intensity Value - 1 means 100%, 0 means 0% - 0 Will reset and cleanup previous effects
 *
@@ -18,52 +18,60 @@
 * Public: Yes
 */
 
+if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
 
 params [
-	["_presetName",		"",		[""]	],
+	["_effectName",		"",		[""]	],
 	["_duration",		1,		[""]	],
 	["_intensity",		0,		[""]	]
 ];
 
+if (_presentName isEqualTo "CLEANUP") exitWith {
+	{
+		// inTransition?
+		if (_y#0) then {
+			_parameter = [ _x, _y#2 ];
+			_condition = { time > _this#1 };	// Waits until the individual last transition has been completed
+			_statement = { [_this#0] call FUNC(request); };
+			[_condition, _statement, _parameter] call CBA_fnc_waitUntilAndExecute;
+		}
+	} foreach QGVAR(activeJIP);
+	ZRN_LOG_MSG(Cleanup Requested!);
+	true
+};
+
 _intensity = _intensity max 0 min 1;
 _duration = _duration * 60;
 
-if (isNil QGVAR(jip_hashMap)) then { GVAR(jip_hashMap) = createHashMap };
 
-private _hashMap = missionNamespace getVariable QGVAR(jip_hashMap);
+if  (_effectName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
+if !(_effectName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
+if ( _intensity == 0 && { isNil QGVAR(activeJIP) || { !(_effectName in GVAR(activeJIP))} } )                 exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
+if (isNil QGVAR(activeJIP)) then { GVAR(activeJIP) = createHashMap; };
+if (_effectName in GVAR(activeJIP) && { (GVAR(activeJIP) get _effectName)#0 } )                              exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
 
-// Waits until the individual last transition has been completed
-if (_presentName isEqualTo "CLEANUP") exitWith {
-	{
-		_parameter = [ _x, _y#3 ];
-		_condition = { time > _this#1 };
-		_statement = { [_this#0] call cvo_storm_fnc_sfx_request;  };
-		[_condition, _statement, _parameter] call CBA_fnc_waitUntilAndExecute;
-		diag_log format ['[CVO](debug)(fn_sfx_request) CLEANUP Requested for: %1', _x];
-	} foreach _hashMap;
-};
+//_effectName = [inTransition, _previousIntensity, _endTime]
 
+_array = QGVAR(activeJIP) getOrDefault [_effectName, [true, 0, time + _duration], true];
 
-private _jipHandle = ["CVO_SFX_JIP",_presetName,"_handle"] joinString "_";
-
-//[_presetName, _jipHandle, _previousIntensity, _endTime]
-
-_array = _hashMap getOrDefault [_presetName, _jipHandle, 0, time + _duration * 1.1];
 private _previousIntensity = _array#2;
 
-if (_intensity == 0 && { count _hashMap == 0 || { _presetName in _hashMap }}) exitWith {diag_log format ['[CVO](debug)(fn_sfx_request) failed: Intensity == 0 while active sound 3D SFX of same Type: %1', _presetName]; };
+if (_intensity == 0 && { count QGVAR(activeJIP) == 0 || { _effectName in QGVAR(activeJIP) }}) exitWith {ZRN_LOG_MSG(failed: Intensity == 0 while active sound 3D SFX of same Type); false };
 
 
-[_presetName, _duration, _intensity, _previousIntensity] remoteExecCall ["cvo_storm_fnc_sfx_remote_3d", [0,2] select isDedicated, _jipHandle];
+[_effectName, _duration, _intensity, _previousIntensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _effectName];
+
 _array set [ 2, _intensity ];
 _array set [ 3, time + _duration ];
-_hashMap set [_presetName, _array];
+QGVAR(activeJIP) set [_effectName, _array];
 
 if (_intensity == 0) then {
 
 	[ {
 		remoteExec ["", _this#0];
 		_this#1 deleteAt _this#2;
-		if (count _this#1 == 0) then { missionNamespace setVariable [QGVAR(jip_hashMap), nil]; };
-	} , [_jipHandle, _hashMap, _presetName], _duration] call CBA_fnc_waitAndExecute;
+		if (count _this#1 == 0) then { GVAR(activeJIP) = nil; };
+	} , [_effectName, QGVAR(activeJIP), _effectName], _duration] call CBA_fnc_waitAndExecute;
 };
+
+true

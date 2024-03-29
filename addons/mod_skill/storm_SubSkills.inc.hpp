@@ -17,7 +17,7 @@ class GVAR(Presets)
     };
 
 
-    class GVAR(sandstorm_old) : GVAR(Default)
+    class GVAR(sandstorm_old) : GVAR(Default)               // EGVAR(mod_skill,sandstorm_old)
     {
         general =           0.40;
         courage =           0.30;
@@ -32,5 +32,4 @@ class GVAR(Presets)
 //      endurance =     0.80;     // doesnt exist in arma
     };
 };
-
 

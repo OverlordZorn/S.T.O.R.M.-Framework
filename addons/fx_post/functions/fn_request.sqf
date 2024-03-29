@@ -18,35 +18,30 @@
  * Public: No
  */
 
- 
-if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
-
- params [
+params [
     ["_effectName",     "", [""]],
     ["_duration",       1,  [0] ],
     ["_intensity",      0,  [0] ]
- ];
+];
 
+_intensity = _intensity max 0 min 1;
+_duration = (1 max _duration) * 60;
 
 if  (_effectName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false};
 if !(_effectName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
 
 private _configPath = (configFile >> QGVAR(Presets) >> _effectName ); 
-private _ppEffectType = getText (_configPath >> "ppEffectType");
-private _layer = getNumber (_configPath >> "layer");
-private _jipHandle = QGVAR_3(_ppEffectType,_layer,jip_handle);
-
-_intensity = _intensity max 0 min 1;
+private _jipHandle = [ ADDON, getText(_configPath >> "ppEffectType"), getNumber(_configPath >> "layer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
 
 // Check fail when _intensity == 0 while no Prev effect
-
 if ( _intensity == 0 && { isNil QGVAR(activeJIPs) || { !(_jipHandle in GVAR(activeJIPs))} } ) exitWith {   ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
 
 if (isNil QGVAR(activeJIPs)) then {
     GVAR(activeJIPs) = createHashMap;
-} else { if ( GVAR(activeJIPs) getOrDefault [_jipHandle, false] ) exitWith { ZRN_LOG_MSG(failed: This Type and Layer is currently in Transition!); false }; };
+} else {
+    if ( GVAR(activeJIPs) getOrDefault [_jipHandle, false] ) exitWith { ZRN_LOG_MSG(failed: This Type and Layer is currently in Transition!); false };
+};
 
-_duration = (1 max _duration) * 60;
 
 private "_resultArray";
 private _effectArray = [_effectName] call FUNC(getConfig);
@@ -54,6 +49,7 @@ private _effectArray = [_effectName] call FUNC(getConfig);
 
 // Check if given Class is Default (Parent)
 if (configName inheritsFrom _configPath isEqualTo "") then {
+
     // i dont remember why i made this but i guess it has a reason lol
     // Default Class -> ignore Intensity
     _resultArray = _effectArray;
@@ -96,4 +92,5 @@ if (_intensity == 0) then {
     // true for _inTransition;
     GVAR(activeJIPs) set [_jipHandle, true];
 };
+
 true

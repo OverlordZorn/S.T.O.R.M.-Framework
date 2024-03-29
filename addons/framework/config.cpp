@@ -32,11 +32,11 @@ class CfgFunctions
 	{
 		class COMPONENT
 		{
-			tag = QADDON;
-
+			tag = Q(PREFIX);
 			file = PATH_TO_FNC;
 
-			class transition_request {};
+			class request_transition {};
+            class hashFromConfig {};
 		};
 
 	}; 

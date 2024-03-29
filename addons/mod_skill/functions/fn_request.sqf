@@ -13,12 +13,12 @@
  * none
  *
  * Example:
- * ["CVO_AI_Skill_sandstorm_old", 1, 1] call cvo_storm_fnc_ai_request;
+ * ["CVO_AI_Skill_sandstorm_old", 1, 1] call storm_mod_skill_fnc_request;
  * 
- * Public: No
+ * Public: Yes
  */
 
-if !(isServer) exitWith { _this remoteExecCall ["cvo_storm_fnc_ai_request", 2, false] };
+if !(isServer) exitWith { _this remoteExecCall [QFUNC(request), 2, false] };
 
 params [
    ["_AI_presetName",        "",                     [""]],
@@ -28,7 +28,6 @@ params [
 
 // Fail Conditions
 
-if (_AI_presetName isEqualTo "") exitWith {diag_log "AI_Request failed - No Preset Name given"};
 
 // Prepare Input Values
  
@@ -39,29 +38,32 @@ _intensity = _intensity max 0;
 _intensity = _intensity min 1;
 
 
-if ((!isNil "CVO_Storm_AI_active") && { CVO_Storm_AI_active#0 }) exitWith {diag_log "AI_Request Failed - Transition is currently in progress!"};
+if (_AI_presetName isEqualTo "")                      exitWith {ZRN_LOG_MSG(Failed - No Preset Name given); false };
+if ((!isNil QGVAR(isActive)) && { GVAR(isActive)#0 }) exitWith {ZRN_LOG_MSG(Failed - Transition is currently in progress); false };
+if (( isNil QGVAR(isActive)) && {_intensity == 0})    exitWith {ZRN_LOG_MSG(Failed - No Modification currently active to be reset); false };
 
-if (( isNil "CVO_Storm_AI_active") && {_intensity == 0}) exitWith {diag_log "AI_Request failed - No Modification currently active to be reset"};
+if (isNil QGVAR(isActive)) then {
 
-if (isNil "CVO_Storm_AI_active") then {
-
-    _default_map = [(configFile >> "CVO_AI_SubSkill_Modifier"), "CVO_AI_Skill_Default"] call cvo_storm_fnc_common_hash_from_config;
+    _default_map = [(configFile >> QGVAR(Presets)), QGVAR(Default)] call PFUNC(hashFromConfig);
 
     // Is [transition active?, _previous_map, _current_Map, _handler_ID]
-    CVO_Storm_AI_active = [true,_default_map, _default_map, -1];
+    GVAR(isActive) = [true,_default_map, _default_map, -1];
 };
 
 
-
-private _previous_map = + (missionNamespace getVariable "CVO_Storm_AI_active")#1;
+private _previous_map = + GVAR(isActive)#1;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 1. Establish Target by inearConversion of Intensity between raw vs default (always 1)
-private _raw_mod_map = [(configFile >> "CVO_AI_SubSkill_Modifier"), _AI_presetName] call cvo_storm_fnc_common_hash_from_config;
-if (_raw_mod_Map isEqualTo false) exitWith {diag_log "AI_Request Failed - Preset not found"};
+
+private _raw_mod_map = [(configFile >> QGVAR(Presets)), _AI_presetName] call PFUNC(hashFromConfig);
+if (_raw_mod_Map isEqualTo false) exitWith {ZRN_LOG_MSG(Failed -Preset not found); false };
 
 private _target_map = createHashMap;
 {   _target_map set [_x, linearConversion [0,1, _intensity, 1, _y, true] ];   } forEach _raw_mod_map;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,8 +72,9 @@ private _target_map = createHashMap;
 private _startTime = time;
 private   _endTime = time + _duration;
 
-diag_log format ['[CVO](debug)(fn_AI_request) _startTime: %1 - _endTime: %2 - _raw_mod_map: %3 - _target_map: %4', _startTime , _endTime, _intensity, _target_map];
+private _delay      = _duration / 4;
 
+private _condition  = { (_this#1) > time };
 private _parameters = [ _startTime, _endTime, _previous_map, _target_map];
 
 // Code to be executed during the Transition
@@ -84,27 +87,20 @@ private _codeToRun  = {
         _current_value = linearConversion [_startTime, _endTime, time, _prev_value, _target_value, true];
         _current_map set [_x, _current_value];            
     } forEach _target_map;
-    [_current_map, (entities [["CAManBase"], [], true, true])] call CVO_STORM_fnc_AI_setSkill_recursive;
-    CVO_Storm_AI_active set [2, _current_map];
+    [_current_map, (entities [["CAManBase"], [], true, true])] call FUNC(apply_recursive);
+    GVAR(isActive) set [2, _current_map];
 };
 
 // Code to be executed at the end of the Transition
 private _exitCode   = {
-    diag_log "[CVO](debug)(fn_AI_request) final adjustment of skill at the end of the transition ";
-    [_this#3, (entities [["CAManBase"], [], true, true])] call CVO_STORM_fnc_AI_setSkill_recursive;
-    CVO_Storm_AI_active set [2,(+ _this#3)];
-    CVO_Storm_AI_active set [1,(+ _this#3)];
-    CVO_Storm_AI_active set [0, false];
+    [_this#3, (entities [["CAManBase"], [], true, true])] call FUNC(apply_recursive);
+    GVAR(isActive) set [2,(+ _this#3)];
+    GVAR(isActive) set [1,(+ _this#3)];
+    GVAR(isActive) set [0, false];
 };
 
-// Condition for the perFrameHandler: While True, it will keep executing, once failed -> ExitCode
-private _condition  = { (_this#1) > time };
-
-// Time between executions - will execute before the first delay.
-private _delay      = _duration / 4;
-
 // Establishes the perFrameHandler
-_handle = [{
+[{
     params ["_args", "_handle"];
     _args params ["_codeToRun", "_parameters", "_exitCode", "_condition"];
 
@@ -115,35 +111,35 @@ _handle = [{
         _parameters call _exitCode;
     };
 }, _delay, [_codeToRun, _parameters, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
-diag_log format ['[CVO](debug)(fn_AI_request) _handle: %1', _handle];
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // 3. create EH for newly created units and applies _current_map via glob-var if this EH doesnt exist already.
 
-if (CVO_Storm_AI_active#3 isEqualTo -1) then {
+if (GVAR(isActive)#3 isEqualTo -1) then {
     private _eh_Handle = addMissionEventHandler ["EntityCreated", {
         params ["_entity"];
 
         if (_entity isKindOf "CAManBase") then {
-            diag_log format ['[CVO](debug)(fn_AI_request) Evenhandler: Entitiy Created: %1 - %2', _entity , typeOf _entity ];
-            [(CVO_Storm_AI_active#2), [_entity]] call CVO_STORM_fnc_AI_setSkill_recursive;
+            [(GVAR(isActive)#2), [_entity]] call FUNC(apply_recursive);
+
+            ZRN_LOG_MSG_2(EventHandler EntitiyCreated -,_entity,typeOf _entity);
         };
     }];
-    CVO_Storm_AI_active set [3, _eh_Handle];
+    GVAR(isActive) set [3, _eh_Handle];
 };
 
 /////////////////////////////////  Deletes EH and start cleanup when intensity == 0 after the final transition /////////////////////////////////
 if (_intensity == 0) then {
     [
         {
-            removeMissionEventHandler ["EntityCreated",CVO_Storm_AI_active#3];
+            removeMissionEventHandler ["EntityCreated",GVAR(isActive)#3];
             [ ( entities [ ["CAManBase"], [], true, true ] ) ] call fn_AI_cleanup_recursive;
-
-            CVO_Storm_AI_active = nil;
-            diag_log "[CVO](debug)(fn_AI_request) EH deleted, Cleanup started,CVO_Storm_AI_active nill'd"; 
+            GVAR(isActive) = nil;
 
         }, 
         [], 
@@ -151,14 +147,8 @@ if (_intensity == 0) then {
     ] call CBA_fnc_waitAndExecute;
 };
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 
-//////////////////////////////////////////////////
-///////////// TO DO /////////////
-//////////////////////////////////////////////////
-/*
-
-
-*/
-//////////////////////////////////////////////////
+true

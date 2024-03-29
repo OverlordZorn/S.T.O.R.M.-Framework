@@ -16,7 +16,7 @@
 // #################################################################################################################################################################################################
 
 class Default;
-class CVO_PE_Default : Default
+class GVAR(DEFAULT) : Default
 {
 	interval = 0.5;					    	// interval of particle's creation
 	circleRadius = 0;						// radius around emitter where particles are created
@@ -97,7 +97,7 @@ class CVO_PE_Default : Default
 	interval_min = 5;
 };
 
-class CVO_PE_Dust_High : CVO_PE_Default
+class GVAR(Dust_High) : GVAR(DEFAULT)
 {
     particleShape = "\A3\data_f\cl_basic";
     particleFSNtieth = 1;
@@ -165,30 +165,30 @@ class CVO_PE_Dust_High : CVO_PE_Default
 };
 
 
-class CVO_PE_Dust_High_100 : CVO_PE_Dust_High
+class GVAR(Dust_High_100) : GVAR(Dust_High)
 {
    	circleRadius = 100;
 };
 
-class CVO_PE_Dust_High_50 : CVO_PE_Dust_High
+class GVAR(Dust_High_50) : GVAR(Dust_High)
 {
    	circleRadius = 50;
 };
 
-class CVO_PE_Dust_High_35 : CVO_PE_Dust_High
+class GVAR(Dust_High_35) : GVAR(Dust_High)
 {
    	circleRadius = 35;
 };
 
 
 
-class CVO_PE_Dust_Low : CVO_PE_Dust_High 
+class GVAR(Dust_Low) : GVAR(Dust_High) 
 {
     size[] = {0,3,7,10,7,3,0};
 };
 
 // Twigs
-class CVO_PE_Leafes : CVO_PE_Default
+class GVAR(Branches) : GVAR(DEFAULT)
 {
     particleShape = "\A3\data_f\ParticleEffects\Hit_Leaves\Sticks_Green";
     particleFSNtieth = 1;
@@ -250,9 +250,6 @@ class CVO_PE_Leafes : CVO_PE_Default
 
 
 /*
-
-
-
 class particle_emitter_0: Default
 {
 	interval = 0.03;

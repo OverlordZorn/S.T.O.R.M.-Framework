@@ -49,7 +49,7 @@ params [
 
 // CLEANUP MODE
 if ( _effectName isEqualTo "CLEANUP")  exitWith {
-    if ( missionNamespace getVariable ["CVO_Debug", false] ) then {
+    if ( missionNamespace getVariable [QPVAR(DEBUG), false] ) then {
         // Deletes Debug Red Arrow
         deleteVehicle ( (GVAR(Active_hashMap) get "Debug_Helper") select 0 ); 
         GVAR(Active_hashMap) deleteAt "Debug_Helper";
@@ -78,7 +78,7 @@ if (isNil QGVAR(Active_hashMap)) then {
     GVAR(isActive) = true;
    
     // Adds Debug_Helper Object (arrow)
-    if (missionNamespace getVariable ["CVO_Debug", false]) then {
+    if (missionNamespace getVariable [QPVAR(DEBUG), false]) then {
             _helper = createVehicleLocal [ "Sign_Arrow_Large_F", [0,0,0] ];
             GVAR(Active_hashMap) set [ "Debug_Helper", [_helper]];
     };
@@ -158,7 +158,7 @@ if (_preExists) then { // Index -1: Requested Type of Particle Spawner does not 
     // Interrupts cration of a new particle spwaner if the target intensity is 0. 
     if (_intensityTarget == 0) exitWith {
         // Stops the reAttach pfh there is no other already existing particlesource. (parseNumber Bool => 0,1 # if Debugmode, expect 1 obj in array to consider it empty, if not, 0 means empty)
-        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then { GVAR(isActive) = false; };
+        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then { GVAR(isActive) = false; };
         false
     };
 
@@ -214,11 +214,11 @@ private _exitCode = {
     if ( _intensityTarget isEqualTo 0) then {
 
         diag_log "Transition pfEH Exit - Intensity == 0 -> Spawner Deleted";
-        GVAR(Active_hashMap) deleteAt _index;   
+        GVAR(Active_hashMap) deleteAt _this#6;   
         deleteVehicle _spawner;
 
 
-        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then {
+        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then {
             GVAR(isActive) = false;
         };
 

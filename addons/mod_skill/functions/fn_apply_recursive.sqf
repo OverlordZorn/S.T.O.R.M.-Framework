@@ -15,7 +15,7 @@
 * None
 *
 * Example:
-* [_array_mod, _array_units] call storm_modSkill_fnc_setSkill_recursive;
+* [_array_mod, _array_units] call storm_mod_Skill_fnc_apply_recursive;
 *
 * Public: No 
 */
@@ -58,8 +58,7 @@ if (count _array_units == 0) exitWith {
 };
 
 // Hands off the remaining array with same parameters to the next iteration
+ZRN_LOG_3(diag_frameno,_iteration,count _array_units);
 
-diag_log format ["[CVO](debug)(fn_AI_setSkill) [%3] Done: %1 Remaining: %2", _iteration, count _array_units, diag_frameno];
-
-_statement = {     [{_this call CVO_STORM_fnc_AI_setSkill_recursive; }, _this] call CBA_fnc_execNextFrame;  };
+_statement = {     [{_this call FUNC(apply_recursive); }, _this] call CBA_fnc_execNextFrame;  };
 [_statement, [_array_mod, _array_units, _iteration]] call CBA_fnc_execNextFrame;

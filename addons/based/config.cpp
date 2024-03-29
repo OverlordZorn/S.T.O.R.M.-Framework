@@ -33,12 +33,10 @@ class CfgFunctions
 	class PREFIX            // Tag
 	{
         class COMPONENT { 
-            tag = QADDON;
+            tag = Q(PREFIX);
         	file = PATH_TO_FNC;
 
             class cba_settings_initialized { postInit = 1; };
-
-            class hashFromConfig {};
         };
 	}; 
 };

@@ -1,7 +1,7 @@
 // COMPONENT should be defined in the script_component.hpp and included BEFORE this hpp
 
 #define MAINPREFIX z
-#define PREFIX STORM
+#define PREFIX storm
 
 #define MOD_NAME_BEAUTIFIED "S.T.O.R.M. Framework"
 
@@ -17,6 +17,6 @@
 
 // config.cpp addon header
 #define AUTHOR "Overlord Zorn [CVO]"
-#define URL "www.github.com/PulsarNeutronStar/CVO-Sandstorm"
+#define URL "http:\/\/www.github.com/PulsarNeutronStar/CVO-Sandstorm"
 
 #define ADDON_CONFIG_HEADER VERSION_CONFIG; name = COMPONENT_NAME; author = AUTHOR; url = URL

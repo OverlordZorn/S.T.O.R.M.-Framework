@@ -36,7 +36,7 @@ class CfgFunctions
 
 			class request {};
 
-			class setSkill_recursive {};
+			class apply_recursive {};
 			class cleanup_recursive {};
 		};
 	}; 

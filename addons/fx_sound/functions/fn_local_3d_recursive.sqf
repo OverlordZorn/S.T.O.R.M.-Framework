@@ -24,7 +24,7 @@ if (_index isEqualTo -1) exitWith {diag_log format ['[CVO](debug)(fn_sound_remot
 
 if (_hashMap isEqualTo "INIT") then {
     _configPath = (configFile >> "CVO_SFX_Presets");
-    _hashMap = [_configPath, _presetName] call EFUNC(based,hashFromConfig); // TODO FUNC
+    _hashMap = [_configPath, _presetName] call PFUNC(hashFromConfig);
 };
 
 private _maxDistance    = _hashMap get "maxDistance";

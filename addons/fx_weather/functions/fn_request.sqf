@@ -303,3 +303,5 @@ private _code = switch (_intensity) do {
 };
 
 [ _code , [], _duration ] call CBA_fnc_waitAndExecute;
+
+true

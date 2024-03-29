@@ -15,7 +15,7 @@
  * Note: 
  *
  * Example:
- * [(configFile >> "CVO_AI_SubSkill_Modifier"), "CVO_AI_Skill_sandstorm_old"] call storm_based_fnc_hashFromConfig;
+ * [(configFile >> "CVO_AI_SubSkill_Modifier"), "CVO_AI_Skill_sandstorm_old"] call storm_fnc_hashFromConfig;
  * 
  * Public: No
  */
@@ -29,8 +29,11 @@ params [
 if (_className  isEqualTo "") exitWith {false};
 
 //Check if config Exists
-if !(_className in (configProperties [_configPath , "true", true] apply { configName _x })) exitWith {
-    diag_log format ["[CVO][STORM](Error)(fn_common_get_hash_from_config) - provided classname doesnt exist: %1", _className];
+if !( toLowerANSI _className in (configProperties [_configPath , "true", true] apply { toLowerANSI configName _x })) exitWith {
+    ZRN_LOG_MSG(failed: configPath >> classname does not exist);
+    ZRN_LOG_1(_configPath);
+    ZRN_LOG_1(_className);
+    ZRN_LOG_1(_className);
     false
 };
 
@@ -43,7 +46,5 @@ private _returnHashMap = createHashMap;
     _value = [_configPath >> _classname, _x] call BIS_fnc_returnConfigEntry;
     _returnHashMap set [_x,_value];
 } forEach _properties;
-
-// diag_log format ["[CVO][STORM](LOG)(fn_common_get_hash_from_config) - success : %1",_returnHashMap];
 
 _returnHashMap
