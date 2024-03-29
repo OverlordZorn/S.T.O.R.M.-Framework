@@ -14,7 +14,7 @@
 *		<array> <[suggested fogBase, _range from max to min]>
 *
 *	Examples:
-*		   _var = [] call cvo_storm_fnc_weather_get_AvgASL;
+*		   _var = [] call storm_fxWeather_fnc_get_AvgASL;
 *
 */
 
@@ -38,7 +38,6 @@ if (count _allPlayers > 3) then {
 	_filteredPlayers = _allPlayers;
 };
 
-// diag_log format ['[CVO](debug)(fn_weather_get_AvgASL) _allPlayers: %1 - _filteredPlayers: %2', _allPlayers , _filteredPlayers];
 
 _allASL = _filteredPlayers apply {
     switch (isTouchingGround vehicle _x) do {
@@ -47,11 +46,9 @@ _allASL = _filteredPlayers apply {
     };
 };
 
-if (count _allASL == 0) exitWith {diag_log "[CVO](debug)(fn_weather_get_AvgASL) failed - empty _allASL "; 0}; 
+if (count _allASL == 0) exitWith {diag_log "[STORM](fxWeather)(fn_get_AvgASL) failed - empty _allASL "; 0};
 
 _allASL sort true;
-
-// diag_log format ['[CVO](debug)(fn_weather_get_AvgASL) _allASL: %1', _allASL];
 
 private _min = selectMin _allASL;
 private _max = selectMax _allASL;
@@ -68,18 +65,4 @@ _avgASL = [_allASL, _avgASL] call BIS_fnc_nearestNum;
 
 _result = _avgASL;
 
-//_result = [_avgASL, _range];
-// diag_log ("[CVO] [ENV] (allPlayersASL) - " + format ["return: %1 - ASLs: %2 - Min: %3 - Max: %4",_result, _allASL, _min, _max]);
-
-// diag_log format ['[CVO](debug)(fn_weather_get_AvgASL) _result: %1', _result];
 _result
-
-
-/* 
- 	how to define the returning value? 
-		https://cbateam.github.io/CBA_A3/docs/files/arrays/fnc_filter-sqf.html
-		https://cbateam.github.io/CBA_A3/docs/files/arrays/fnc_sortNestedArray-sqf.html
-		https://community.bistudio.com/wiki/BIS_fnc_consolidateArray
-*/ 
-
-// TODO FIND ERROR HERE

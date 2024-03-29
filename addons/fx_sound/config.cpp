@@ -33,18 +33,19 @@ class CfgFunctions
 	class PREFIX            // Tag
 	{
         class COMPONENT { 
+			tag = QADDON;
 			file = PATH_TO_FNC;
 
-			class SFX_request {};
+			class request {};
 
-			class SFX_remote_3d {};
-			class SFX_local_3d {};
-			class SFX_local_3d_recursive {};
+			class remote_3d {};
+			class local_3d {};
+			class local_3d_recursive {};
         };
 	}; 
 };
 
 
-#include "CVO_SFX_Cfg.inc.hpp"
-#include "CVO_SFX_SoundPresets.hpp"
+#include "storm_CfgSFX.inc.inc.hpp"
+#include "storm_SoundPresets.inc.hpp"
 

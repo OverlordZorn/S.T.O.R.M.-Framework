@@ -1,8 +1,8 @@
 #define COMPONENT based
-#define COMPONENT_BEAUTIFIED Based
+#define COMPONENT_BEAUTIFIED Based (Main Addon)
 
 
-#include "\z\cvo_storm\addons\based\script_macros.hpp"
+#include "\z\storm\addons\based\script_macros.hpp"
 
 
 // #define DEBUG_MODE_FULL

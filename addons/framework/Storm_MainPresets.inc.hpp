@@ -1,8 +1,8 @@
-class CVO_StormPresets
+class PVAR(mainPresets)
 {
-    class CVO_Storm_Default
+    class PVAR(Default)
     {
-        storm_name = "CVO_Storm_Default";
+        storm_name = QPVAR(Default);
 
         weather_preset = "";
         weather_coef = 1;

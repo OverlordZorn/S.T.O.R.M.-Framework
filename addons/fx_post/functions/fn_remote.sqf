@@ -15,7 +15,7 @@
  * Note: 
  *
  * Example:
- * [_effectArray, _duration] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",0, "CVO_Storm_CC_PP_Effect_JIP_Handle" ];
+ * [_effectArray, _duration] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",[0,2] select isDedicated, "CVO_Storm_CC_PP_Effect_JIP_Handle" ];
  * 
  * Public: No
  */
@@ -32,19 +32,19 @@ params [
 
 if (_effectArray isEqualTo []) exitWith {};
 
-private _ppEffectType = getText   (configFile >> "CVO_PP_Effects" >> _effectName >> "ppEffectType");
-private _ppEffectPrio = getNumber (configFile >> "CVO_PP_Effects" >> _effectName >> "ppEffectPrio");
-private _layer        = getNumber (configFile >> "CVO_PP_Effects" >> _effectName >> "layer");
+private _ppEffectType = getText   (configFile >> QGVAR(Presets) >> _effectName >> "ppEffectType");
+private _ppEffectPrio = getNumber (configFile >> QGVAR(Presets) >> _effectName >> "ppEffectPrio");
+private _layer        = getNumber (configFile >> QGVAR(Presets) >> _effectName >> "layer");
 
 
-if (isNil "CVO_Storm_Active_PP_Effects_Array") then {
-    CVO_Storm_Active_PP_Effects_Array = [];
+if (isNil QGVAR(activeEffects)) then {
+    GVAR(activeEffects) = [];
 };
 
 
 // Defines custom Variablename as String 
 // missionNameSpace has only lowercase letters
-private _varName = toLower (["CVO_Storm_",_ppEffectType,"_",_layer,"_PP_Effect_Handle"] joinString "");
+private _varName = toLower (QGVAR_3(_ppEffectType,_layer,handle));
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _varName : %1", _varName];
 
@@ -59,7 +59,7 @@ if (_existsVar isEqualto false) then {
     missionNamespace setVariable [_varName, (ppEffectCreate [_ppEffectType, _ppEffectPrio]) ];
 
     // adds the name of the variable as a string to the array  
-    CVO_Storm_Active_PP_Effects_Array pushback _varName;
+    GVAR(activeEffects) pushback _varName;
 
     (missionNamespace getVariable _varname) ppEffectEnable true;
 };
@@ -71,6 +71,6 @@ if (_existsVar isEqualto false) then {
 if (_intensity == 0) then {
     [ {
         ppEffectDestroy (missionNamespace getVariable _this#0);
-        if (count CVO_Storm_Active_PP_Effects_Array == 0) then { CVO_Storm_Active_PP_Effects_Array = nil; };
+        if (count GVAR(activeEffects) == 0) then { GVAR(activeEffects) = nil; };
      }, [_varName], _duration] call CBA_fnc_waitAndExecute;
 };

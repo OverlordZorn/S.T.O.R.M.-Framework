@@ -1,5 +1,5 @@
-name = "cvo_storm_framework"
-prefix = "cvo_storm"
+name = "S.T.O.R.M."
+prefix = "storm"
 mainprefix = "z"
 
 [properties]
@@ -23,9 +23,11 @@ exclude = [
 ]
 
 [version]
-major = 0 # Overrides path when set
-minor = 1
-patch = 0
+path = "addons/based/script_version.hpp"
+
+#major = 0 # Overrides path when set
+#minor = 1
+#patch = 0
 git_hash = 4 # Default: 8
 
 

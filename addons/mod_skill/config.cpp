@@ -31,14 +31,15 @@ class CfgFunctions
 	{
 		class COMPONENT   // Category
 		{
+			tag = QADDON;
 			file = PATH_TO_FNC;
 
-			class AI_request {};
+			class request {};
 
-			class AI_setSkill_recursive {};
-			class AI_cleanup_recursive {};
+			class setSkill_recursive {};
+			class cleanup_recursive {};
 		};
 	}; 
 };
 
-#include "CVO_AI_SubSkills.hpp"
+#include "storm_SubSkills.inc.hpp"

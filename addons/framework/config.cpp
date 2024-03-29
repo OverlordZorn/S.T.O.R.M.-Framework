@@ -25,26 +25,21 @@ class CfgPatches {
 	};
 };
 
-#include "CVO_StormPresets.hpp"
-
 
 class CfgFunctions
 {
 	class PREFIX            // Tag
 	{
-		class Common   // Category
+		class COMPONENT
 		{
+			tag = QADDON;
+
 			file = PATH_TO_FNC;
 
-			class common_hash_from_config {};
-		};
-
-		class Storm
-		{
-			file = PATH_TO_FNC;
-
-			class storm_request {};
+			class transition_request {};
 		};
 
 	}; 
 };
+
+#include "Storm_MainPresets.inc.hpp"

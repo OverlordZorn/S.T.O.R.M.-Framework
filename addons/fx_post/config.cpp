@@ -31,15 +31,16 @@ class CfgFunctions
 	{
 		class COMPONENT   // Category
 		{
+			tag = QADDON;
 			file = PATH_TO_FNC;
 
-			class ppEffect_request {};
+			class request {};
 
-			class ppEffect_remote {};
-			class ppEffect_get_from_config {};
-			class ppEffect_convert_intensity {};
+			class remote {};
+			class getConfig {};
+			class convertIntensity {};
 		};
 	}; 
 };
 
-#include "CVO_PP_Effects.hpp"
+#include "Storm_postPresets.inc.hpp"

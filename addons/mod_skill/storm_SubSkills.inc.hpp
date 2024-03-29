@@ -1,6 +1,6 @@
-class CVO_AI_SubSkill_Modifier
+class GVAR(Presets)
 {
-    class CVO_AI_Skill_Default
+    class GVAR(Default)
     {
         general =           1.00;
         courage =           1.00;
@@ -17,7 +17,7 @@ class CVO_AI_SubSkill_Modifier
     };
 
 
-    class CVO_AI_Skill_sandstorm_old : CVO_AI_Skill_Default
+    class GVAR(sandstorm_old) : GVAR(Default)
     {
         general =           0.40;
         courage =           0.30;

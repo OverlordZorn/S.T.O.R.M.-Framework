@@ -6,7 +6,7 @@
  * Intensity will be regulated simply by dropInterval (The bigger the number, the less particles)
  * If the same Effect has already been called, it will instead adjust the already existing PE spawner.
  * If _intensityTarget == 0, the function will ether exit in case the spawner doesnt exist already or transition the spawner to 0 intensity and afterwards, the spawner will be deleted.  
- * If a transition is currently taking place (CVO_Storm_Local_PE_Spawner_array#_x#3), then the funciton will simply fail silently.
+ * If a transition is currently taking place (GVAR(Active_hashMap)#_x#3), then the funciton will simply fail silently.
  *
  * Arguments:
  * 0: _EffectName           <STRING> CfgCloudlet Classname of the desired Particle Effect. 
@@ -20,17 +20,17 @@
  *
  * Example:
  *
- * ["CVO_PE_Leafes", 600, 0.75] remoteExecCall ["cvo_storm_fnc_particle_remote",0, _jip_handle_string];
- * ["CVO_PE_Leafes", 600]       remoteExecCall ["cvo_storm_fnc_particle_remote",0, _jip_handle_string];
- * ["CLEANUP"]                  remoteExecCall ["cvo_storm_fnc_particle_remote",0, _jip_handle_string];
- * ["CVO_PE_Leafes"]                      call   cvo_storm_fnc_particle_remote;
- * ["CLEANUP"]                            call   cvo_storm_fnc_particle_remote;
+ * ["CVO_PE_Leafes", 600, 0.75] remoteExecCall ["storm_fxParticle_fnc_remote",[0,2] select isDedicated, _jip_handle_string];
+ * ["CVO_PE_Leafes", 600]       remoteExecCall ["storm_fxParticle_fnc_remote",[0,2] select isDedicated, _jip_handle_string];
+ * ["CLEANUP"]                  remoteExecCall ["storm_fxParticle_fnc_remote",[0,2] select isDedicated, _jip_handle_string];
+ * ["CVO_PE_Leafes"]                      call   storm_fxParticle_fnc_remote;
+ * ["CLEANUP"]                            call   storm_fxParticle_fnc_remote;
  * 
  * Public: No
  */
 
 #define COEF_SPEED_HELI 9
-#define COEF_SPEED 6
+#define COEF_SPEED 5
 #define COEF_WIND  0.2
 #define PFEH_ATTACH_DELAY 0
 #define PFEH_INTENSITY_DELAY 7 // _duration /  PFEH_INTENSITY_DELAY == _delay
@@ -51,14 +51,14 @@ params [
 if ( _effectName isEqualTo "CLEANUP")  exitWith {
     if ( missionNamespace getVariable ["CVO_Debug", false] ) then {
         // Deletes Debug Red Arrow
-        deleteVehicle (CVO_Storm_Local_PE_Spawner_array#0#0); 
-        CVO_Storm_Local_PE_Spawner_array deleteAt 0;
+        deleteVehicle ( (GVAR(Active_hashMap) get "Debug_Helper") select 0 ); 
+        GVAR(Active_hashMap) deleteAt "Debug_Helper";
     };
 
         // Transition to 0 over Default duration for each existing Particle Spawner
     {  
         [_x#1] call cvo_storm_fnc_particle_remote;
-    } forEach CVO_Storm_Local_PE_Spawner_array;
+    } forEach GVAR(Active_hashMap);
 };
 
 
@@ -68,22 +68,25 @@ if ( _effectName isEqualTo "")  exitWith {false};
 if (_intensityTarget < 0     )  exitWith {false};
 if (_duration    isEqualTo  0)  exitWith {false};
 
+///////////////////////////////////////////////////
+// Handles framework for first new particle Source 
+///////////////////////////////////////////////////
 
-
-if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
-    //CVO_Storm_Local_PE_Spawner_array Nested Array of particle spawners [_spawnerObj, "IdentString",_intensity] 
-    CVO_Storm_Local_PE_Spawner_array = [];
-    CVO_particle_isActive = true;
-
+if (isNil QGVAR(Active_hashMap)) then {
+    //GVAR(Active_hashMap) Nested Array of particle spawners [_spawnerObj, "IdentString",_intensity] 
+    GVAR(Active_hashMap) = createHashMap;
+    GVAR(isActive) = true;
+   
     // Adds Debug_Helper Object (arrow)
     if (missionNamespace getVariable ["CVO_Debug", false]) then {
             _helper = createVehicleLocal [ "Sign_Arrow_Large_F", [0,0,0] ];
-            CVO_Storm_Local_PE_Spawner_array pushback [_helper, "Debug_Helper"];
+            GVAR(Active_hashMap) set [ "Debug_Helper", [_helper]];
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ATTACH-TO PER FRAME HANDLER
     // Start pfEH to re-attach all Particle Spawners according to player speed & wind.
-    // watch CVO_particle_isActive, if inactive(false), stop/exit the pfH and delete remaining particle spawners + the particle array
+    // watch GVAR(isActive), if inactive, stop/exit the pfH and delete remaining particle spawners + the particle array
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private _codeToRun = {
@@ -93,23 +96,23 @@ if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
         private _isHeli = typeof vehicle player isKindOf "Air";
 
         _coef_speed = [COEF_SPEED, COEF_SPEED_HELI] select (_isHeli);
+
         private _relPosArray = (( velocityModelSpace _player ) vectorMultiply _coef_speed) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply COEF_WIND);
 
         _relPosArray set [2, (_relPosArray#2) + 1];
         { 
-            if (_isHeli) then { if (typeOf (_x#0) == "Sign_Arrow_Large_F" ) then {    detach (_x#0) ;   continue    }  };
+            if (_isHeli && { _x == "Debug_Helper" } ) then { detach (_y#0); continue };
            
-            _x#0 attachTo [_player, _relPosArray];
-             } forEach CVO_Storm_Local_PE_Spawner_array;
+            _y#0 attachTo [_player, _relPosArray];
+             } forEach GVAR(Active_hashMap);
     };
 
     private _exitCode  = { 
-    diag_log "reAttach pfEH Exit";
-        { deleteVehicle (_x#0) } forEach CVO_Storm_Local_PE_Spawner_array; 
-        CVO_Storm_Local_PE_Spawner_array = nil;  
+        { deleteVehicle (_y#0) } forEach GVAR(Active_hashMap); 
+        GVAR(Active_hashMap) = nil;  
     };
 
-    private _condition = { ( missionNameSpace getVariable ["CVO_particle_isActive", false] ) };
+    private _condition = { GVAR(isActive) };
     private _delay = PFEH_ATTACH_DELAY;
 
     [{
@@ -123,19 +126,23 @@ if (isNil "CVO_Storm_Local_PE_Spawner_array") then {
             [] call _exitCode;
         };
     }, _delay, [_codeToRun, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 };
 
-// Defines custom Variablename as String 
-// missionNameSpace has only lowercase letters
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Check if a spawner of that type already exists, 
-// if not, create, setParticleClass, store as array [_obj,_name,_intensity] and add it to the array.
+// if not, create, setParticleClass, store as _name = [_obj,_intensity,_isTransitioning] and add it to the array.
 // if already exists, take previous intensity and set as start inensity. 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 private _intensityStart = 0;
-private _index = CVO_Storm_Local_PE_Spawner_array findIf { _x#1 isEqualTo _effectName };
+private _preExists = _effectName in GVAR(Active_hashMap);
 
 private _dropIntervalStart = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval_min");
 private _dropIntervalMax   = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval");
@@ -146,14 +153,12 @@ private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropInt
 
 
 private "_spawner";
-if (_index == -1) then { // Index -1: Requested Type of Particle Spawner does not exist yet, therefor, it creates a new one.
+if (_preExists) then { // Index -1: Requested Type of Particle Spawner does not exist yet, therefor, it creates a new one.
 
     // Interrupts cration of a new particle spwaner if the target intensity is 0. 
     if (_intensityTarget == 0) exitWith {
         // Stops the reAttach pfh there is no other already existing particlesource. (parseNumber Bool => 0,1 # if Debugmode, expect 1 obj in array to consider it empty, if not, 0 means empty)
-        if ( count CVO_Storm_Local_PE_Spawner_array == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then {
-            CVO_particle_isActive = false;
-        };
+        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then { GVAR(isActive) = false; };
         false
     };
 
@@ -161,22 +166,23 @@ if (_index == -1) then { // Index -1: Requested Type of Particle Spawner does no
     _spawner setParticleClass _effectName;
 
     _isTransitioning = true;
-    CVO_Storm_Local_PE_Spawner_array pushback [_spawner, _effectName, _intensityTarget,_isTransitioning];
+    GVAR(Active_hashMap) set [_effectName, [_spawner, _intensityTarget, _isTransitioning] ];
 
 } else {
-    _spawnerArray = CVO_Storm_Local_PE_Spawner_array select _index;
 
-    if (_spawnerArray#3) exitWith {false}; // exits when transition of this PE is already in progress.    
+    _spawnerArray = GVAR(Active_hashMap) get _effectName;
+
+    if (_spawnerArray#2) exitWith {false}; // exits when transition of this PE is already in progress.    
     
     _spawner = _spawnerArray#0; 
-    _intensityStart = _spawnerArray#2;
+    _intensityStart = _spawnerArray#1;
     _spawnerArray set [3, true];
     _dropIntervalStart = linearConversion [0, 1, _intensityTarget, DROP_INTERVAL_MIN, _dropIntervalMax, true];
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//                      Per Frame Handler for the Transition of the Effect
+// TRANSITION PER FRAME HANDLER
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////// Particle Intensity will simply be adjusted over time via setDropInterval /////////////
 ///////////// Maybe in Future, Intensity could be applied via colorAlpha, Size, ...    /////////////
@@ -189,34 +195,31 @@ private _endTime = _startTime + _duration;
 
 
 //// params inside the pfEH
-private _parameters = [ _spawner, _startTime, _endTime, _dropIntervalStart, _dropIntervalTarget, _intensityTarget ];
+private _parameters = [ _spawner, _startTime, _endTime, _dropIntervalStart, _dropIntervalTarget, _intensityTarget,_effectName ];
 
 private _codeToRun = {
-    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget" ];
-    _drop = linearConversion [ _startTime, _endTime, time, _dropIntervalStart, _dropIntervalTarget ];
-    _spawner setDropInterval _drop;
+    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
+    _drop = linearConversion [ _this#1, _this#2 , time, _this#3, _this#4 ];
+    _this#0 setDropInterval _drop;
 }; 
 
 private _exitCode = {   
-    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget" ];
+    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
     diag_log "Transition pfEH Exit";
 
-
-    private _index = CVO_Storm_Local_PE_Spawner_array findIf { _x#0 isEqualTo _spawner };
-
-    (CVO_Storm_Local_PE_Spawner_array select _index) set [3, false];
+    (GVAR(Active_hashMap) get _this#6) set [2, false];
 
 
     _spawner setDropInterval  _dropIntervalTarget; 
     if ( _intensityTarget isEqualTo 0) then {
 
         diag_log "Transition pfEH Exit - Intensity == 0 -> Spawner Deleted";
-        CVO_Storm_Local_PE_Spawner_array deleteAt _index;   
+        GVAR(Active_hashMap) deleteAt _index;   
         deleteVehicle _spawner;
 
 
-        if ( count CVO_Storm_Local_PE_Spawner_array == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then {
-            CVO_particle_isActive = false;
+        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable ["CVO_Debug", false] ) ) ) then {
+            GVAR(isActive) = false;
         };
 
         
@@ -245,3 +248,6 @@ private _delay = _duration / PFEH_INTENSITY_DELAY;
 /////////////////// Handling of the Debug_arrow during "CLEANUP" could be optimized, ///////////////
 /////////////////// but its happening so rarely, i dont think its gonna be necessary ///////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// TODO: turn spawner ARRAY into hashMap

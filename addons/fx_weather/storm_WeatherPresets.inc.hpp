@@ -1,7 +1,7 @@
-class CVO_Weather_Presets
+class GVAR(Presets)
 {
 
-    class CVO_Weather_Default
+    class GVAR(Default)
     {
         change_overcast = 0;                            // 0 or 1 - consider it a bool
         overcast_value = 0;                             // 0..1
@@ -10,7 +10,7 @@ class CVO_Weather_Presets
         rain_value = 0;                                 // 0..1
 
         change_rainParams = 0;                          // 0 or 1 - consider it a bool
-        rainParams = "CVO_RainParams_Default";          // String - name of RainParams Config Class
+        rainParams = QPVAR(RainParams_Default);          // String - name of RainParams Config Class
 
         change_lightnings = 0;                          // 0 or 1 - consider it a bool
         lightnings_value = 0;                           // 0..1
@@ -34,7 +34,7 @@ class CVO_Weather_Presets
         waves_value = 0;                                // 0..1
     };
 
-    class CVO_Weather_ClearSky : CVO_Weather_Default
+    class GVAR(ClearSky) : GVAR(Default)
     {
         change_overcast = 1;                            // 0 or 1 - consider it a bool
         overcast_value = 0;                             // 0..1
@@ -43,7 +43,7 @@ class CVO_Weather_Presets
         rain_value = 0;                                 // 0..1
 
         change_rainParams = 1;                          // 0 or 1 - consider it a bool
-        rainParams = "CVO_RainParams_Default";          // String - name of RainParams Config Class
+        rainParams = QPVAR(RainParams_Default);          // String - name of RainParams Config Class
 
         change_lightnings = 1;                          // 0 or 1 - consider it a bool
         lightnings_value = 0;                           // 0..1
@@ -67,7 +67,7 @@ class CVO_Weather_Presets
         waves_value = 0;                                // 0..1
     };
 
-    class CVO_Weather_Sandstorm_01 : CVO_Weather_Default
+    class GVAR(Sandstorm_01) : GVAR(Default)
     {
         change_overcast = 1;                            // 0 or 1 - consider it a bool
         overcast_value = 1;                             // 0..1
@@ -76,7 +76,7 @@ class CVO_Weather_Presets
         rain_value = 0;                                 // 0..1
 
         change_rainParams = 0;                          // 0 or 1 - consider it a bool
-        rainParams = "CVO_RainParams_Default";          // String - name of RainParams Config Class
+        rainParams = QPVAR(RainParams_Default);          // String - name of RainParams Config Class
 
         change_lightnings = 1;                          // 0 or 1 - consider it a bool
         lightnings_value = 0;                           // 0..1
@@ -100,7 +100,7 @@ class CVO_Weather_Presets
         waves_value = 1;                                // 0..1
     };
 
-    class CVO_Weather_Test : CVO_Weather_Default
+    class GVAR(Test) : GVAR(Default)
     {
         change_overcast = 1;                            // 0 or 1 - consider it a bool
         overcast_value = 1;                             // 0..1
@@ -109,7 +109,7 @@ class CVO_Weather_Presets
         rain_value = 1;                                 // 0..1
 
         change_rainParams = 1;                          // 0 or 1 - consider it a bool
-        rainParams = "CVO_RainParams_Snow_CVO";          // String - name of RainParams Config Class
+        rainParams = QPVAR(RainParams_Snow_CVO);          // String - name of RainParams Config Class
 
         change_lightnings = 1;                          // 0 or 1 - consider it a bool
         lightnings_value = 1;                           // 0..1

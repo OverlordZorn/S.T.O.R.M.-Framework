@@ -1,4 +1,4 @@
-class CVO_CC_Default
+class GVAR(CC_Default)
 {
 	ppEffectType = "ColorCorrections";
 	ppEffectPrio = "1500";
@@ -28,7 +28,7 @@ class CVO_CC_Default
 
 };
 
-class CVO_CC_Alias : CVO_CC_Default
+class GVAR(CC_Alias) : GVAR(CC_Default)
 {
 	brightness = 0.86;
 	offset = 0.01;
@@ -37,7 +37,7 @@ class CVO_CC_Alias : CVO_CC_Default
 	desaturation_rgba0[] = 	{	-0.57,	 0.86,	 -1.2,   0.86	};			// RGB - Color -- 0 - not in use? -- color rgb weights for desaturation
 };
 
-class CVO_CC_01 : CVO_CC_Default
+class GVAR(CC_01) : GVAR(CC_Default)
 {
 	brightness = 	0.98;
 	contrast = 		0.93;
@@ -48,7 +48,7 @@ class CVO_CC_01 : CVO_CC_Default
 };
 
 
-class CVO_CC_Mars_Storm : CVO_CC_Default
+class GVAR(CC_Mars_Storm) : GVAR(CC_Default)
 {
 	brightness = 	0.80;
 	contrast = 		0.80;
@@ -59,7 +59,7 @@ class CVO_CC_Mars_Storm : CVO_CC_Default
 };
 
 
-class CVO_CC_Muted_Green_Yellow : CVO_CC_Default
+class GVAR(CC_Muted_Green_Yellow) : GVAR(CC_Default)
 {
 	brightness = 	0.80;
 	contrast = 		1.00;
@@ -70,7 +70,7 @@ class CVO_CC_Muted_Green_Yellow : CVO_CC_Default
 };
 
 
-class CVO_CC_Muted_Pale_Blue : CVO_CC_Default
+class GVAR(CC_Muted_Pale_Blue) : GVAR(CC_Default)
 {
 	brightness = 	1.07;
 	contrast = 		0.90;
@@ -83,7 +83,7 @@ class CVO_CC_Muted_Pale_Blue : CVO_CC_Default
 
 
 
-class CVO_CC_Frosted_Blue_Purple : CVO_CC_Default
+class GVAR(CC_Frosted_Blue_Purple) : GVAR(CC_Default)
 {
 	brightness = 	1.00;
 	contrast = 		0.90;
@@ -95,12 +95,11 @@ class CVO_CC_Frosted_Blue_Purple : CVO_CC_Default
 
 
 
-
  
 
+/* Currently not in use
 
-
-class CVO_CC_Radial_Default
+class GVAR(CC_Radial_Default)
 {
 	ppEffectType = "ColorCorrections";
 	ppEffectPrio = "1600";
@@ -125,7 +124,7 @@ class CVO_CC_Radial_Default
 	}; 	
 };
 
-class CVO_CC_Radial_Blinking_open : CVO_CC_Radial_Default
+class GVAR(CC_Radial_Blinking_open) : GVAR(CC_Radial_Default)
 {
 	brightness = 0.1;
 	radial_color[] = {
@@ -139,7 +138,7 @@ class CVO_CC_Radial_Blinking_open : CVO_CC_Radial_Default
 	};
 };
 
-class CVO_CC_Radial_Blinking_half : CVO_CC_Radial_Default
+class GVAR(CC_Radial_Blinking_half) : GVAR(CC_Radial_Default)
 {
 	brightness = 0.1;
 	radial_color[] = {
@@ -152,7 +151,7 @@ class CVO_CC_Radial_Blinking_half : CVO_CC_Radial_Default
 		 1												// 0..			coefficient for color interpolation between inner and outer radius
 	};
 };
-class CVO_CC_Radial_Blinking_closed : CVO_CC_Radial_Default
+class GVAR(CC_Radial_Blinking_closed) : GVAR(CC_Radial_Default)
 {
 	brightness = 0.1;
 	radial_color[] = {
@@ -165,3 +164,5 @@ class CVO_CC_Radial_Blinking_closed : CVO_CC_Radial_Default
 		 1												// 0..			coefficient for color interpolation between inner and outer radius
 	};
 };
+
+*/

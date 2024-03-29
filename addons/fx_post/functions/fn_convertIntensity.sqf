@@ -16,7 +16,7 @@
  * Note: 
  *
  * Example:
- * [_effectArray, _intensity, _baseArray] call cvo_storm_fnc_ppEffect_convert_intensity;
+ * [_effectArray, _intensity, _baseArray] call storm_fxPost_fnc_convert_intensity;
  * 
  * Public: No
  */
@@ -27,19 +27,9 @@ params [
     ["_baseArray",      [],     [[]]]
 ];
 
-// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _effectArray];
-// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _baseArray];
-// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Start : %1", _intensity];
-
-
-//if !(_effectArray isEqualTypeArray _baseArray) exitWith {false}; // will trigger with the new baseArray approach
-
 private _resultArray = [];
-
 {
     if (_x isEqualType [] ) then {
-
-        // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _x == array : %1", _x];
 
         private _subArray = _x;
         private _subArrayBase = _baseArray select _forEachIndex;
@@ -55,8 +45,6 @@ private _resultArray = [];
                 _value = linearConversion [0,1,_intensity, _base,_target,true];
             };
     
-            // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _value : %1", _value];
-
             _subResultArray pushBack _value;
 
         } forEach _subArray;
@@ -65,8 +53,6 @@ private _resultArray = [];
      
 
     } else {
-
-        // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _x != array : %1", _x];
 
         private "_value";
 
@@ -78,21 +64,7 @@ private _resultArray = [];
         } else {
             _value = linearConversion [0,1,_intensity, _base,_target,true];
         };
-
-        // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _value : %1", _value];
-
-
         _resultArray pushBack _value;
-
     };
-
-    // diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _resultArray : %1", _resultArray];
-
-
 } forEach _effectArray;
-
-// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - _effectArray : %1", _effectArray];
-// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) -   _baseArray : %1", _baseArray];
-// diag_log format ["[CVO][STORM](LOG)(fnc_ppEffect_convert_intensity) - Final result : %1", _resultArray];
-
 _resultArray

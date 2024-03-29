@@ -35,9 +35,8 @@ _intensity = _intensity max 0 min 1;
 
 diag_log format ["[CVO][STORM](Particle_request) - name: %1 - _duration: %2- _intensity: %3", _PE_effect_Name, _duration, _intensity];
 
-
 //Check if config Exists
-if !(_PE_effect_Name in (configProperties [configFile >> "CVO_PE_Effects", "true", true] apply { configName _x })) exitWith {    diag_log format ["[CVO][STORM](Particle_request) Failed: provided PE_Effect_name doesnt exist: %1", _PE_effect_Name]; false };
+if !(_PE_effect_Name in (configProperties [configFile >> "CfgCloudlets", "true", true] apply { configName _x })) exitWith {    diag_log format ["[CVO][STORM](Particle_request) Failed: provided PE_Effect_name doesnt exist: %1", _PE_effect_Name]; false };
 
 
 // Check if can transition to 0 (Needs effect to be already active)
@@ -52,7 +51,7 @@ diag_log format ['[CVO](debug)(Particle_request) Request Passed: _PE_effect_Name
 
 /////////////////////////////////////////////////////////////////////////////
 // RemoteExec the request
-private _jip_handle_string = [_PE_effect_Name, _duration, _intensity] remoteExecCall ["cvo_storm_fnc_particle_remote",0, _jip_handle_string];
+private _jip_handle_string = [_PE_effect_Name, _duration, _intensity] remoteExecCall ["cvo_storm_fnc_particle_remote", [0,2] select isDedicated, _jip_handle_string];
 if (isNil "_jip_handle_string") exitWith {
     diag_log format ["[CVO][STORM](Error)(Particle_request) - Not Successful: %1", _PE_effect_Name];
     false

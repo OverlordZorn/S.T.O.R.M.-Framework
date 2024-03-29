@@ -13,11 +13,10 @@
 * None
 *
 * Example:
-* [_soundName,_soundPreset, _direction, _distance, _intensity, _maxDistance] call cvo_storm_fnc_sfx_local_3d;
+* [_soundName,_soundPreset, _direction, _distance, _intensity, _maxDistance] call storm_fxSound_fnc_local_3d;
 *
 * Public: Yes
 */
-diag_log "[CVO](debug)(fn_sfx_local_3d) Started";
 
 params [
     ["_soundName",      "",         [""]    ],
@@ -28,7 +27,7 @@ params [
     ["_maxDistance",    1500,       [0]     ]
 ];
 
-#define ABOVEGROUND 100
+#define ABOVEGROUND 5
 #define RND_PITCH 0.2
 #define ISSPEECH 0
 #define OFFSET 0
@@ -36,30 +35,23 @@ params [
 #define RANGE_MOD 1.5
 
 
-
 if (_soundName == "") exitWith {};
 if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWith {diag_log format ['[CVO](debug)(fn_sound_remote_spacial) failed: _Direction invalid: %1', _direction]; };
 
-
-if ( ! missionNamespace getVariable ["CVO_SFX_3D_helper_array", false] ) then {    CVO_SFX_3D_helper_array = [];    };
-
-_HelperName = ["CVO_SFX_3D",_soundPreset,"helperOBJ"] joinString "_";
-ZRN_LOG_1(_helperName);
-
+if (missionNamespace getVariable ["CVO_SFX_3D_helper_array", false] isEqualTo false ) then {    CVO_SFX_3D_helper_array = [];    };
+private _HelperName = ["CVO_SFX_3D",_soundPreset,"helperOBJ"] joinString "_";
 private _helperObj = missionNamespace getVariable [_HelperName, objNull ];
-ZRN_LOG_1(_helperObj);
-
-if (_intensity == 0 && { _helperObj isEqualTo objNull }) exitWith {diag_log "[CVO](debug)(fn_sound_remote_distant) failed: Intensity 0: Cleanup not possible while no previous sound execution";};
+if (_intensity == 0 && { _helperObj isEqualTo objNull }) exitWith {diag_log "[CVO](debug)(fn_sfx_local_3d) failed: Intensity 0: Cleanup not possible while no previous sound execution";};
 
 
 if (_helperObj isEqualTo objNull) then {
-        _helperClass = ["Helper_Base_F", "Sign_Arrow_Large_F"]select missionNamespace getVariable ["CVO_Debug", false];
-        ZRN_LOG_1(_helperClass);
+        _helperClass = ["Helper_Base_F", call {selectRandom ["Sign_Arrow_Large_Green_F", "Sign_Arrow_Large_Blue_F", "Sign_Arrow_Large_Pink_F", "Sign_Arrow_Large_Yellow_F", "Sign_Arrow_Large_Green_F"]} ] select (missionNamespace getVariable ["CVO_Debug", false]);
+        
         _helperObj  = createVehicleLocal [_helperClass, [0,0,0]];
-        ZRN_LOG_1(_helperObj);
         missionNamespace setVariable [_HelperName, _helperObj];
         CVO_SFX_3D_helper_array pushBack _helperObj;
         ZRN_LOG_1(CVO_SFX_3D_helper_array);
+        if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) Helper Created - _helperClass: %1', _helperClass];};
 };
 
 // Define Mode of Operation regarding Direction of sound source.
@@ -70,7 +62,6 @@ if (_direction isEqualType "") then {
         default { 0 };
     };
 };
-diag_log format ['[CVO](debug)(fn_sfx_local_3d) Adapted: _direction: %1', _direction];
 
 private _pos = player getPos [_distance, _direction];
 _pos = [_pos#0, _pos#1, ABOVEGROUND + (getPosASL player # 2)];
@@ -85,16 +76,23 @@ private _sayObj = if (__GAME_VER_MAJ__ >= 2 && { __GAME_VER_MIN__ >= 18 }) then 
 } else {
     _helperObj say3D [_soundName, _range, ((1 - RND_PITCH) + random RND_PITCH), ISSPEECH, OFFSET];      // additional bool argument once 2.18 hits
 };
+if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) say3D -> _soundName: %1 - _intensity: %2', _soundName , _intensity];};
 
 
 // Deletes the Local Helper Obj once intensity has reached 0;
 if (_intensity == 0) then {
     _statement = {
         private _array = CVO_SFX_3D_helper_array - [_this#1];
-        if (count _array == 0) then { CVO_SFX_3D_helper_array = nil } else { CVO_SFX_3D_helper_array = _array };
-
+        if (count _array == 0) then {
+            CVO_SFX_3D_helper_array = nil;
+            if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) cleanup - helper array == nil', _intensity];};
+        } else {
+            CVO_SFX_3D_helper_array = _array;
+            if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) cleanup - helper array == %1', CVO_SFX_3D_helper_array];};
+        };
         deleteVehicle (missionNameSpace getVariable _this#2 );
         missionNamespace setVariable [_this#2, nil];  
+        if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) cleanup - helper obj deleted, gvar nil`d', _intensity];};
     };
 
     _condition = {  _this#0 isEqualTo objNull    };                 // condition - Needs to return bool

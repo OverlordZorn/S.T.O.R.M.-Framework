@@ -30,12 +30,15 @@ class CfgPatches {
 
 class CfgFunctions
 {
-	class CVO_Storm            // Tag
+	class PREFIX            // Tag
 	{
         class COMPONENT { 
+            tag = QADDON;
         	file = PATH_TO_FNC;
 
             class cba_settings_initialized { postInit = 1; };
+
+            class hashFromConfig {};
         };
 	}; 
 };

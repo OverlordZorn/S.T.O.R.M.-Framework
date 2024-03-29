@@ -31,24 +31,24 @@ class CfgFunctions
 	{
 		class COMPONENT   // Category
 		{
+			tag = QADDON;
 			file = PATH_TO_FNC;
 
-			class weather_request {};
+			class request {};
 
-			class weather_get_WeatherPreset_as_Hash {};
-			class weather_get_rainParams_as_Array {};
+			class get_WeatherPreset_as_Hash {};
+			class get_rainParams_as_Array {};
 
-			class weather_get_AvgASL {};
+			class get_AvgASL {};
 
-			class weather_setWind {};
-			class weather_setFog_avg {};
-
+			class setWind {};
+			class setFog_avg {};
 		};
 	}; 
 };
 
-class CVO_Weather_Effects
+class P_CFG_COMP
 {
-	#include "CVO_WE_WeatherPresets.hpp"
-	#include "CVO_WE_RainParams.hpp"
+	#include "storm_RainParams.inc.hpp"
+	#include "storm_WeatherPresets.inc.hpp"
 };

@@ -1,4 +1,4 @@
-class CVO_FG_Default
+class GVAR(FG_Default)
 {
 	ppEffectType = "FilmGrain";
 	ppEffectPrio = "2000";
@@ -14,7 +14,7 @@ class CVO_FG_Default
 	baseArray[] = {0.005, "false","false","false","false","false"};
 };
 
-class CVO_FG_Basic : CVO_FG_Default
+class GVAR(FG_Basic) : GVAR(FG_Default)
 {
 	intensity =   0.1;			// 0..1
 	sharpness =   0.1;			// 1..20
@@ -24,7 +24,7 @@ class CVO_FG_Basic : CVO_FG_Default
 	monochromatic = 0;			// 0,1 # 0 Monochromatic # Any other value Color
 };
 
-class CVO_FG_Storm : CVO_FG_Default
+class GVAR(FG_Storm) : GVAR(FG_Default)
 {
 	intensity =   0.15;			// 0..1
 	sharpness =   0.7;			// 1..20
@@ -34,7 +34,7 @@ class CVO_FG_Storm : CVO_FG_Default
 	monochromatic = 0;			// 0,1 # 0 Monochromatic # Any other value Color
 };
 
-class CVO_FG_Storm_02 : CVO_FG_Default
+class GVAR(FG_Storm_02) : GVAR(FG_Default)
 {
 	intensity =   0.78;			// 0..1
 	sharpness =   1.5;			// 1..20

@@ -27,19 +27,20 @@ class CfgPatches {
 
 class CfgFunctions
 {
-	class PREFIX          // Tag
+	class PREFIX        // Tag
 	{
-		class COMPONENT   // Category
+		class COMPONENT   	// Category
 		{
+			tag = QADDON;
 			file = PATH_TO_FNC;
 
-			class particle_request {};
+			class request {};
 
-			class particle_remote {};
+			class remote {};
 		};
 	}; 
 };
 
 class CfgCloudlets {
-	#include "CVO_PE_ParticleEffects.hpp"
+	#include "Storm_ParticleEffects.inc.hpp"
 };

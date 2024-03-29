@@ -1,6 +1,6 @@
-class CVO_Rain_Params
+class PVAR(RainParams)
 {
-	class CVO_RainParams_Default
+	class PVAR(RainParams_Default)
 	{
 		// Parameters for the new particle rain
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
@@ -42,7 +42,7 @@ class CVO_Rain_Params
 		dropColorStrong=0;	
 	};
 
-	class CVO_RainParams_Snow : CVO_RainParams_Default
+	class PVAR(RainParams_Snow) : PVAR(RainParams_Default)
 	{
 		// Parameters for the new particle rain
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
@@ -86,11 +86,11 @@ class CVO_Rain_Params
 
 
 
-	class CVO_RainParams_Snow_CVO : CVO_RainParams_Default
+	class PVAR(RainParams_Snow_CVO) : PVAR(RainParams_Default)
 	{
 		// Parameters for the new particle rain
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
-		rainDropTexture="z\cvo_storm\addons\storm\data\Raven_Voron_256.paa";
+		rainDropTexture="z\storm\addons\based\data\Raven_Voron_256.paa";
 		// dropsInTexture - the number of drops that are present in the drop texture
 		texDropCount=4;
 		// minimum rain strength when the effect starts to be rendered

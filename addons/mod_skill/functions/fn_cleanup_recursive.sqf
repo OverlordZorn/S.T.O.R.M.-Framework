@@ -34,7 +34,7 @@ if (!alive _unit)           exitWith {};
 if (isPlayer _unit)         exitWith {};
 */
 
-_unit setVariable ["CVO_AI_Skill_Hash", false];
+_unit setVariable [QGVAR(preSkills), false];
 
 // Hands off the remaining array with same parameters to the next iteration
 

@@ -15,7 +15,7 @@
 * None
 *
 * Example:
-* [_array_mod, _array_units] call CVO_STORM_fnc_AI_setSkill_recursive;
+* [_array_mod, _array_units] call storm_modSkill_fnc_setSkill_recursive;
 *
 * Public: No 
 */
@@ -36,19 +36,17 @@ _iteration = _iteration + 1;
 private _unit = _array_units deleteAt 0;
 
 
-private _base_Ai_Skill_Hash = _unit getVariable ["CVO_AI_Skill_Hash", false];
+private _base_Ai_Skill_Hash = _unit getVariable [QGVAR(preSkills), false];
 
 // stores initial Units SubSkills 
 if (_base_Ai_Skill_Hash isEqualTo false) then {
     _base_Ai_Skill_Hash = createHashMap;
     { _base_Ai_Skill_Hash set [_x, (_unit skill _x)] } forEach ["general","courage","aimingAccuracy","aimingShake","aimingSpeed","commanding","spotDistance","spotTime","reloadSpeed"];
-    _unit setVariable ["CVO_AI_Skill_Hash", _base_Ai_Skill_Hash];
+    _unit setVariable [QGVAR(preSkills), _base_Ai_Skill_Hash];
 };
 
 
 // set Skill based on _array_mod
-
-
 {   
     _value = ( _base_Ai_Skill_Hash get _x ) * _y;
     _unit setSkill [_x, _value];
@@ -56,10 +54,11 @@ if (_base_Ai_Skill_Hash isEqualTo false) then {
 
 // Handle Exit of self-calling function
 if (count _array_units == 0) exitWith {
-    diag_log format ["[CVO](debug)(fn_AI_setSkill) %1 done", _iteration];
+    ZRN_LOG_MSG(completed);
 };
 
 // Hands off the remaining array with same parameters to the next iteration
+
 diag_log format ["[CVO](debug)(fn_AI_setSkill) [%3] Done: %1 Remaining: %2", _iteration, count _array_units, diag_frameno];
 
 _statement = {     [{_this call CVO_STORM_fnc_AI_setSkill_recursive; }, _this] call CBA_fnc_execNextFrame;  };
