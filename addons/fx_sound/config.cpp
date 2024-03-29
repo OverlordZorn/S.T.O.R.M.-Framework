@@ -30,10 +30,10 @@ class CfgPatches {
 
 class CfgFunctions
 {
-	class PREFIX            // Tag
+	class ADDON            // Tag
 	{
-        class COMPONENT { 
-			tag = QADDON;
+        class COMPONENT
+		{ 
 			file = PATH_TO_FNC;
 
 			class request {};

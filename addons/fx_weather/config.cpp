@@ -27,13 +27,11 @@ class CfgPatches {
 
 class CfgFunctions
 {
-	class PREFIX          // Tag
+	class ADDON          // Tag
 	{
 		class COMPONENT   // Category
 		{
-			tag = QADDON;
 			file = PATH_TO_FNC;
-
 			class request {};
 
 			class get_WeatherPreset_as_Hash {};

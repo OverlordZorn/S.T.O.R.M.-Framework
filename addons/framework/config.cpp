@@ -32,7 +32,6 @@ class CfgFunctions
 	{
 		class COMPONENT
 		{
-			tag = Q(PREFIX);
 			file = PATH_TO_FNC;
 
 			class request_transition {};
