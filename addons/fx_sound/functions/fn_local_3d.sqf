@@ -36,22 +36,23 @@ params [
 
 
 if (_soundName == "") exitWith {};
-if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWith {diag_log format ['[CVO](debug)(fn_sound_remote_spacial) failed: _Direction invalid: %1', _direction]; };
+if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWith { ZRN_LOG_MSG(failed: _direction invalid!); false };
 
-if (missionNamespace getVariable ["CVO_SFX_3D_helper_array", false] isEqualTo false ) then {    CVO_SFX_3D_helper_array = [];    };
-private _HelperName = ["CVO_SFX_3D",_soundPreset,"helperOBJ"] joinString "_";
+if (missionNamespace getVariable [QGVAR(Helper_Array), false] isEqualTo false ) then {    GVAR(Helper_Array) = [];    };
+private _HelperName = [ADDON,_soundPreset,"helperOBJ"] joinString "_";
 private _helperObj = missionNamespace getVariable [_HelperName, objNull ];
-if (_intensity == 0 && { _helperObj isEqualTo objNull }) exitWith {diag_log "[CVO](debug)(fn_sfx_local_3d) failed: Intensity 0: Cleanup not possible while no previous sound execution";};
+if (_intensity == 0 && { _helperObj isEqualTo objNull }) exitWith { ZRN_LOG_MSG(failed: cannot cleanup while no previous effect); false };
 
 
 if (_helperObj isEqualTo objNull) then {
+        // use invisible helperObj to play3d the sound from, or, when debug, use big funny arrow
         _helperClass = ["Helper_Base_F", call {selectRandom ["Sign_Arrow_Large_Green_F", "Sign_Arrow_Large_Blue_F", "Sign_Arrow_Large_Pink_F", "Sign_Arrow_Large_Yellow_F", "Sign_Arrow_Large_Green_F"]} ] select (missionNamespace getVariable ["CVO_Debug", false]);
         
         _helperObj  = createVehicleLocal [_helperClass, [0,0,0]];
         missionNamespace setVariable [_HelperName, _helperObj];
-        CVO_SFX_3D_helper_array pushBack _helperObj;
-        ZRN_LOG_1(CVO_SFX_3D_helper_array);
-        if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) Helper Created - _helperClass: %1', _helperClass];};
+        GVAR(Helper_Array) pushBack _helperObj;
+        ZRN_LOG_1(GVAR(Helper_Array));
+        ZRN_LOG_MSG_1(Debug Helper Created,_helperClass);
 };
 
 // Define Mode of Operation regarding Direction of sound source.
@@ -76,23 +77,24 @@ private _sayObj = if (__GAME_VER_MAJ__ >= 2 && { __GAME_VER_MIN__ >= 18 }) then 
 } else {
     _helperObj say3D [_soundName, _range, ((1 - RND_PITCH) + random RND_PITCH), ISSPEECH, OFFSET];      // additional bool argument once 2.18 hits
 };
-if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) say3D -> _soundName: %1 - _intensity: %2', _soundName , _intensity];};
+
+ZRN_LOG_MSG_2(say3D,_soundName,_intensity);
 
 
 // Deletes the Local Helper Obj once intensity has reached 0;
 if (_intensity == 0) then {
     _statement = {
-        private _array = CVO_SFX_3D_helper_array - [_this#1];
+        private _array = GVAR(Helper_Array) - [_this#1];
         if (count _array == 0) then {
-            CVO_SFX_3D_helper_array = nil;
-            if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) cleanup - helper array == nil', _intensity];};
+            GVAR(Helper_Array) = nil;
+            ZRN_LOG_MSG_1(cleanup: helper array == isNil,_intensity);
         } else {
-            CVO_SFX_3D_helper_array = _array;
-            if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) cleanup - helper array == %1', CVO_SFX_3D_helper_array];};
+            GVAR(Helper_Array) = _array;
+            ZRN_LOG_MSG_1(cleanup: helper Array ==,GVAR(Helper_Array));
         };
         deleteVehicle (missionNameSpace getVariable _this#2 );
         missionNamespace setVariable [_this#2, nil];  
-        if CVO_Debug then {diag_Log format ['[CVO](debug)(fn_sfx_local_3d) cleanup - helper obj deleted, gvar nil`d', _intensity];};
+        ZRN_LOG_MSG_1(cleanup: helper obj deleted - gvar = nil,_intensity);
     };
 
     _condition = {  _this#0 isEqualTo objNull    };                 // condition - Needs to return bool
