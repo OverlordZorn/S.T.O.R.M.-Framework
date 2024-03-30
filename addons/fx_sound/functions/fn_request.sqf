@@ -5,7 +5,7 @@
 * To be executed on the server, will remoteExecute all needed Fnc Calls and Handle JIP
 *
 * Arguments:
-*	0:	_effectName		<STRING>	Name of desired preset from CVO SFX Soundpresets
+*	0:	_presetName		<STRING>	Name of desired preset from CVO SFX Soundpresets
 *	1:	_duration		<NUMBER>	Duration in Minutes - Time of the transition from current to target
 *	2:	_intensity		<Number>	0..1 Intensity Value - 1 means 100%, 0 means 0% - 0 Will reset and cleanup previous effects
 *
@@ -16,17 +16,22 @@
 * ['something', player] call storm_fxSound_fnc_request;
 *
 * Public: Yes
+*
+* GVARS
+*  	GVAR(S_activeJIP) set [_presetName, [isTransitioning, previous_intensity, _endTime]
+*
 */
+
 
 if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
 
 params [
-	["_effectName",		"",		[""]	],
+	["_presetName",		"",		[""]	],
 	["_duration",		1,		[0]		],
 	["_intensity",		0,		[0]		]
 ];
 
-ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensity);
+ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
 
 
 if (_presentName isEqualTo "CLEANUP") exitWith {
@@ -38,7 +43,7 @@ if (_presentName isEqualTo "CLEANUP") exitWith {
 			_statement = { [_this#0] call FUNC(request); };
 			[_condition, _statement, _parameter] call CBA_fnc_waitUntilAndExecute;
 		}
-	} foreach QGVAR(activeJIP);
+	} foreach QGVAR(S_activeJIP);
 	ZRN_LOG_MSG(Cleanup Requested!);
 	true
 };
@@ -46,34 +51,35 @@ if (_presentName isEqualTo "CLEANUP") exitWith {
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
 
-if  (_effectName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
-if !(_effectName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
-if ( _intensity == 0 && { isNil QGVAR(activeJIP) || { !(_effectName in GVAR(activeJIP))} } )                 exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
-if (isNil QGVAR(activeJIP)) then { GVAR(activeJIP) = createHashMap; };
-if (_effectName in GVAR(activeJIP) && { (GVAR(activeJIP) get _effectName)#0 } )                              exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
+if  (_presetName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
+if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
+if ( _intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                 exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
+if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = createHashMap; };
+if (_presetName in GVAR(S_activeJIP) && { (GVAR(S_activeJIP) get _presetName)#0 } )                              exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
 
-//_effectName = [inTransition, _previousIntensity, _endTime]
+//_presetName = [inTransition, _previousIntensity, _endTime]
 
-_array = GVAR(activeJIP) getOrDefault [_effectName, [true, 0, time + _duration], true];
+_array = GVAR(S_activeJIP) getOrDefault [_presetName, [true, 0, time + _duration], true];
 
-private _previousIntensity = _array#2;
+private _previousIntensity = _array#1;
 
-if (_intensity == 0 && { count QGVAR(activeJIP) == 0 || { _effectName in QGVAR(activeJIP) }}) exitWith {ZRN_LOG_MSG(failed: Intensity == 0 while active sound 3D SFX of same Type); false };
+if (_intensity == 0 && { count QGVAR(S_activeJIP) == 0 || { _presetName in QGVAR(S_activeJIP) }}) exitWith {ZRN_LOG_MSG(failed: Intensity == 0 while active sound 3D SFX of same Type); false };
 
 
-[_effectName, _duration, _intensity, _previousIntensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _effectName];
+[_presetName, _duration, _intensity, _previousIntensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _presetName];
 
-_array set [ 2, _intensity ];
-_array set [ 3, time + _duration ];
-GVAR(activeJIP) set [_effectName, _array];
+_array set [ 1, _intensity ];
+_array set [ 2, time + _duration ];
+GVAR(S_activeJIP) set [_presetName, _array];
 
 if (_intensity == 0) then {
 
 	[ {
 		remoteExec ["", _this#0];
 		_this#1 deleteAt _this#2;
-		if (count _this#1 == 0) then { GVAR(activeJIP) = nil; };
-	} , [_effectName, QGVAR(activeJIP), _effectName], _duration] call CBA_fnc_waitAndExecute;
+		if (count _this#1 == 0) then { GVAR(S_activeJIP) = nil; };
+	} , [_presetName, QGVAR(S_activeJIP), _presetName], _duration] call CBA_fnc_waitAndExecute;
 };
-
+ZRN_LOG_MSG_1(:,GVAR(S_activeJIP));
+ZRN_LOG_MSG_1(completed!,_presetName);
 true

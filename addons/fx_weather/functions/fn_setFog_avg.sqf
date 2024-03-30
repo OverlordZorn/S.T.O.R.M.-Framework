@@ -17,8 +17,12 @@
  * [_fogParams_Target, _setFog, 120 ] call storm_fxWeather_fnc_setFog_avg;
  * 
  * Public: No
+  *
+ * GVARS
+ *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_previous, _fog_target, DELAY];
+ *
  */
-
+ 
 
 if (!isServer) exitWith {_this remoteExecCall [QFUNC(setFog_avg),2]};
 
@@ -36,34 +40,34 @@ private _fog_previous = fogParams;
 private _startTime = time;
 private _endTime = time + _duration;
 
-private _needStart = isNil QGVAR(fogParams);
+private _needPerFrameHandler = isNil QGVAR(S_fogParams);
 
-GVAR(fogParams) = [_startTime, _endTime, _fog_previous, _fog_target, DELAY];
+GVAR(S_fogParams) = [_startTime, _endTime, _fog_previous, _fog_target, DELAY];
 
 
 // If the perFrameHandler is already running, we only need to update the array
-if (!_needStart) exitWith {};
+if (!_needPerFrameHandler) exitWith {};
 
-private _condition = { !isNil QGVAR(fogParams) };
+private _condition = { !isNil QGVAR(S_fogParams) };
 
 private _codeToRun = {
     
     private _avg_ASL = round ([] call cvo_storm_fnc_weather_get_AvgASL);
 
-    private _currentParams = switch (time > GVAR(fogParams)#1) do {
+    private _currentParams = switch (time > GVAR(S_fogParams)#1) do {
         case true: {
             // fog_target
             [
-                GVAR(fogParams)#3#0,
-                GVAR(fogParams)#3#1,
-               (GVAR(fogParams)#3#2) + _avg_ASL
+                GVAR(S_fogParams)#3#0,
+                GVAR(S_fogParams)#3#1,
+               (GVAR(S_fogParams)#3#2) + _avg_ASL
             ]
         };
         case false: {
             [
-                linearConversion [GVAR(fogParams)#0, GVAR(fogParams)#1, time, GVAR(fogParams)#2#0, GVAR(fogParams)#3#0,             true ],
-                linearConversion [GVAR(fogParams)#0, GVAR(fogParams)#1, time, GVAR(fogParams)#2#1, GVAR(fogParams)#3#1,             true ],
-                linearConversion [GVAR(fogParams)#0, GVAR(fogParams)#1, time, GVAR(fogParams)#2#2,(GVAR(fogParams)#3#2) + _avg_ASL, true ]
+                linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#0, GVAR(S_fogParams)#3#0,             true ],
+                linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#1, GVAR(S_fogParams)#3#1,             true ],
+                linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#2,(GVAR(S_fogParams)#3#2) + _avg_ASL, true ]
             ]
         };
     };

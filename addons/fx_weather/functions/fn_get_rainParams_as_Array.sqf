@@ -14,7 +14,11 @@
  * [_rainParams_preset] call storm_fxWeather_fnc_rainParms_as_Array;
  * 
  * Public: No
- */
+ *
+ * GVARS
+ * 	None
+ *
+*/
 
  params [   ["_rainParams_preset", "", [""]]    ];
 

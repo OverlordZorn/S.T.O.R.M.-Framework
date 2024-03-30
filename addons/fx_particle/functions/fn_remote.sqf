@@ -6,7 +6,7 @@
  * Intensity will be regulated simply by dropInterval (The bigger the number, the less particles)
  * If the same Effect has already been called, it will instead adjust the already existing PE spawner.
  * If _intensityTarget == 0, the function will ether exit in case the spawner doesnt exist already or transition the spawner to 0 intensity and afterwards, the spawner will be deleted.  
- * If a transition is currently taking place (GVAR(Active_hashMap)#_x#3), then the funciton will simply fail silently.
+ * If a transition is currently taking place (GVAR(C_Active_PartSource)#_x#3), then the funciton will simply fail silently.
  *
  * Arguments:
  * 0: _EffectName           <STRING> CfgCloudlet Classname of the desired Particle Effect. 
@@ -27,6 +27,15 @@
  * ["CLEANUP"]                            call   storm_fxParticle_fnc_remote;
  * 
  * Public: No
+ *
+ *
+ *  created GVARS
+ *  GVAR(C_Active_PartSource) set [_effectName, [_spawner, _intensityTarget, _isTransitioning]
+ *  GVAR(C_Attach_pfH_isActive) boolean - gets changed at end of transition - will get checked by attach-to perFrameHandler
+ *
+ *
+ *
+ *
  */
 
 #define COEF_SPEED_HELI 9
@@ -35,6 +44,8 @@
 #define PFEH_ATTACH_DELAY 0
 #define PFEH_INTENSITY_DELAY 7 // _duration /  PFEH_INTENSITY_DELAY == _delay
 #define DROP_INTERVAL_MIN 20
+
+
 
 
 
@@ -47,18 +58,21 @@ params [
 ];
 
 
+
 // CLEANUP MODE
 if ( _effectName isEqualTo "CLEANUP")  exitWith {
     if ( missionNamespace getVariable [QPVAR(DEBUG), false] ) then {
         // Deletes Debug Red Arrow
-        deleteVehicle ( (GVAR(Active_hashMap) get "Debug_Helper") select 0 ); 
-        GVAR(Active_hashMap) deleteAt "Debug_Helper";
+        deleteVehicle ( (GVAR(C_Active_PartSource) get "Debug_Helper") select 0 ); 
+        GVAR(C_Active_PartSource) deleteAt "Debug_Helper";
+        ZRN_LOG_MSG_1(Cleanup: Helper Deleted,_effectName);
     };
 
         // Transition to 0 over Default duration for each existing Particle Spawner
     {  
-        [_x#1] call cvo_storm_fnc_particle_remote;
-    } forEach GVAR(Active_hashMap);
+        ZRN_LOG_MSG_1(Requesting Cleanup for:,_x#1);        
+        [_x] call cvo_storm_fnc_particle_remote;
+    } forEach GVAR(C_Active_PartSource);
 };
 
 _intensity = _intensity max 0 min 1;
@@ -70,21 +84,21 @@ if ( _effectName isEqualTo "")  exitWith {ZRN_LOG_MSG(failed: effectName not pro
 // Handles framework for first new particle Source 
 ///////////////////////////////////////////////////
 
-if (isNil QGVAR(Active_hashMap)) then {
-    //GVAR(Active_hashMap) Nested Array of particle spawners [_spawnerObj, "IdentString",_intensity] 
-    GVAR(Active_hashMap) = createHashMap;
-    GVAR(isActive) = true;
+if (isNil QGVAR(C_Active_PartSource)) then {
+    //GVAR(C_Active_PartSource) Nested Array of particle spawners [_spawnerObj, "IdentString",_intensity] 
+    GVAR(C_Active_PartSource) = createHashMap;
+    GVAR(C_Attach_pfH_isActive) = true;
    
     // Adds Debug_Helper Object (arrow)
     if (missionNamespace getVariable [QPVAR(DEBUG), false]) then {
             _helper = createVehicleLocal [ "Sign_Arrow_Large_F", [0,0,0] ];
-            GVAR(Active_hashMap) set [ "Debug_Helper", [_helper]];
+            GVAR(C_Active_PartSource) set [ "Debug_Helper", [_helper]];
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ATTACH-TO PER FRAME HANDLER
     // Start pfEH to re-attach all Particle Spawners according to player speed & wind.
-    // watch GVAR(isActive), if inactive, stop/exit the pfH and delete remaining particle spawners + the particle array
+    // watch GVAR(C_Attach_pfH_isActive), if inactive, stop/exit the pfH and delete remaining particle spawners + the particle array
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private _codeToRun = {
@@ -102,15 +116,15 @@ if (isNil QGVAR(Active_hashMap)) then {
             if (_isHeli && { _x == "Debug_Helper" } ) then { detach (_y#0); continue };
            
             _y#0 attachTo [_player, _relPosArray];
-             } forEach GVAR(Active_hashMap);
+             } forEach GVAR(C_Active_PartSource);
     };
 
     private _exitCode  = { 
-        { deleteVehicle (_y#0) } forEach GVAR(Active_hashMap); 
-        GVAR(Active_hashMap) = nil;  
+        { deleteVehicle (_y#0) } forEach GVAR(C_Active_PartSource); 
+        GVAR(C_Active_PartSource) = nil;  
     };
 
-    private _condition = { GVAR(isActive) };
+    private _condition = { GVAR(C_Attach_pfH_isActive) };
     private _delay = PFEH_ATTACH_DELAY;
 
     [{
@@ -140,7 +154,7 @@ if (isNil QGVAR(Active_hashMap)) then {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 private _intensityStart = 0;
-private _preExists = _effectName in GVAR(Active_hashMap);
+private _preExists = _effectName in GVAR(C_Active_PartSource);
 
 private _dropIntervalStart = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval_min");
 private _dropIntervalMax   = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval");
@@ -153,10 +167,10 @@ private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropInt
 private "_spawner";
 if (_preExists) then { // Index -1: Requested Type of Particle Spawner does not exist yet, therefor, it creates a new one.
 
-    // Interrupts cration of a new particle spwaner if the target intensity is 0. 
     if (_intensityTarget == 0) exitWith {
+        // Interrupts cration of a new particle spwaner if the target intensity is 0. 
         // Stops the reAttach pfh there is no other already existing particlesource. (parseNumber Bool => 0,1 # if Debugmode, expect 1 obj in array to consider it empty, if not, 0 means empty)
-        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then { GVAR(isActive) = false; };
+        if ( count GVAR(C_Active_PartSource) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then { GVAR(C_Attach_pfH_isActive) = false; };
         false
     };
 
@@ -164,11 +178,11 @@ if (_preExists) then { // Index -1: Requested Type of Particle Spawner does not 
     _spawner setParticleClass _effectName;
 
     _isTransitioning = true;
-    GVAR(Active_hashMap) set [_effectName, [_spawner, _intensityTarget, _isTransitioning] ];
-
+    GVAR(C_Active_PartSource) set [_effectName, [_spawner, _intensityTarget, _isTransitioning] ];
+    ZRN_LOG_MSG_4(MSG,A,B,C,D);
 } else {
 
-    _spawnerArray = GVAR(Active_hashMap) get _effectName;
+    _spawnerArray = GVAR(C_Active_PartSource) get _effectName;
 
     if (_spawnerArray#2) exitWith {false}; // exits when transition of this PE is already in progress.    
     
@@ -206,7 +220,7 @@ private _exitCode = {
     params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
     ZRN_LOG_MSG(Transition pfHandler: exiting);
 
-    (GVAR(Active_hashMap) get _this#6) set [2, false];
+    (GVAR(C_Active_PartSource) get _this#6) set [2, false];
 
 
     _spawner setDropInterval  _dropIntervalTarget;
@@ -214,12 +228,12 @@ private _exitCode = {
     if ( _intensityTarget isEqualTo 0) then {
 
         ZRN_LOG_MSG(Transition pfHandler: exiting + Intensity==0 -> deleting Spawner);
-        GVAR(Active_hashMap) deleteAt _this#6;   
+        GVAR(C_Active_PartSource) deleteAt _this#6;   
         deleteVehicle _spawner;
 
 
-        if ( count GVAR(Active_hashMap) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then {
-            GVAR(isActive) = false;
+        if ( count GVAR(C_Active_PartSource) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then {
+            GVAR(C_Attach_pfH_isActive) = false;
         };
 
         

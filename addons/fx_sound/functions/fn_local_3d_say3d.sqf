@@ -13,9 +13,13 @@
 * None
 *
 * Example:
-* [_soundName,_soundPreset, _direction, _distance, _intensity, _maxDistance] call storm_fxSound_fnc_local_3d;
+* [_soundName,_soundPreset, _direction, _distance, _intensity, _maxDistance] call storm_fxSound_fnc_local_3d_play;
 *
-* Public: Yes
+* Public: No
+*
+* GVARS
+*  	GVAR(C_Objects) hashmap key = _soundPreset - value = [_helperObj]
+*
 */
 
 params [
@@ -38,20 +42,20 @@ params [
 if (_soundName == "") exitWith {};
 if ( _direction isEqualType "" && { !(_direction in ["WIND", "RAND"]) } ) exitWith { ZRN_LOG_MSG(failed: _direction invalid!); false };
 
-if (missionNamespace getVariable [QGVAR(Helper_Array), false] isEqualTo false ) then {    GVAR(Helper_Array) = [];    };
-private _HelperName = [ADDON,_soundPreset,"helperOBJ"] joinString "_";
-private _helperObj = missionNamespace getVariable [_HelperName, objNull ];
-if (_intensity == 0 && { _helperObj isEqualTo objNull }) exitWith { ZRN_LOG_MSG(failed: cannot cleanup while no previous effect); false };
+if (missionNamespace getVariable [QGVAR(C_Objects), false] isEqualTo false ) then {    GVAR(C_Objects) = hashMap;    };
 
+private _exists = _soundpreset in GVAR(C_Objects);
 
-if (_helperObj isEqualTo objNull) then {
+if (_intensity == 0 && { !_exists }) exitWith { ZRN_LOG_MSG(failed: cannot cleanup while no previous effect); false };
+
+if (!_exists ) then {
         // use invisible helperObj to play3d the sound from, or, when debug, use big funny arrow
         _helperClass = ["Helper_Base_F", call {selectRandom ["Sign_Arrow_Large_Green_F", "Sign_Arrow_Large_Blue_F", "Sign_Arrow_Large_Pink_F", "Sign_Arrow_Large_Yellow_F", "Sign_Arrow_Large_Green_F"]} ] select (missionNamespace getVariable ["CVO_Debug", false]);
         
         _helperObj  = createVehicleLocal [_helperClass, [0,0,0]];
         missionNamespace setVariable [_HelperName, _helperObj];
-        GVAR(Helper_Array) pushBack _helperObj;
-        ZRN_LOG_1(GVAR(Helper_Array));
+        GVAR(C_Objects) set [_soundPreset, _helperObj];
+        ZRN_LOG_1(GVAR(C_Objects));
         ZRN_LOG_MSG_1(Debug Helper Created,_helperClass);
 };
 
@@ -84,21 +88,19 @@ ZRN_LOG_MSG_2(say3D,_soundName,_intensity);
 // Deletes the Local Helper Obj once intensity has reached 0;
 if (_intensity == 0) then {
     _statement = {
-        private _array = GVAR(Helper_Array) - [_this#1];
-        if (count _array == 0) then {
-            GVAR(Helper_Array) = nil;
-            ZRN_LOG_MSG_1(cleanup: helper array == isNil,_intensity);
+        deleteVehicle _this#1;
+        GVAR(C_Objects) deleteAt _this#2;
+        if (count GVAR(C_Objects) == 0) then {
+            GVAR(C_Objects) = nil;
+            ZRN_LOG_MSG_1(cleanup: C_Objects empty,_intensity);
         } else {
-            GVAR(Helper_Array) = _array;
-            ZRN_LOG_MSG_1(cleanup: helper Array ==,GVAR(Helper_Array));
+            ZRN_LOG_MSG_1(cleanup:,GVAR(C_Objects));
         };
-        deleteVehicle (missionNameSpace getVariable _this#2 );
-        missionNamespace setVariable [_this#2, nil];  
         ZRN_LOG_MSG_1(cleanup: helper obj deleted - gvar = nil,_intensity);
     };
 
     _condition = {  _this#0 isEqualTo objNull    };                 // condition - Needs to return bool
-    _parameter = [_sayObj, _helperObj, _HelperName];                                         // arguments to be passed on -> _this
+    _parameter = [_sayObj, _helperObj, _soundPreset];                                         // arguments to be passed on -> _this
     _timeout = 120;                                                 // if condition isnt true within this time in S, _timecode will be executed.
     [_condition, _statement, _parameter, _timeout,_statement] call CBA_fnc_waitUntilAndExecute;
 };

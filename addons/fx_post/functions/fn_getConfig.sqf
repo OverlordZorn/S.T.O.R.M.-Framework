@@ -17,6 +17,10 @@
  * [_PP_effect_Name] call FUNC(get_from_config);
  * 
  * Public: No
+ *
+ * GVARS
+ *  NONE
+ *
  */
 
 
@@ -46,6 +50,8 @@ private _properties = switch (_ppEffectType) do {
     case "DynamicBlur":      {(configProperties [(configFile >> QGVAR(Presets) >> QGVAR(DB_Default) ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer", "baseArray"]};
 };
 
+ZRN_LOG_1(_properties);
+
 private _effectArray = [];
 
 // Create effect Array to be exported
@@ -53,5 +59,7 @@ private _effectArray = [];
     _value = [_configPath, _x] call BIS_fnc_returnConfigEntry;
     _effectArray set [_forEachIndex,_value];
 } forEach _properties;
+
+ZRN_LOG_1(_effectArray);
 
 _effectArray

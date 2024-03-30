@@ -16,7 +16,9 @@
  * ["CVO_AI_Skill_sandstorm_old", 1, 1] call storm_mod_skill_fnc_request;
  * 
  * Public: Yes
- */
+ * GVARS
+ * 	    GVAR(isActive) - [_inTransition, _previous_map, _current_Map, _handler_ID]
+*/
 
 if !(isServer) exitWith { _this remoteExecCall [QFUNC(request), 2, false] };
 
@@ -147,5 +149,6 @@ if (_intensity == 0) then {
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+ZRN_LOG_MSG_1(completed!,_presetName);
 
 true

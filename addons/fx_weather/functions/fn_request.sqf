@@ -1,22 +1,28 @@
 #include "..\script_component.hpp"
 
 /*
- * Author: Zorn
- * Applies Weather Over Time. 
- *
- * Arguments:
- * 0: _presetName    <STRING> Name of Post Process Preset - Capitalisation needs to be exact!
- * 1: _duration          <NUMBER> in Minutes for the duration to be applied.
- * 2: _intensity         <NUMBER> 0..1 Factor of Intensity for the PP Effect 
- *
- * Return Value:
- * _pp_effect_JIP_handle  <STRING>
- *
- * Example:
- * ["CVO_Weather_Sandstorm_01", 1, 0.5] call storm_fxWeather_fnc_request;
- * 
- * Public: No
- */
+* Author: Zorn
+* Applies Weather Over Time. 
+*
+* Arguments:
+* 0: _presetName    <STRING> Name of Post Process Preset - Capitalisation needs to be exact!
+* 1: _duration          <NUMBER> in Minutes for the duration to be applied.
+* 2: _intensity         <NUMBER> 0..1 Factor of Intensity for the PP Effect 
+*
+* Return Value:
+* _pp_effect_JIP_handle  <STRING>
+*
+* Example:
+* ["CVO_Weather_Sandstorm_01", 1, 0.5] call storm_fxWeather_fnc_request;
+* 
+* Public: No
+*
+* GVARS
+*  	GVAR(S_inTransition) boolean
+*     GVAR(S_previousWeather) hashmap of previous weather settings for reset 
+*
+*/
+
 
 
 if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
@@ -32,27 +38,27 @@ ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
 
 
 // Check: transition currently?
-if ( missionNamespace getVariable [QGVAR(isActiveTransition), false] ) exitWith { ZRN_LOG_MSG(failed: Transition already in progress); false };
+if ( missionNamespace getVariable [QGVAR(S_inTransition), false] ) exitWith { ZRN_LOG_MSG(failed: Transition already in progress); false };
 
 // check: Can reset?
-if ( _intensity == 0 && isNil QGVAR(previous) ) exitWith { ZRN_LOG_MSG(failed: intensity = 0 while no previous change); false };
+if ( _intensity == 0 && isNil QGVAR(S_previousWeather) ) exitWith { ZRN_LOG_MSG(failed: intensity = 0 while no S_previousWeather change); false };
 
 if (_intensity == 0) then {   _presetName = "Reset";  };
 
 // Check: No Preset?
-if (_presetName isEqualTo "")    exitWith { ZRN_LOG_MSG(failed - no _presetName given); false };
+if (_presetName isEqualTo "")    exitWith { ZRN_LOG_MSG(failed: no _presetName given); false };
 
 
 _duration = 60 * (_duration max 1);
 _intensity = _intensity max 0 min 1;
 
 
-if (isNil QGVAR(isActiveTransition)) then {   GVAR(isActiveTransition) = true;   };
+if (isNil QGVAR(S_inTransition)) then {   GVAR(S_inTransition) = true;   };
 
 
 
 private _hashMap = switch (_intensity) do {
-   case 0: { + GVAR(previous) };
+   case 0: { + GVAR(S_previousWeather) };
    default { [_presetName] call FUNC(get_WeatherPreset_as_Hash); };
 };
 
@@ -63,9 +69,9 @@ ZRN_LOG_MSG(Request approved - wait for completion);
 ZRN_LOG_3(_presetName,_duration,_intensity);
 ZRN_LOG_1(_hashMap);
 
-private _firstWeatherChange = isNil QGVAR(previous);
+private _firstWeatherChange = isNil QGVAR(S_previousWeather);
 if (_firstWeatherChange) then {
-   GVAR(previous) = createHashMap;
+   GVAR(S_previousWeather) = createHashMap;
 };
 
 
@@ -90,8 +96,8 @@ if ((_hashMap getOrDefault ["change_overcast",0]) > 0) then {
 
 if (_firstWeatherChange) then {
    // Save Current
-   GVAR(previous) set ["change_overcast", 1];
-   GVAR(previous) set ["overcast_value", overcast];
+   GVAR(S_previousWeather) set ["change_overcast", 1];
+   GVAR(S_previousWeather) set ["overcast_value", overcast];
 };
    // apply new
    _value_overcast = linearConversion [   0,    1, _intensity, 0, (_hashMap get "overcast_value"), true];
@@ -106,8 +112,8 @@ if ((_hashMap getOrDefault ["change_gusts", 0]) > 0) then {
 
 if (_firstWeatherChange) then {
    // Save Current
-   GVAR(previous) set ["change_gusts", 1];
-   GVAR(previous) set ["gusts_value", gusts];
+   GVAR(S_previousWeather) set ["change_gusts", 1];
+   GVAR(S_previousWeather) set ["gusts_value", gusts];
 };
 
    // apply Intensity
@@ -124,8 +130,8 @@ if ((_hashMap getOrDefault ["change_waves", 0]) > 0) then {
 
 if (_firstWeatherChange) then {
    // Save Current
-   GVAR(previous) set ["change_gusts", 1];
-   GVAR(previous) set ["waves_value", waves];
+   GVAR(S_previousWeather) set ["change_gusts", 1];
+   GVAR(S_previousWeather) set ["waves_value", waves];
 };
 
    // apply Intensity
@@ -146,8 +152,8 @@ if ((_hashMap getOrDefault ["change_lightnings", 0]) > 0) then {
 
 if (_firstWeatherChange) then {
    // Save Current
-   GVAR(previous) set ["change_lightnings", 1];
-   GVAR(previous) set ["lightnings_value", lightnings];
+   GVAR(S_previousWeather) set ["change_lightnings", 1];
+   GVAR(S_previousWeather) set ["lightnings_value", lightnings];
 };
 
    // apply Intensity
@@ -161,14 +167,14 @@ if (_firstWeatherChange) then {
 
 if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
-      // Store previous rain Parms
+      // Store S_previousWeather rain Parms
    if (_firstWeatherChange) then {
-      GVAR(previous) set ["change_rainParams", 1];
-      GVAR(previous) set ["RainParams", rainParams];
-      // Store previous rainValue if rain changes
+      GVAR(S_previousWeather) set ["change_rainParams", 1];
+      GVAR(S_previousWeather) set ["RainParams", rainParams];
+      // Store S_previousWeather rainValue if rain changes
       if ((_hashMap getOrDefault ["change_rainValue", 0]) > 0) then { 
-         GVAR(previous) set ["change_rainValue", 1];
-         GVAR(previous) set ["rain_value", rain];
+         GVAR(S_previousWeather) set ["change_rainValue", 1];
+         GVAR(S_previousWeather) set ["rain_value", rain];
       };
    };
 
@@ -197,8 +203,8 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
    // Save Current
    if (_firstWeatherChange) then {
-      GVAR(previous) set ["change_rainValue", 1];
-      GVAR(previous) set ["rain_value", rain];
+      GVAR(S_previousWeather) set ["change_rainValue", 1];
+      GVAR(S_previousWeather) set ["rain_value", rain];
    };
 
       // apply Intensity
@@ -215,8 +221,8 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
   if (_firstWeatherChange) then {
  // Save Current
-   GVAR(previous) set ["change_fog", 1];
-   GVAR(previous) set ["fogParams", fogParams];
+   GVAR(S_previousWeather) set ["change_fog", 1];
+   GVAR(S_previousWeather) set ["fogParams", fogParams];
    };
 
 
@@ -263,8 +269,8 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 
    if (_firstWeatherChange) then {
       // Save Current
-      GVAR(previous) set ["change_wind", 1];
-      GVAR(previous) set ["wind_value", vectorMagnitude wind];
+      GVAR(S_previousWeather) set ["change_wind", 1];
+      GVAR(S_previousWeather) set ["wind_value", vectorMagnitude wind];
 
       missionNamespace setVariable ["ace_weather_disableWindSimulation", true];
    };
@@ -292,19 +298,21 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 
 private _code = switch (_intensity) do {
    case 0: {{
-      GVAR(previous) = nil;
+      GVAR(S_previousWeather) = nil;
 
-      GVAR(isActiveTransition) = false;
+      GVAR(S_inTransition) = false;
 
-      ZRN_LOG_MSG(Transition Complete & previous weather has been restored);
+      ZRN_LOG_MSG(Transition Complete & S_previousWeather weather has been restored);
     }};
    default {{
-      GVAR(isActiveTransition) = false;
+      GVAR(S_inTransition) = false;
 
       ZRN_LOG_MSG(Transition Complete);
     }};
 };
 
 [ _code , [], _duration ] call CBA_fnc_waitAndExecute;
+
+ZRN_LOG_MSG_1(completed!,_presetName);
 
 true

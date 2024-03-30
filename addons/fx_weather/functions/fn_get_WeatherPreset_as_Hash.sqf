@@ -17,9 +17,11 @@
  * [_presetName] call storm_fxWeather_fnc_get_WeatherPreset_as_Hash;
  * 
  * Public: No
- */
+ * GVARS
+ * 	None
+*/
 
- params [   ["_presetName", "", [""]]    ];
+params [   ["_presetName", "", [""]]    ];
 
 //Check if EffectName given
 if (_presetName isEqualTo "") exitWith {

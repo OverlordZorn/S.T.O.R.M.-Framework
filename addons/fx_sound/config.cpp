@@ -39,7 +39,7 @@ class CfgFunctions
 			class request {};
 
 			class remote_3d {};
-			class local_3d {};
+			class local_3d_say3d {};
 			class local_3d_recursive {};
         };
 	}; 

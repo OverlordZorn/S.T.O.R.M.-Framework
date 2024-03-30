@@ -93,4 +93,6 @@ _code = if (_intensity == 0 ) then {
 };
 [_code, [], _duration * 60 ] call CBA_fnc_waitAndExecute;
 
+
+ZRN_LOG_MSG_1(completed!,_stormPreset);
 _result

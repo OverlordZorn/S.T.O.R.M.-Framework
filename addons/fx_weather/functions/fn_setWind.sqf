@@ -33,7 +33,7 @@ params [
     ["_azimuth",            "PREV",  ["",0]       ]
 ];
 
-if (_duration isEqualTo 0) exitWith {false};
+if (_duration isEqualTo 0) exitWith { ZRN_LOG_MSG(failed: duration == 0); false};
 
 // apply Mode
 switch (_azimuth) do {

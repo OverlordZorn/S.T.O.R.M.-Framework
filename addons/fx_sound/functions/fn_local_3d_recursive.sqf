@@ -12,6 +12,9 @@
 * [_presetName] call storm_fx_sound_fnc_local_3d_recursive;
 *
 * Public: Yes
+*
+* GVARS
+*   GVAR(C_isActive) - established by fn_remote_3d ## key = _presetName # value =[_inInTransition, _previousIntensity, _currentIntensity, _targetIntensity]
 */
 
 
@@ -19,8 +22,9 @@ params [
     ["_presetName",     "",     [""]                ],
     ["_hashMap",        "INIT", ["", createHashMap] ]
 ];
-private _index = GVAR(isActive) findIf { _x#0 == _presetName };
-if (_index isEqualTo -1) exitWith { ZRN_LOG_MSG(completed: preset not in GVAR(isActive) anymore); };
+private _exists = _presetName in GVAR(C_isActive);
+
+if (!_exists) exitWith { ZRN_LOG_MSG(completed: preset not in GVAR(C_isActive) anymore); };
 
 if (_hashMap isEqualTo "INIT") then {
     _configPath = (configFile >> QGVAR(Presets));
@@ -41,12 +45,12 @@ private _soundName      = selectRandom _arr;
 
 _hashMap set ["previousSound", _soundName];
 
-private _intensity = ( ( GVAR(isActive) select _index select 3 ) + selectRandom [-1,1] * random 0.2 ) max 0;
+private _intensity = ( ( GVAR(C_isActive) get _presetName  select 2 ) + selectRandom [-1,1] * random 0.2 ) max 0;
 
 _distance = linearConversion [0,1, _intensity, _maxDistance, _minDistance, false] max 0;
 _delay =    linearConversion [0,1, _intensity, _maxDelay,    _minDelay,    false] max 0;
 
-_sayObj = [_soundName,_presetName, _direction, _distance, _intensity, _maxDistance] call FUNC(local_3d);
+_sayObj = [_soundName,_presetName, _direction, _distance, _intensity, _maxDistance] call FUNC(local_3d_say3d);
 
 // waitUntil previous sound is played, then wait _delay AndExecute "recursive" function
 

@@ -19,6 +19,11 @@
  * [_effectArray, _intensity, _baseArray] call storm_fxPost_fnc_convert_intensity;
  * 
  * Public: No
+ * 
+ * GVARS
+ *  NONE
+ * 
+ * 
  */
 
 params [

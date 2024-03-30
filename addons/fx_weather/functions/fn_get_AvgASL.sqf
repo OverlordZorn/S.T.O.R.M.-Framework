@@ -46,7 +46,7 @@ _allASL = _filteredPlayers apply {
     };
 };
 
-if (count _allASL == 0) exitWith {diag_log "[STORM](fxWeather)(fn_get_AvgASL) failed - empty _allASL "; 0};
+if (count _allASL == 0) exitWith {ZRN_LOG_MSG(failed: empty _allASL); false };
 
 _allASL sort true;
 

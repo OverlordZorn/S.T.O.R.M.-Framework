@@ -16,9 +16,14 @@
  * ["CVO_PE_Default", 5, 0.5] call cvo_storm_fnc_particle_request;
  * 
  * Public: No
+ *
+ * GVARS
+ *  GVAR(S_activeJIP) set [_effectName, inTransition]; // Monitors active JIP - key == jipHandle, value == is this effect currently in transition?
+ *
+ *
  */
 
- /////////// TODO: MACRO_FY
+
 
 if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
 
@@ -38,9 +43,9 @@ ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensity);
 //Check if config Exists
 if  (_effectName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
 if !(_effectName in (configProperties [configFile >> "CfgCloudlets", "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found); false };
-if ( _intensity == 0 && { isNil QGVAR(activeJIP) || { !(_effectName in GVAR(activeJIP))} } )                 exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
-if (isNil QGVAR(activeJIP)) then { GVAR(activeJIP) = createHashMap; };
-if (_effectName in GVAR(activeJIP) && { (GVAR(activeJIP) get _effectName) } )                                exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
+if ( _intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_effectName in GVAR(S_activeJIP))} } )                 exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
+if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = createHashMap; };
+if (_effectName in GVAR(S_activeJIP) && { (GVAR(S_activeJIP) get _effectName) } )                                exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
 
 /////////////////////////////////////////////////////////////////////////////
 // RemoteExec the request
@@ -51,9 +56,9 @@ if (isNil "_effectName") exitWith { ZRN_LOG_MSG(failed: remoteExec failed); fals
 
 /////////////////////////////////////////////////////////////////////////////
 // Handles In-Transition-Check
-GVAR(activeJIP) set [_effectName, true];
+GVAR(S_activeJIP) set [_effectName, true];
 [{  
-    GVAR(activeJIP) set [_this#0, false];
+    GVAR(S_activeJIP) set [_this#0, false];
 }, [_effectName], _duration] call CBA_fnc_waitAndExecute;
 /////////////////////////////////////////////////////////////////////////////
 
@@ -61,11 +66,12 @@ GVAR(activeJIP) set [_effectName, true];
 if (_intensity == 0) then {
     // Handles Cleanup of JIP in case of decaying(transition-> 0) Effect once transition to 0 is completed.
     [{
-        GVAR(activeJIP) deleteAt _this#0;
+        GVAR(S_activeJIP) deleteAt _this#0;
         remoteExec ["", _this#0]; // removes entry from JIP Queue
-        if ( count GVAR(activeJIP) == 0) then { GVAR(activeJIP) = nil; };
+        if ( count GVAR(S_activeJIP) == 0) then { GVAR(S_activeJIP) = nil; };
     }, [_effectName], _duration] call CBA_fnc_waitAndExecute;
 
 };
 
+ZRN_LOG_MSG_1(completed!,_presetName);
 true

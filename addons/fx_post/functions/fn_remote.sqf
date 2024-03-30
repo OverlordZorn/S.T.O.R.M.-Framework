@@ -18,8 +18,11 @@
  * [_effectArray, _duration] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",[0,2] select isDedicated, "CVO_Storm_CC_PP_Effect_JIP_Handle" ];
  * 
  * Public: No
+ *
+ * GVARS
+ *      GVAR(C_activeEffects) = [.._effectName..]; array of all active effects
+ *
  */
-
 
 if (!hasInterface) exitWith {};
 
@@ -37,14 +40,14 @@ private _ppEffectPrio = getNumber (configFile >> QGVAR(Presets) >> _effectName >
 private _layer        = getNumber (configFile >> QGVAR(Presets) >> _effectName >> "layer");
 
 
-if (isNil QGVAR(activeEffects)) then {
-    GVAR(activeEffects) = [];
+if (isNil QGVAR(C_activeEffects)) then {
+    GVAR(C_activeEffects) = [];
 };
 
 
 // Defines custom Variablename as String 
 // missionNameSpace has only lowercase letters
-private _varName = toLower ([_ppEffectType,_layer,handle]joinstring "_");
+private _varName = toLower ([ADDON,_ppEffectType,_layer,handle]joinstring "_");
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _varName : %1", _varName];
 
@@ -59,7 +62,7 @@ if (_existsVar isEqualto false) then {
     missionNamespace setVariable [_varName, (ppEffectCreate [_ppEffectType, _ppEffectPrio]) ];
 
     // adds the name of the variable as a string to the array  
-    GVAR(activeEffects) pushback _varName;
+    GVAR(C_activeEffects) pushback _varName;
 
     (missionNamespace getVariable _varname) ppEffectEnable true;
 };
@@ -71,6 +74,6 @@ if (_existsVar isEqualto false) then {
 if (_intensity == 0) then {
     [ {
         ppEffectDestroy (missionNamespace getVariable _this#0);
-        if (count GVAR(activeEffects) == 0) then { GVAR(activeEffects) = nil; };
+        if (count GVAR(C_activeEffects) == 0) then { GVAR(C_activeEffects) = nil; };
      }, [_varName], _duration] call CBA_fnc_waitAndExecute;
 };
