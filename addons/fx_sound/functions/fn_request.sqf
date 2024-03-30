@@ -22,9 +22,12 @@ if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
 
 params [
 	["_effectName",		"",		[""]	],
-	["_duration",		1,		[""]	],
-	["_intensity",		0,		[""]	]
+	["_duration",		1,		[0]		],
+	["_intensity",		0,		[0]		]
 ];
+
+ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensity);
+
 
 if (_presentName isEqualTo "CLEANUP") exitWith {
 	{
@@ -41,8 +44,7 @@ if (_presentName isEqualTo "CLEANUP") exitWith {
 };
 
 _intensity = _intensity max 0 min 1;
-_duration = _duration * 60;
-
+_duration = 60 * (_duration max 1);
 
 if  (_effectName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
 if !(_effectName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
@@ -52,7 +54,7 @@ if (_effectName in GVAR(activeJIP) && { (GVAR(activeJIP) get _effectName)#0 } ) 
 
 //_effectName = [inTransition, _previousIntensity, _endTime]
 
-_array = QGVAR(activeJIP) getOrDefault [_effectName, [true, 0, time + _duration], true];
+_array = GVAR(activeJIP) getOrDefault [_effectName, [true, 0, time + _duration], true];
 
 private _previousIntensity = _array#2;
 
@@ -63,7 +65,7 @@ if (_intensity == 0 && { count QGVAR(activeJIP) == 0 || { _effectName in QGVAR(a
 
 _array set [ 2, _intensity ];
 _array set [ 3, time + _duration ];
-QGVAR(activeJIP) set [_effectName, _array];
+GVAR(activeJIP) set [_effectName, _array];
 
 if (_intensity == 0) then {
 
