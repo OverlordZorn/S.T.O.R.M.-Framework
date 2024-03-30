@@ -5,7 +5,7 @@
  * Takes care of AI Skill changes over time. Especially for Storm Events that reduce player visibliity, it is highly recommended to adjust AI Skill to keep the experience of the weather balanced.
  *
  * Arguments:
- * 0: _AI_presetName     <STRING> Name of Particle Effect Preset - Capitalisation needs to be exact!
+ * 0: _presetName     <STRING> Name of Particle Effect Preset - Capitalisation needs to be exact!
  * 1: _duration          <NUMBER> in Minutes for the duration to be at the end of the Transitio
  * 2: _intensity         <NUMBER> 0..1 Factor of Intensity for the PP Effect 
  *
@@ -21,24 +21,21 @@
 if !(isServer) exitWith { _this remoteExecCall [QFUNC(request), 2, false] };
 
 params [
-   ["_AI_presetName",        "",                     [""]],
+   ["_presetName",        "",                     [""]],
    ["_duration",               5,                     [0]],
    ["_intensity",              0,                     [0]]
 ];
 
-// Fail Conditions
 
+ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
 
 // Prepare Input Values
- 
-_duration = _duration max 1;
-_duration = _duration * 60;
-
-_intensity = _intensity max 0;
-_intensity = _intensity min 1;
+_duration = 60 * (_duration max 1);
+_intensity = _intensity max 0 min 1;
 
 
-if (_AI_presetName isEqualTo "")                      exitWith {ZRN_LOG_MSG(Failed - No Preset Name given); false };
+// Fail Conditions
+if (_presetName isEqualTo "")                      exitWith {ZRN_LOG_MSG(Failed - No Preset Name given); false };
 if ((!isNil QGVAR(isActive)) && { GVAR(isActive)#0 }) exitWith {ZRN_LOG_MSG(Failed - Transition is currently in progress); false };
 if (( isNil QGVAR(isActive)) && {_intensity == 0})    exitWith {ZRN_LOG_MSG(Failed - No Modification currently active to be reset); false };
 
@@ -56,7 +53,7 @@ private _previous_map = + GVAR(isActive)#1;
 ////////////////////////////////////////////////////////////////////////////////////////
 // 1. Establish Target by inearConversion of Intensity between raw vs default (always 1)
 
-private _raw_mod_map = [(configFile >> QGVAR(Presets)), _AI_presetName] call PFUNC(hashFromConfig);
+private _raw_mod_map = [(configFile >> QGVAR(Presets)), _presetName] call PFUNC(hashFromConfig);
 if (_raw_mod_Map isEqualTo false) exitWith {ZRN_LOG_MSG(Failed -Preset not found); false };
 
 private _target_map = createHashMap;
