@@ -24,13 +24,16 @@ if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
 
 
 params [
-   ["_effectName",        "", [""]],
+   ["_effectName",             "", [""]],
    ["_duration",               1,  [0]],
    ["_intensity",              0,  [0]]
 ];
 
-_duration = (_duration max 1) * 60;
+
 _intensity = _intensity max 0 min 1;
+_duration = 60 * (_duration max 1);
+
+ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensity);
 
 //Check if config Exists
 if  (_effectName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
