@@ -44,7 +44,7 @@ if (isNil QGVAR(activeEffects)) then {
 
 // Defines custom Variablename as String 
 // missionNameSpace has only lowercase letters
-private _varName = toLower (QGVAR_3(_ppEffectType,_layer,handle));
+private _varName = toLower ([_ppEffectType,_layer,handle]joinstring "_");
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _varName : %1", _varName];
 
