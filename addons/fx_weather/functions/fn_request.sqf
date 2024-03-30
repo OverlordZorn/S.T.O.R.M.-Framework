@@ -10,10 +10,10 @@
 * 2: _intensity         <NUMBER> 0..1 Factor of Intensity for the PP Effect 
 *
 * Return Value:
-* _pp_effect_JIP_handle  <STRING>
+* true if successful
 *
 * Example:
-* ["CVO_Weather_Sandstorm_01", 1, 0.5] call storm_fxWeather_fnc_request;
+* ["Storm_fx_weather_Sandstorm_01", 1, 0.5] call storm_fxWeather_fnc_request;
 * 
 * Public: No
 *
@@ -65,6 +65,7 @@ private _hashMap = switch (_intensity) do {
 // get hashMap, check if its "false", if not, store _hashMap
 if (_hashMap isEqualTo false) exitWith {   ZRN_LOG_MSG(failed: get_WeatherPreset_as_Hash has returned with an error); false };
 
+
 ZRN_LOG_MSG(Request approved - wait for completion);
 ZRN_LOG_3(_presetName,_duration,_intensity);
 ZRN_LOG_1(_hashMap);
@@ -74,7 +75,7 @@ if (_firstWeatherChange) then {
    GVAR(S_previousWeather) = createHashMap;
 };
 
-
+private _return = [];
 
 // ##########################################################
 // ################### FREEZE CURRENT ####################### 
@@ -94,14 +95,16 @@ forceWeatherChange;
 
 if ((_hashMap getOrDefault ["change_overcast",0]) > 0) then {
 
-if (_firstWeatherChange) then {
-   // Save Current
-   GVAR(S_previousWeather) set ["change_overcast", 1];
-   GVAR(S_previousWeather) set ["overcast_value", overcast];
-};
+   if (_firstWeatherChange) then {
+      // Save Current
+      GVAR(S_previousWeather) set ["change_overcast", 1];
+      GVAR(S_previousWeather) set ["overcast_value", overcast];
+   };
    // apply new
-   _value_overcast = linearConversion [   0,    1, _intensity, 0, (_hashMap get "overcast_value"), true];
-   _duration setOvercast _value_overcast;
+   _value = linearConversion [   0,    1, _intensity, 0, (_hashMap get "overcast_value"), true];
+   _duration setOvercast _value;
+   _return pushback ["overcast", true];
+   ZRN_LOG_MSG_2(setOvercast,_duration,_value);
 };
 
 
@@ -120,6 +123,8 @@ if (_firstWeatherChange) then {
    _value = linearConversion [   0,    1, _intensity, 0 ,_hashMap get "gusts_value", true];
    // execute Changes
    _duration setGusts _value;
+   _return pushback ["gusts", true];
+   ZRN_LOG_MSG_2(setGusts,_duration,_value);
 };
 
 
@@ -139,6 +144,8 @@ if (_firstWeatherChange) then {
 
    // execute Changes
    _duration setWaves _value;
+   _return pushback ["Waves", true];
+   ZRN_LOG_MSG_2(setWaves,_duration,_value);
 };
 
 
@@ -160,6 +167,8 @@ if (_firstWeatherChange) then {
    _value = linearConversion [   0,    1, _intensity, 0, _hashMap get "lightnings_value", true];
    // execute Changes
    _duration setLightnings _value;
+   _return pushback ["Lightnings", true];
+   ZRN_LOG_MSG_2(setLightnings,_duration,_value);
 };
 
 // ##########################################################
@@ -180,14 +189,16 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
 
    //retrieve RainParms Value and Rain Value with Intensity
-   _rainParams = [ _hashMap get "rainParams" ] call cvo_storm_fnc_weather_get_rainParams_as_Array;
+   _rainParams = [ _hashMap get "rainParams" ] call FUNC(get_rainParams_as_Array);
    _valueRain = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true ];
 
    // remove the rain to create a no-rain period to change rainParams
    ( _duration / 3 ) setRain 0;
 
     // Apply new Rain Parameters during "noRain" period
-   [ { _this call BIS_fnc_setRain; }, _rainParams, ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
+   [ { _this call BIS_fnc_setRain; }, [_rainParams], ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
+   ZRN_LOG_MSG_2(setRainParams,_duration,_rainParams);
+   _return pushback ["RainParams", true];
 
     // setRain during the last third of the transition, only if needed. 
    if ( (_hashMap getOrDefault ["change_rainValue", 0] > 0 )  && (_valueRain > 0) ) then { 
@@ -195,6 +206,7 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
          params ["_duration", "_value"];
          (_duration * 1/3) setRain _value;
       }, [_duration,_valueRain],    _duration * 2/3] call CBA_fnc_waitAndExecute;
+      _return pushback ["Rain", true];
    };
 } else {
 
@@ -211,6 +223,8 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
       _value = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true];
       // execute Changes
       _duration setRain _value;
+      ZRN_LOG_MSG_2(setRain,_duration,_value);
+      _return pushback ["RainOnly", true];
    };
 };
 
@@ -243,22 +257,25 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
       };
    };
 
- // Executes Transition based on Mode
+    // Executes Transition based on Mode
    switch (_fog_Mode) do {
       case 0: {
          // No fogBase via AvgASL needed. Terminate perFrameHandler if active.
          if (!isNil QGVAR(fogParams)) then {GVAR(fogParams) = nil};
          _duration setFog _fog_target;
+         ZRN_LOG_MSG_2(setFog,_duration,_fog_target);
       };
       default {
          // fogBase via AvgASL requested.
-         [_fog_target, _duration] call cvo_Storm_fnc_weather_setFog_avg;
+         [_fog_target, _duration] call FUNC(setFog_avg);
+         ZRN_LOG_MSG_2(setFog_avg,_duration,_fog_target);
 
          // If fogBase via AvgASL is requested only during initial Tranistion, (Mode=1), perFrameHandler will be terminated after transition.
          _isContinous = [false, true] select (_fog_Mode - 1);
          if (!_isContinous) then { [ { GVAR(fogParams) = nil; } , [], _duration] call CBA_fnc_waitAndExecute;};
       };
    };
+   _return pushback ["fog", true];
 };
 
 // ##################################################
@@ -273,6 +290,7 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
       GVAR(S_previousWeather) set ["wind_value", vectorMagnitude wind];
 
       missionNamespace setVariable ["ace_weather_disableWindSimulation", true];
+
    };
 
    // get Value + Intensity
@@ -285,7 +303,11 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
       default { false};
    };
    
-   [_target_magnitude, _duration, _forceWindEnd] call cvo_storm_fnc_weather_setWind;
+   [_target_magnitude, _duration, _forceWindEnd] call FUNC(setWind);
+
+   _return pushback ["wind", true];
+   ZRN_LOG_MSG_2(setWind,_duration,_target_magnitude);
+
 
    if (_intensity == 0) then {
       [ { missionNamespace setVariable ["ace_weather_disableWindSimulation", nil]; } , [], _duration] call CBA_fnc_waitAndExecute;
@@ -315,4 +337,4 @@ private _code = switch (_intensity) do {
 
 ZRN_LOG_MSG_1(completed!,_presetName);
 
-true
+_return

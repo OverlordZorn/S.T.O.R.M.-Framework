@@ -44,6 +44,7 @@ private _needPerFrameHandler = isNil QGVAR(S_fogParams);
 
 GVAR(S_fogParams) = [_startTime, _endTime, _fog_previous, _fog_target, DELAY];
 
+ZRN_LOG_1(GVAR(S_fogParams));
 
 // If the perFrameHandler is already running, we only need to update the array
 if (!_needPerFrameHandler) exitWith {};
@@ -52,7 +53,7 @@ private _condition = { !isNil QGVAR(S_fogParams) };
 
 private _codeToRun = {
     
-    private _avg_ASL = round ([] call cvo_storm_fnc_weather_get_AvgASL);
+    private _avg_ASL = round ([] call FUNC(get_AvgASL));
 
     private _currentParams = switch (time > GVAR(S_fogParams)#1) do {
         case true: {
@@ -64,6 +65,8 @@ private _codeToRun = {
             ]
         };
         case false: {
+
+            ZRN_LOG_4(GVAR(S_fogParams)#0,GVAR(S_fogParams)#1,GVAR(S_fogParams)#2,GVAR(S_fogParams)#3);
             [
                 linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#0, GVAR(S_fogParams)#3#0,             true ],
                 linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#1, GVAR(S_fogParams)#3#1,             true ],
@@ -84,3 +87,4 @@ _handle = [{
         _handle call CBA_fnc_removePerFrameHandler;
     };
 }, DELAY, [_codeToRun,_condition]] call CBA_fnc_addPerFrameHandler;
+

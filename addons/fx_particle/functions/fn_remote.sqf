@@ -57,7 +57,7 @@ params [
     ["_intensityTarget",    0,        [0]]
 ];
 
-
+ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensityTarget);
 
 // CLEANUP MODE
 if ( _effectName isEqualTo "CLEANUP")  exitWith {
@@ -71,7 +71,7 @@ if ( _effectName isEqualTo "CLEANUP")  exitWith {
         // Transition to 0 over Default duration for each existing Particle Spawner
     {  
         ZRN_LOG_MSG_1(Requesting Cleanup for:,_x#1);        
-        [_x] call cvo_storm_fnc_particle_remote;
+        [_x] call FUNC(remote);
     } forEach GVAR(C_Active_PartSource);
 };
 
@@ -153,6 +153,8 @@ if (isNil QGVAR(C_Active_PartSource)) then {
 // if already exists, take previous intensity and set as start inensity. 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// [_effectName, [_spawner, _intensityTarget, _isTransitioning]]
+
 private _intensityStart = 0;
 private _preExists = _effectName in GVAR(C_Active_PartSource);
 
@@ -164,8 +166,18 @@ private _dropIntervalMax   = getNumber (configFile >> "CfgCloudlets" >> _effectn
 private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropIntervalStart, _dropIntervalMax, true];
 
 
-private "_spawner";
-if (_preExists) then { // Index -1: Requested Type of Particle Spawner does not exist yet, therefor, it creates a new one.
+private ["_spawner", "_spawnerArray"];
+if (_preExists) then {
+
+    _spawnerArray = GVAR(C_Active_PartSource) get _effectName;
+    if (_spawnerArray#2) exitWith {false}; // exits when transition of this PE is already in progress.    
+   
+    _spawner = _spawnerArray#0; 
+    _intensityStart = _spawnerArray#1;
+    _spawnerArray set [3, true];
+    _dropIntervalStart = linearConversion [0, 1, _intensityTarget, DROP_INTERVAL_MIN, _dropIntervalMax, true];
+
+} else {
 
     if (_intensityTarget == 0) exitWith {
         // Interrupts cration of a new particle spwaner if the target intensity is 0. 
@@ -178,18 +190,9 @@ if (_preExists) then { // Index -1: Requested Type of Particle Spawner does not 
     _spawner setParticleClass _effectName;
 
     _isTransitioning = true;
-    GVAR(C_Active_PartSource) set [_effectName, [_spawner, _intensityTarget, _isTransitioning] ];
-    ZRN_LOG_MSG_4(MSG,A,B,C,D);
-} else {
-
-    _spawnerArray = GVAR(C_Active_PartSource) get _effectName;
-
-    if (_spawnerArray#2) exitWith {false}; // exits when transition of this PE is already in progress.    
-    
-    _spawner = _spawnerArray#0; 
-    _intensityStart = _spawnerArray#1;
-    _spawnerArray set [3, true];
-    _dropIntervalStart = linearConversion [0, 1, _intensityTarget, DROP_INTERVAL_MIN, _dropIntervalMax, true];
+    _spawnerArray = [_spawner, _intensityTarget, _isTransitioning];
+    GVAR(C_Active_PartSource) set [_effectName, _spawnerArray];
+    ZRN_LOG_MSG_2(MSG,_effectName,_spawnerArray);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +216,7 @@ private _codeToRun = {
     params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
     _drop = linearConversion [ _this#1, _this#2 , time, _this#3, _this#4 ];
     _this#0 setDropInterval _drop;
-    ZRN_LOG_MSG_2(pfHandler: setDropInterval,_this#0,_drop);
+    ZRN_LOG_MSG_2(Transition pfHandler: setDropInterval,_this#0,_drop);
 }; 
 
 private _exitCode = {   
@@ -221,7 +224,6 @@ private _exitCode = {
     ZRN_LOG_MSG(Transition pfHandler: exiting);
 
     (GVAR(C_Active_PartSource) get _this#6) set [2, false];
-
 
     _spawner setDropInterval  _dropIntervalTarget;
     ZRN_LOG_MSG_2(pfHandler: setDropInterval Exit,_this#0,_drop);

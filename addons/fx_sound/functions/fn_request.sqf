@@ -51,16 +51,14 @@ if (_presentName isEqualTo "CLEANUP") exitWith {
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
 
-if  (_presetName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
-if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
-if ( _intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                 exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
+if  (_presetName isEqualTo "")                                                                               	exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
+if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) 	exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
+if ( _intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
 if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = createHashMap; };
-if (_presetName in GVAR(S_activeJIP) && { (GVAR(S_activeJIP) get _presetName)#0 } )                              exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
+if (_presetName in GVAR(S_activeJIP) && { (GVAR(S_activeJIP) get _presetName)#0 } )                             exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
 
 //_presetName = [inTransition, _previousIntensity, _endTime]
-
 _array = GVAR(S_activeJIP) getOrDefault [_presetName, [true, 0, time + _duration], true];
-
 private _previousIntensity = _array#1;
 
 if (_intensity == 0 && { count QGVAR(S_activeJIP) == 0 || { _presetName in QGVAR(S_activeJIP) }}) exitWith {ZRN_LOG_MSG(failed: Intensity == 0 while active sound 3D SFX of same Type); false };
