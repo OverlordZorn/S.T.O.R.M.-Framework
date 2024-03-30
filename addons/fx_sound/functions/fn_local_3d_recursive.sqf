@@ -19,12 +19,13 @@ params [
     ["_presetName",     "",     [""]                ],
     ["_hashMap",        "INIT", ["", createHashMap] ]
 ];
-private _index = CVO_SFX_3D_Active findIf { _x#0 == _presetName };
-if (_index isEqualTo -1) exitWith {diag_log format ['[CVO](debug)(fn_sound_remote_recursive) finished: %1 not found in CVO_SFX_3D_Active', _presetName];};
+private _index = GVAR(isActive) findIf { _x#0 == _presetName };
+if (_index isEqualTo -1) exitWith { ZRN_LOG_MSG(completed: preset not in GVAR(isActive) anymore); };
 
 if (_hashMap isEqualTo "INIT") then {
-    _configPath = (configFile >> "CVO_SFX_Presets");
+    _configPath = (configFile >> QGVAR(Presets));
     _hashMap = [_configPath, _presetName] call PFUNC(hashFromConfig);
+    if (_hashMap isEqualto false) exitWith {ZRN_LOG_MSG(failed: _hashMap == false); false};
 };
 
 private _maxDistance    = _hashMap get "maxDistance";
@@ -40,7 +41,7 @@ private _soundName      = selectRandom _arr;
 
 _hashMap set ["previousSound", _soundName];
 
-private _intensity = ( ( CVO_SFX_3D_Active select _index select 3 ) + selectRandom [-1,1] * random 0.2 ) max 0;
+private _intensity = ( ( GVAR(isActive) select _index select 3 ) + selectRandom [-1,1] * random 0.2 ) max 0;
 
 _distance = linearConversion [0,1, _intensity, _maxDistance, _minDistance, false] max 0;
 _delay =    linearConversion [0,1, _intensity, _maxDelay,    _minDelay,    false] max 0;
