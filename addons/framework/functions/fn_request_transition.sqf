@@ -28,10 +28,10 @@ params [
    ["_intensity",       0.5,  [0]   ]
 ];
 
-private _configPath = (configFile >> QPVAR(mainPresets));
+ZRN_LOG_3(_stormPreset,_duration,_intensity);
 
+private _configPath = (configFile >> QPVAR(mainPresets));
 _test = (configProperties [_configPath, "true", true] apply { toLowerANSI configName _x });
-ZRN_LOG_2(_stormPreset,_test);
 
 
 if  (_stormPreset == "")                                                                                             exitWith { ZRN_LOG_MSG(failed: Preset not provided); false };
@@ -40,8 +40,8 @@ if (!isNil QPVAR(isActive) && {PVAR(isActive) # 2 == true} )                    
 if (_intensity == 0 && {isNil QPVAR(isActive) } )                                                                    exitWith { ZRN_LOG_MSG(failed: Cannot transition to 0 without previous Storm Transition); false };
 
 // Sanitize
-_duration = 1 max _duration;
-_intensity = _intensity max 1 min 0;
+_duration =  _duration  max 1;
+_intensity = _intensity max 0 min 1;
 
 _hashMap = [_configPath, _stormPreset] call PFUNC(hashFromConfig);
 if (_hashMap isEqualTo false) exitWith {false};
@@ -54,25 +54,31 @@ _arr set [2, true];
 _arr set [3, _hashMap];
 if (isNil QPVAR(isActive)) then { missionNameSpace setVariable [ QPVAR(isActive), _arr, true] };
 
+ZRN_LOG_1(_hashMap);
+
 private _result = [];
 private "_var";
 
-_var = [_hashMap get "mod_skill_preset",  _duration, _intensity * (_hashMap get "mod_skill_coef")]  call EFUNC(mod_skill,request);
-_result pushback [_hashMap get "mod_skill_preset", _var];
+_var = [_hashMap get "mod_skill_preset",  _duration, _intensity * (_hashMap get "mod_skill_coef") ]  call EFUNC(mod_skill,request);
+_result pushback [_var, _hashMap get "mod_skill_preset"];
 
-_var = [_hashMap get "fx_weather_preset", _duration, _intensity * (_hashMap get "fx_weather_coef")] call EFUNC(fx_weather,request);
-_result pushback [_hashMap get "fx_weather_preset", _var];
+
+_var = [_hashMap get "fx_weather_preset", _duration, _intensity * (_hashMap get "fx_weather_coef") ] call EFUNC(fx_weather,request);
+_result pushback [_var, _hashMap get "fx_weather_preset"];
+
 
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_sound_coef")   ] call EFUNC(fx_sound,request);
-   _result pushback [_x, _var];
+   _result pushback [_var, _x];
 } forEach (_hashMap get "fx_sound_presets");
 
-{   _var = [x, _duration, _intensity * (_hashMap get "fx_particle_coef")] call EFUNC(fx_particle,request);
-   _result pushback [_x, _var];
+
+{   _var = [_x, _duration, _intensity * (_hashMap get "fx_particle_coef") ] call EFUNC(fx_particle,request);
+   _result pushback [_var, _x];
 } forEach (_hashMap get "fx_particle_presets");
 
+
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_post_coef")    ] call EFUNC(fx_post,request);
-   _result pushback [_x, _var];
+   _result pushback [_var, _x];
 } forEach (_hashMap get "fx_post_presets");
 
 
