@@ -28,6 +28,9 @@ params [
    ["_intensity",     0,  [0] ]
 ];
 
+ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
+
+
 // Check: transition currently?
 if ( missionNamespace getVariable [QGVAR(isActiveTransition), false] ) exitWith { ZRN_LOG_MSG(failed: Transition already in progress); false };
 
@@ -40,7 +43,7 @@ if (_intensity == 0) then {   _presetName = "Reset";  };
 if (_presetName isEqualTo "")    exitWith { ZRN_LOG_MSG(failed - no _presetName given); false };
 
 
-_duration = 60 * _duration max 1;
+_duration = 60 * (_duration max 1);
 _intensity = _intensity max 0 min 1;
 
 
