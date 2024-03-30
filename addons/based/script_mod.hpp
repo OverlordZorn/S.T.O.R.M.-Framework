@@ -17,6 +17,6 @@
 
 // config.cpp addon header
 #define AUTHOR "Overlord Zorn [CVO]"
-#define URL "http:\/\/www.github.com/PulsarNeutronStar/CVO-Sandstorm"
+#define URL "www.github.com/PulsarNeutronStar/S.T.O.R.M.-Weather-Framework"
 
 #define ADDON_CONFIG_HEADER VERSION_CONFIG; name = COMPONENT_NAME; author = AUTHOR; url = URL
