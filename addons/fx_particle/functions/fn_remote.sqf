@@ -61,12 +61,10 @@ if ( _effectName isEqualTo "CLEANUP")  exitWith {
     } forEach GVAR(Active_hashMap);
 };
 
+_intensity = _intensity max 0 min 1;
+_duration  =  _duration min 60;
 
-
-
-if ( _effectName isEqualTo "")  exitWith {false};
-if (_intensityTarget < 0     )  exitWith {false};
-if (_duration    isEqualTo  0)  exitWith {false};
+if ( _effectName isEqualTo "")  exitWith {ZRN_LOG_MSG(failed: effectName not provided); false};
 
 ///////////////////////////////////////////////////
 // Handles framework for first new particle Source 
@@ -201,19 +199,21 @@ private _codeToRun = {
     params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
     _drop = linearConversion [ _this#1, _this#2 , time, _this#3, _this#4 ];
     _this#0 setDropInterval _drop;
+    ZRN_LOG_MSG_2(pfHandler: setDropInterval,_this#0,_drop);
 }; 
 
 private _exitCode = {   
     params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
-    diag_log "Transition pfEH Exit";
+    ZRN_LOG_MSG(Transition pfHandler: exiting);
 
     (GVAR(Active_hashMap) get _this#6) set [2, false];
 
 
-    _spawner setDropInterval  _dropIntervalTarget; 
+    _spawner setDropInterval  _dropIntervalTarget;
+    ZRN_LOG_MSG_2(pfHandler: setDropInterval Exit,_this#0,_drop);
     if ( _intensityTarget isEqualTo 0) then {
 
-        diag_log "Transition pfEH Exit - Intensity == 0 -> Spawner Deleted";
+        ZRN_LOG_MSG(Transition pfHandler: exiting + Intensity==0 -> deleting Spawner);
         GVAR(Active_hashMap) deleteAt _this#6;   
         deleteVehicle _spawner;
 
@@ -242,6 +242,7 @@ private _delay = _duration / PFEH_INTENSITY_DELAY;
     };
 }, _delay, [_codeToRun, _parameters, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
 
+ZRN_LOG_MSG_1(completed,_effectName);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// ## Notes ##/////////////////////////////////////////////////
@@ -250,4 +251,3 @@ private _delay = _duration / PFEH_INTENSITY_DELAY;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// TODO: turn spawner ARRAY into hashMap
