@@ -25,7 +25,10 @@ params [
 ];
 
 _intensity = _intensity max 0 min 1;
-_duration = (1 max _duration) * 60;
+_duration = 60 * (_duration max 1);
+
+ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensity);
+
 
 if  (_effectName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false};
 if !(_effectName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
