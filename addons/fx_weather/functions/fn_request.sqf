@@ -104,7 +104,7 @@ if ((_hashMap getOrDefault ["change_overcast",0]) > 0) then {
    _value = linearConversion [   0,    1, _intensity, 0, (_hashMap get "overcast_value"), true];
    _duration setOvercast _value;
    _return pushback ["overcast", true];
-   ZRN_LOG_MSG_2(setOvercast,_duration,_value);
+   ZRN_LOG_MSG_2(setOvercast----,_duration,_value);
 };
 
 
@@ -124,7 +124,7 @@ if (_firstWeatherChange) then {
    // execute Changes
    _duration setGusts _value;
    _return pushback ["gusts", true];
-   ZRN_LOG_MSG_2(setGusts,_duration,_value);
+   ZRN_LOG_MSG_2(setGusts-------,_duration,_value);
 };
 
 
@@ -145,7 +145,7 @@ if (_firstWeatherChange) then {
    // execute Changes
    _duration setWaves _value;
    _return pushback ["Waves", true];
-   ZRN_LOG_MSG_2(setWaves,_duration,_value);
+   ZRN_LOG_MSG_2(setWaves-------,_duration,_value);
 };
 
 
@@ -168,7 +168,7 @@ if (_firstWeatherChange) then {
    // execute Changes
    _duration setLightnings _value;
    _return pushback ["Lightnings", true];
-   ZRN_LOG_MSG_2(setLightnings,_duration,_value);
+   ZRN_LOG_MSG_2(setLightnings--,_duration,_value);
 };
 
 // ##########################################################
@@ -197,7 +197,7 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
     // Apply new Rain Parameters during "noRain" period
    [ { _this call BIS_fnc_setRain; }, [_rainParams], ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
-   ZRN_LOG_MSG_2(setRainParams,_duration,_rainParams);
+   ZRN_LOG_MSG_2(setRainParams--,_duration,_rainParams);
    _return pushback ["RainParams", true];
 
     // setRain during the last third of the transition, only if needed. 
@@ -223,7 +223,7 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
       _value = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true];
       // execute Changes
       _duration setRain _value;
-      ZRN_LOG_MSG_2(setRain,_duration,_value);
+      ZRN_LOG_MSG_2(setRain--------,_duration,_value);
       _return pushback ["RainOnly", true];
    };
 };
@@ -247,6 +247,7 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
          // Handles reset 
          _fog_target = _hashMap getOrDefault ["fogParams", [0,0,0]];
          _fog_Mode = 0;
+         ZRN_LOG_MSG_2(Reset of Fog - Intensity == 0,_fog_mode, _fog_target);
       };
       default {
          _fog_target = [];
@@ -254,28 +255,30 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
          _fog_target set [1,_hashMap get "fog_dispersion"];
          _fog_target set [2,_hashMap get "fog_base"];
          _fog_Mode = _hashMap getOrDefault ["fog_mode", 0];
+         ZRN_LOG_MSG_2(Intensity != 0,_fog_mode, _fog_target);
       };
    };
 
     // Executes Transition based on Mode
    switch (_fog_Mode) do {
       case 0: {
+         _duration setFog _fog_target;
          // No fogBase via AvgASL needed. Terminate perFrameHandler if active.
          if (!isNil QGVAR(fogParams)) then {GVAR(fogParams) = nil};
-         _duration setFog _fog_target;
-         ZRN_LOG_MSG_2(setFog,_duration,_fog_target);
+         ZRN_LOG_MSG_2(setFog---------,_duration,_fog_target);
+         _return pushback ["fog", true];
       };
       default {
          // fogBase via AvgASL requested.
          [_fog_target, _duration] call FUNC(setFog_avg);
-         ZRN_LOG_MSG_2(setFog_avg,_duration,_fog_target);
+         ZRN_LOG_MSG_2(setFog_avg-----,_duration,_fog_target);
 
          // If fogBase via AvgASL is requested only during initial Tranistion, (Mode=1), perFrameHandler will be terminated after transition.
          _isContinous = [false, true] select (_fog_Mode - 1);
          if (!_isContinous) then { [ { GVAR(fogParams) = nil; } , [], _duration] call CBA_fnc_waitAndExecute;};
+         _return pushback ["fog", true];
       };
    };
-   _return pushback ["fog", true];
 };
 
 // ##################################################
@@ -306,7 +309,7 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
    [_target_magnitude, _duration, _forceWindEnd] call FUNC(setWind);
 
    _return pushback ["wind", true];
-   ZRN_LOG_MSG_2(setWind,_duration,_target_magnitude);
+   ZRN_LOG_MSG_2(setWind--------,_duration,_target_magnitude);
 
 
    if (_intensity == 0) then {
