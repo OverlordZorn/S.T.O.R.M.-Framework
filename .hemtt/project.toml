@@ -4,7 +4,7 @@ mainprefix = "z"
 
 [properties]
 author = "MrZorn"
-url = "https://github.com/PulsarNeutronStar/CVO-Sandstorm"
+url = "https://github.com/PulsarNeutronStar/S.T.O.R.M.-Weather-Framework"
 
 [files]
 include = [
