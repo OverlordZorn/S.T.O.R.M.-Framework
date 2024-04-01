@@ -41,10 +41,13 @@ private _properties = (configProperties [(configFile >> Q(P_CFG_COMP) >> QGVAR(P
 private _weatherPresetMap = createHashMap;
 
 
-// Create effect Array to be exported
+
 {
     _value = [_configPath, _x] call BIS_fnc_returnConfigEntry;
     _weatherPresetMap set [_x,_value];
 } forEach _properties;
 
 _weatherPresetMap
+
+
+
