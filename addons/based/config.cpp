@@ -40,3 +40,6 @@ class CfgFunctions
         };
 	}; 
 };
+
+
+#include "CfgEventHandlers.hpp"
