@@ -45,8 +45,5 @@ class CfgFunctions
 	}; 
 };
 
-class P_CFG_COMP
-{
-	#include "storm_RainParams.inc.hpp"
-	#include "storm_WeatherPresets.inc.hpp"
-};
+#include "storm_RainParams.inc.hpp"
+#include "storm_WeatherPresets.inc.hpp"
