@@ -10,7 +10,7 @@ class GVAR(Presets)
         rain_value = 0;                                 // 0..1
 
         change_rainParams = 0;                          // 0 or 1 - consider it a bool
-        rainParams = QPVAR(RainParams_Default);          // String - name of RainParams Config Class
+        rainParams = QGVAR(RainParams_Default);          // String - name of RainParams Config Class
 
         change_lightnings = 0;                          // 0 or 1 - consider it a bool
         lightnings_value = 0;                           // 0..1
@@ -43,7 +43,7 @@ class GVAR(Presets)
         rain_value = 0;                                 // 0..1
 
         change_rainParams = 1;                          // 0 or 1 - consider it a bool
-        rainParams = QPVAR(RainParams_Default);          // String - name of RainParams Config Class
+        rainParams = QGVAR(RainParams_Default);          // String - name of RainParams Config Class
 
         change_lightnings = 1;                          // 0 or 1 - consider it a bool
         lightnings_value = 0;                           // 0..1
@@ -76,7 +76,7 @@ class GVAR(Presets)
         rain_value = 0;                                 // 0..1
 
         change_rainParams = 0;                          // 0 or 1 - consider it a bool
-        rainParams = QPVAR(RainParams_Default);          // String - name of RainParams Config Class
+        rainParams = QGVAR(RainParams_Default);          // String - name of RainParams Config Class
 
         change_lightnings = 1;                          // 0 or 1 - consider it a bool
         lightnings_value = 0;                           // 0..1
@@ -109,7 +109,7 @@ class GVAR(Presets)
         rain_value = 1;                                 // 0..1
 
         change_rainParams = 1;                          // 0 or 1 - consider it a bool
-        rainParams = QPVAR(RainParams_Snow_CVO);          // String - name of RainParams Config Class
+        rainParams = QGVAR(RainParams_Snow_CVO);          // String - name of RainParams Config Class
 
         change_lightnings = 1;                          // 0 or 1 - consider it a bool
         lightnings_value = 1;                           // 0..1

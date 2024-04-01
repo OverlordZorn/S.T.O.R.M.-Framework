@@ -1,6 +1,6 @@
-class PVAR(RainParams)
+class GVAR(RainParams)
 {
-	class PVAR(RainParams_Default)
+	class GVAR(RainParams_Default)
 	{
 		// Parameters for the new particle rain
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
@@ -42,7 +42,7 @@ class PVAR(RainParams)
 		dropColorStrong=0;	
 	};
 
-	class PVAR(RainParams_Snow) : PVAR(RainParams_Default)
+	class GVAR(RainParams_Snow) : GVAR(RainParams_Default)
 	{
 		// Parameters for the new particle rain
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
@@ -86,7 +86,7 @@ class PVAR(RainParams)
 
 
 
-	class PVAR(RainParams_Snow_CVO) : PVAR(RainParams_Default)
+	class GVAR(RainParams_Snow_CVO) : GVAR(RainParams_Default)
 	{
 		// Parameters for the new particle rain
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
