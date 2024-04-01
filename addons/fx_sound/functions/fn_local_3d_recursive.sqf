@@ -57,7 +57,7 @@ _sayObj = [_soundName,_presetName, _direction, _distance, _intensity, _maxDistan
 _statement = {
     [{_this call FUNC(local_3d_recursive)}, [_this#2,_this#3], _this#1] call CBA_fnc_waitAndExecute;    
 };                
-_condition = { _this#0 isEqualTo objNull };                 // condition - Needs to return bool
+_condition = { isNull _this#0 };                 // condition - Needs to return bool
 _parameter = [_sayObj, _delay, _presetName, _hashMap];      // arguments to be passed on -> _this
 _timeout = 120;                                             // if condition isnt true within this time in S, _timecode will be executed.
 [_condition, _statement, _parameter, _timeout,_statement] call CBA_fnc_waitUntilAndExecute;
