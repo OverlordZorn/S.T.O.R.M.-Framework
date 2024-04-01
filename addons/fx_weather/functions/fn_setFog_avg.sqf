@@ -19,7 +19,7 @@
  * Public: No
   *
  * GVARS
- *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_previous, _fog_target, DELAY];
+ *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY];
  *
  */
  
@@ -28,55 +28,73 @@ if (!isServer) exitWith {_this remoteExecCall [QFUNC(setFog_avg),2]};
 
   params [
     ["_fog_target",         [0,0,0],    [[]],   [3] ],
-    ["_duration",           0,          [0]         ]
+    ["_duration",           0,          [0]         ],
+    ["_targetIntensity",    0,          [0]         ]
 ];
 #define DELAY 20
 
-
+ZRN_LOG_MSG_3(INIT,_fog_target,_duration,_targetIntensity);
 if (_duration isEqualTo 0) exitWith {ZRN_LOG_MSG(failed: duration == 0); false };
 
-private _fog_previous = fogParams;
 
+private _fog_start = fogParams;
 private _startTime = time;
 private _endTime = time + _duration;
 
 private _needPerFrameHandler = isNil QGVAR(S_fogParams);
 
-GVAR(S_fogParams) = [_startTime, _endTime, _fog_previous, _fog_target, DELAY];
+GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target,_targetIntensity, DELAY];
 
 ZRN_LOG_1(GVAR(S_fogParams));
 
 // If the perFrameHandler is already running, we only need to update the array
 if (!_needPerFrameHandler) exitWith {};
 
-private _condition = { !isNil QGVAR(S_fogParams) };
+private "_condition";
+
+switch (_targetIntensity) do {
+    case 0: { _condition = { QGVAR(S_fogParams)#1 > time }; };
+    default { _condition = { !isNil QGVAR(S_fogParams) }; };
+};
+
 
 private _codeToRun = {
     
-    private _avg_ASL = round ([] call FUNC(get_AvgASL));
+    GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target","_targetIntensity", "_delay"];
+    ZRN_LOG_1(GVAR(S_fogParams));
 
-    private _currentParams = switch (time > GVAR(S_fogParams)#1) do {
+    private _avg_ASL = round ([] call FUNC(get_AvgASL));
+    ZRN_LOG_1(_avg_ASL);
+
+    private _currentParams = switch (time > _endTime) do {
         case true: {
+            ZRN_LOG_MSG_1(PFH after transitiion,time);
             // fog_target
             [
-                GVAR(S_fogParams)#3#0,
-                GVAR(S_fogParams)#3#1,
-               (GVAR(S_fogParams)#3#2) + _avg_ASL
+                _fog_target#0,
+                _fog_target#1,
+               (_fog_target#2) + _avg_ASL
             ]
         };
         case false: {
-
-            ZRN_LOG_4(GVAR(S_fogParams)#0,GVAR(S_fogParams)#1,GVAR(S_fogParams)#2,GVAR(S_fogParams)#3);
+            ZRN_LOG_MSG_1(PFH during transitiion,time);
             [
-                linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#0, GVAR(S_fogParams)#3#0,             true ],
-                linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#1, GVAR(S_fogParams)#3#1,             true ],
-                linearConversion [GVAR(S_fogParams)#0, GVAR(S_fogParams)#1, time, GVAR(S_fogParams)#2#2,(GVAR(S_fogParams)#3#2) + _avg_ASL, true ]
+                linearConversion [_startTime, _endTime, time, _fog_start#0, _fog_target#0,             true ],
+                linearConversion [_startTime, _endTime, time, _fog_start#1, _fog_target#1,             true ],
+                linearConversion [_startTime, _endTime, time, _fog_start#2,(_fog_target#2) + _avg_ASL, true ]
             ]
         };
     };
-    DELAY setFog _currentParams;
-};
 
+    ZRN_LOG_1(_currentParams);
+    _delay setFog _currentParams;
+
+};
+private _exit = {
+    GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target","_targetIntensity", "_delay"];
+    _delay setFog _fog_target;
+    GVAR(S_fogParams) = nil;
+};
 _handle = [{
     params ["_args", "_handle"];
     _args params ["_codeToRun", "_condition"];
@@ -84,7 +102,7 @@ _handle = [{
     if ([] call _condition) then {
         [] call _codeToRun;
     } else {
+        [] call _exit;
         _handle call CBA_fnc_removePerFrameHandler;
     };
 }, DELAY, [_codeToRun,_condition]] call CBA_fnc_addPerFrameHandler;
-
