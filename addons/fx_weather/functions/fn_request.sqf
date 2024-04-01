@@ -62,6 +62,8 @@ private _hashMap = switch (_intensity) do {
    default { [( configFile >> QGVAR(Presets) ), _presetName] call PFUNC(hashFromConfig); };
 };
 
+
+
 // get hashMap, check if its "false", if not, store _hashMap
 if (_hashMap isEqualTo false) exitWith {   ZRN_LOG_MSG(failed: get_WeatherPreset_as_Hash has returned with an error); false };
 
@@ -80,16 +82,18 @@ private _return = [];
 // ##########################################################
 // ################### FREEZE CURRENT ####################### 
 
+if (_firstWeatherChange) then {
 
-0 setOvercast     overcast;
-0 setRain         rain;
-0 setLightnings   lightnings;
-0 setFog          fogParams;
-  setWind         [wind#0, wind#1, true];
-0 setGusts        gusts;
-0 setWaves        waves;
-forceWeatherChange;
+   0 setOvercast     overcast;
+   0 setRain         rain;
+   0 setLightnings   lightnings;
+   0 setFog          fogParams;
+     setWind         [wind#0, wind#1, true];
+   0 setGusts        gusts;
+   0 setWaves        waves;
+   forceWeatherChange;
 
+};
 
 
 /*
@@ -250,8 +254,12 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
       case 0: {
          // Handles reset to pre-request weather
          _fog_target = _hashMap getOrDefault ["fogParams", [0,0,0]];
-         _fog_Mode = 0;
+         _fog_Mode = 1;
          ZRN_LOG_MSG_2(Reset of Fog - Intensity == 0,_fog_mode,_fog_target);
+
+         [ { GVAR(S_fogParams) = nil; } , [], _duration * 1.1] call CBA_fnc_waitAndExecute;
+
+
       };
       default {
          _fog_target = [];
@@ -266,13 +274,15 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
     // Executes Transition based on Mode
    switch (_fog_Mode) do {
       case 0: {
-         ZRN_LOG_MSG_3(Catchpoint,_fog_Mode,_duration,_fog_target);
-         _duration setFog _fog_target;
-         ZRN_LOG_MSG_1(post setFog,time);
-         // No fogBase via AvgASL needed. Terminate perFrameHandler if active.
+
          if (!isNil QGVAR(fogParams)) then {GVAR(fogParams) = nil};
-         ZRN_LOG_MSG_2(setFog---------,_duration,_fog_target);
-         _return pushback ["fog", true];
+
+         [ { _this#0 setFog _this#1 } , [_duration, _fog_target], 5] call CBA_fnc_waitAndExecute;
+         _duration setFog _fog_target;
+
+         // No fogBase via AvgASL needed. Terminate perFrameHandler if active.
+         _return pushback ["fog reset to 0", true];
+
       };
       default {
          // fogBase via AvgASL requested.
@@ -335,7 +345,7 @@ private _code = switch (_intensity) do {
    case 0: {{
       GVAR(S_previousWeather) = nil;
 
-      GVAR(S_inTransition) = false;
+      GVAR(S_inTransition) = nil;
 
       ZRN_LOG_MSG(Transition Complete & S_previousWeather weather has been restored);
     }};
@@ -348,7 +358,4 @@ private _code = switch (_intensity) do {
 
 [ _code , [], _duration ] call CBA_fnc_waitAndExecute;
 
-ZRN_LOG_MSG_1(reached end without error!,_presetName);
-ZRN_LOG_1(_hashMap);
-ZRN_LOG_1(GVAR(S_previousWeather));
 _return

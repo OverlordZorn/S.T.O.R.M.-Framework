@@ -19,7 +19,7 @@
  * Public: No
   *
  * GVARS
- *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY];
+ *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY]; _
  *
  */
  
@@ -28,14 +28,9 @@ if (!isServer) exitWith {_this remoteExecCall [QFUNC(setFog_avg),2]};
 
   params [
     ["_fog_target",         [0,0,0],    [[]],   [3] ],
-    ["_duration",           0,          [0]         ],
-    ["_targetIntensity",    0,          [0]         ]
+    ["_duration",           0,          [0]         ]
 ];
-#define DELAY 20
-
-ZRN_LOG_MSG_3(INIT,_fog_target,_duration,_targetIntensity);
-if (_duration isEqualTo 0) exitWith {ZRN_LOG_MSG(failed: duration == 0); false };
-
+#define DELAY 30
 
 private _fog_start = fogParams;
 private _startTime = time;
@@ -43,24 +38,20 @@ private _endTime = time + _duration;
 
 private _needPerFrameHandler = isNil QGVAR(S_fogParams);
 
-GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target,_targetIntensity, DELAY];
-
+// S_fogParams gets updated with the new target parameters
+GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY];
 ZRN_LOG_1(GVAR(S_fogParams));
 
 // If the perFrameHandler is already running, we only need to update the array
-if (!_needPerFrameHandler) exitWith {};
+if (!_needPerFrameHandler) exitWith { ZRN_LOG_1(_needPerFrameHandler);};
 
 private "_condition";
 
-switch (_targetIntensity) do {
-    case 0: { _condition = { QGVAR(S_fogParams)#1 > time }; };
-    default { _condition = { !isNil QGVAR(S_fogParams) }; };
-};
-
+_condition = { ! isNil QGVAR(S_fogParams) };
 
 private _codeToRun = {
     
-    GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target","_targetIntensity", "_delay"];
+    GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target", "_delay"];
     ZRN_LOG_1(GVAR(S_fogParams));
 
     private _avg_ASL = round ([] call FUNC(get_AvgASL));
@@ -90,11 +81,6 @@ private _codeToRun = {
     _delay setFog _currentParams;
 
 };
-private _exit = {
-    GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target","_targetIntensity", "_delay"];
-    _delay setFog _fog_target;
-    GVAR(S_fogParams) = nil;
-};
 _handle = [{
     params ["_args", "_handle"];
     _args params ["_codeToRun", "_condition"];
@@ -102,7 +88,6 @@ _handle = [{
     if ([] call _condition) then {
         [] call _codeToRun;
     } else {
-        [] call _exit;
         _handle call CBA_fnc_removePerFrameHandler;
     };
 }, DELAY, [_codeToRun,_condition]] call CBA_fnc_addPerFrameHandler;
