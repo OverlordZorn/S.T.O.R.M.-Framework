@@ -29,13 +29,13 @@ if (_rainParams_preset isEqualTo "") exitWith {
 };
 
 //Check if config Exists
-if !(_rainParams_preset in (configProperties [configFile >> QGVAR(Presets) >> QPVAR(RainParams), "true", true] apply { configName _x })) exitWith {
+if !(_rainParams_preset in (configProperties [configFile >> QGVAR(Presets) >> QGVAR(RainParams), "true", true] apply { configName _x })) exitWith {
     ZRN_LOG_MSG(failed: _rainParams_preset not found);
     false
 };
 
-private _configPath = (configFile >> QGVAR(Presets) >> QPVAR(RainParams) >> _rainParams_preset );
-private _properties = (configProperties [(configFile >> QGVAR(Presets) >> QPVAR(RainParams) >> QGVAR(Default) ), "true", true] apply { configName _x });
+private _configPath = (configFile >> QGVAR(Presets) >> QGVAR(RainParams) >> _rainParams_preset );
+private _properties = (configProperties [(configFile >> QGVAR(Presets) >> QGVAR(RainParams) >> QGVAR(Default) ), "true", true] apply { configName _x });
 
 private _rainParams = [];
 
