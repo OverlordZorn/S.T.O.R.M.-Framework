@@ -59,7 +59,7 @@ if (isNil QGVAR(S_inTransition)) then {   GVAR(S_inTransition) = true;   };
 
 private _hashMap = switch (_intensity) do {
    case 0: { + GVAR(S_previousWeather) };
-   default { [_presetName] call FUNC(get_WeatherPreset_as_Hash); };
+   default { [( configFile >> QGVAR(Presets) ), _presetName] call PFUNC(hashFromConfig); };
 };
 
 // get hashMap, check if its "false", if not, store _hashMap
