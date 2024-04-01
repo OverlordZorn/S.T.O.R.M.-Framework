@@ -31,9 +31,6 @@ if (_className  isEqualTo "") exitWith {false};
 //Check if config Exists
 if !( toLowerANSI _className in (configProperties [_configPath , "true", true] apply { toLowerANSI configName _x })) exitWith {
     ZRN_LOG_MSG(failed: configPath >> classname does not exist);
-    ZRN_LOG_1(_configPath);
-    ZRN_LOG_1(_className);
-    ZRN_LOG_1(_className);
     false
 };
 
