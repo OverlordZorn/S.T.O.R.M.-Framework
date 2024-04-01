@@ -25,7 +25,7 @@ class GVAR(DEFAULT) : Default
 	particleShape = "\A3\data_f\ParticleEffects\Universal\Universal";	// path and name of file
 	particleFSNtieth = 16;					// How many rows there are in the texture. For example Universal is 16x16, so particleFSNtieth is 16. Default: 1
 	particleFSIndex = 12;					// Row index 0 based, so particleFSIndex 12 will mean 13th row from the top. Default: 0
-	particleFSFrameCount = 8;				// How many frames from the start of the chosen row to animate (particleFSFrameCount 8 means animate frames 1,2,3,4,5,6 and 7 in sequence). Default: 1
+	particleFSFrameCount = 8;					// How many frames from the start of the chosen row to animate (particleFSFrameCount 8 means animate frames 1,2,3,4,5,6 and 7 in sequence). Default: 1
 	particleFSLoop = 1;						// Whether or not to repeat from the beginning when all frames got played (0 - false, 1 - true). If particleFSLoop is 0 animation sequence is played only once. Default: 1
 	animationSpeed[] = {3,2,1};				// interpolated speed of animation in animation cycles per second.
 												// e.g if particleFSFrameCount is 8 and animationSpeed at the time is 0.4 result in 8 * 0.5 = 4 frame changes per second.
@@ -111,22 +111,22 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
     lifeTime = 30;
 
     position[] = {0, 0, 5};
-    moveVelocity[] =  {3,3,5};
+    moveVelocity[] =  {0,0,5};
 
     rotationVelocity = 3;
-    weight = 1.10;
+    weight = 1.00;
     volume = 0.85;
-    rubbing = 0.001;
+    rubbing = 0.005;
 
-    size[] = {0,3,7,10,12,14,10};
+    size[] = {0,3,7,10,12,7,3};
 
     color[] = {
-		{0.65, 0.5, 0.5, 0.05}, 
-		{0.65, 0.6, 0.5, 0.10}, 
-		{1,   0.95, 0.8, 0.15},
-		{1,   0.95, 0.8, 0.20},
-		{1,   0.95, 0.8, 0.15},
-		{0.65, 0.6, 0.5, 0.05}, 
+		{0.65, 0.5, 0.5, 0.01}, 
+		{0.65, 0.6, 0.5, 0.03}, 
+		{1,   0.95, 0.8, 0.07},
+		{1,   0.95, 0.8, 0.10},
+		{1,   0.95, 0.8, 0.07},
+		{0.65, 0.6, 0.5, 0.01}, 
 		{0.65, 0.6, 0.5, 0.00}
 	};
 
@@ -144,12 +144,14 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
 
 	// setParticleRandom
     lifeTimeVar = 10;
-    positionVar[] = {0.25, 0.25, 0};
-    moveVelocityVar[] = {-1, -1, 1};
+    positionVar[] = {0, 0, 5};
+    moveVelocityVar[] = {0, 0, 3};
    	rotationVelocityVar = 1;
 	sizeVar = 0;
-    colorVar[] = {0, 0, 0, 0.1};	
+    colorVar[] = {0, 0, 0, 0.0};	
     angleVar = 0;
+
+	bounceOnSurface = 1;
   	bounceOnSurfaceVar = 0.0;
 
 	// setParticleCircle
