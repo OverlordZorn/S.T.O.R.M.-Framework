@@ -87,9 +87,13 @@
 // Debug
 #define DEBUG_HEADER format [QUOTE([PREFIX][COMPONENT](%1)),_fnc_scriptName]
 
+
+
 #define ZRN_LOG_MSG(MSG) diag_log (DEBUG_HEADER + QUOTE(MSG))
 
 #ifdef _CVO_DEBUG_
+    #define ZRN_SCRIPTNAME(var1) _fnc_scriptName = Q(var1)
+
     #define ZRN_LOG_MSG_1(MSG,A) diag_log (DEBUG_HEADER + (format [' %1 - A: %2',QUOTE(MSG),RETNIL(A)]))
     #define ZRN_LOG_MSG_2(MSG,A,B) diag_log (DEBUG_HEADER + (format [' %1 - A: %2 - B: %3',QUOTE(MSG),RETNIL(A),RETNIL(B)]))
     #define ZRN_LOG_MSG_3(MSG,A,B,C) diag_log (DEBUG_HEADER + (format [' %1 - A: %2 - B: %3 - C: %4',QUOTE(MSG),RETNIL(A),RETNIL(B),RETNIL(C)]))
@@ -108,6 +112,8 @@
     #define ZRN_LOG_7(A,B,C,D,E,F,G) diag_log (DEBUG_HEADER + (format [' A: %1 - B: %2 - C: %3 - D: %4 - E: %5 - F: %6 - H: %7',RETNIL(A),RETNIL(B),RETNIL(C),RETNIL(D),RETNIL(E),RETNIL(F),RETNIL(G)]))
     #define ZRN_LOG_8(A,B,C,D,E,F,G,H) diag_log (DEBUG_HEADER + (format [' A: %1 - B: %2 - C: %3 - D: %4 - E: %5 - F: %6 - H: %7 - I: %8',RETNIL(A),RETNIL(B),RETNIL(C),RETNIL(D),RETNIL(E),RETNIL(F),RETNIL(G),RETNIL(H)]))
 #else
+    #define ZRN_SCRIPTNAME(var1)
+
     #define ZRN_LOG_MSG_1(MSG,A)
     #define ZRN_LOG_MSG_2(MSG,A,B)
     #define ZRN_LOG_MSG_3(MSG,A,B,C)
