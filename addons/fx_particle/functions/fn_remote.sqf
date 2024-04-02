@@ -1,4 +1,4 @@
-#include "..\script_component.hpp"
+ #include "..\script_component.hpp"
 
 /*
  * Author: [Zorn]
@@ -216,6 +216,7 @@ private _codeToRun = {
     params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
     _drop = linearConversion [ _this#1, _this#2 , time, _this#3, _this#4 ];
     _this#0 setDropInterval _drop;
+    ZRN_SCRIPTNAME(pFH);
     ZRN_LOG_MSG_2(Transition pfHandler: setDropInterval,_this#0,_drop);
 }; 
 
