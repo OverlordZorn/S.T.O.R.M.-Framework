@@ -94,7 +94,7 @@ class GVAR(DEFAULT) : Default
 
 	// additional Meta Data
 	// obj = "objNull";
-	interval_min = 5;
+	interval_min = 2;
 };
 
 class GVAR(Dust_High) : GVAR(DEFAULT)
@@ -162,7 +162,7 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
 	interval = 0.01;					    // interval of particle's creation
 	// 0.01+random 0.1
 
-	interval_max = 1;
+	interval_min = 1;
 
 };
 
@@ -247,6 +247,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
 	// setDropInterval
 	interval = 0.1;					    // interval of particle's creation
 	// 0.01+random 0.1
+	interval_min = 2;
 
 };
 
