@@ -37,6 +37,7 @@ class CfgFunctions
         	file = PATH_TO_FNC;
 
             class cba_settings_initialized { postInit = 1; };
+            class antiMilkManMessures {postInit = 1; };
         };
 	}; 
 };
