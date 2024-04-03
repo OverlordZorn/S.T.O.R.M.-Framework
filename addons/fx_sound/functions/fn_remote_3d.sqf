@@ -33,7 +33,6 @@ params [
     ["__previousIntensity",     0,      [0]     ]
 ];
 
-ZRN_LOG_MSG_1(init,_this);
 
 #define DELAY 5
 
@@ -50,9 +49,7 @@ _intensity = _intensity max 0 min 1;
 if (missionNamespace getVariable [QGVAR(C_isActive), false] isEqualTo false) then {  GVAR(C_isActive) = createHashMap; };
 
 private _exists = false;
-
 if (count GVAR(C_isActive) > 0) then { _exists = _presetName in GVAR(C_isActive) };
-ZRN_LOG_1(_exists);
 
 private ["_arr", "_currentIntensity", "_targetIntensity", "_exitDueTransitionActive", "_startRecursive"];
 
@@ -68,7 +65,7 @@ if (_exists) then {
     _arr set [1, _previousIntensity];
     _arr set [2, _currentIntensity];
     _arr set [3, _targetIntensity];
-    ZRN_LOG_MSG_3(Retrieve existing Entry,_arr,_index,GVAR(C_isActive));
+    ZRN_LOG_MSG_2(Retrieve existing Entry,_arr,GVAR(C_isActive));
 } else {
     // create new entry
     _startRecursive = true;
@@ -80,7 +77,7 @@ if (_exists) then {
     ZRN_LOG_MSG_1(New Entry,GVAR(C_isActive));
 };
 
-if _exitDueTransitionActive exitWith {ZRN_LOG_MSG(failed: Transition already taking place); false };
+if (_exitDueTransitionActive) exitWith {ZRN_LOG_MSG(failed: Transition already taking place); false };
 
 
 ////////////////////////////////////////////////////

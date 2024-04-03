@@ -31,9 +31,6 @@ params [
 	["_intensity",		0,		[0]		]
 ];
 
-ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
-
-
 if (_presentName isEqualTo "CLEANUP") exitWith {
 	{
 		// inTransition?
@@ -78,6 +75,6 @@ if (_intensity == 0) then {
 		if (count _this#1 == 0) then { GVAR(S_activeJIP) = nil; };
 	} , [_presetName, QGVAR(S_activeJIP), _presetName], _duration] call CBA_fnc_waitAndExecute;
 };
-ZRN_LOG_MSG_1(:,GVAR(S_activeJIP));
-ZRN_LOG_MSG_1(completed!,_presetName);
+//ZRN_LOG_MSG_1(:,GVAR(S_activeJIP));
+//ZRN_LOG_MSG_1(Request Successful!,_presetName);
 true

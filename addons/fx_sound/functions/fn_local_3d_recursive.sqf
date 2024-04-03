@@ -22,6 +22,7 @@ params [
     ["_presetName",     "",     [""]                ],
     ["_hashMap",        "INIT", ["", createHashMap] ]
 ];
+
 private _exists = _presetName in GVAR(C_isActive);
 
 if (!_exists) exitWith { ZRN_LOG_MSG(completed: preset not in GVAR(C_isActive) anymore); };
@@ -37,32 +38,43 @@ private _minDistance    = _hashMap get "minDistance";
 private _direction      = _hashMap get "direction";
 private _maxDelay       = _hashMap get "maxDelay";
 private _minDelay       = _hashMap get "minDelay";
-private _previousSound  = _hashMap getOrDefault ["previousSound", ""];
+//private _previousSound  = _hashMap getOrDefault ["previousSound", ""];
 private _arr            = + (_hashMap get "sounds");
-if (count _arr >1) then { _arr = _arr - [_previousSound]; };
+
+/*
+if (1 < count _arr) then {
+    _arr = _arr - [_previousSound];
+};
+_hashMap set ["previousSound", _soundName];
+*/
 
 private _soundName      = selectRandom _arr;
 
-_hashMap set ["previousSound", _soundName];
+private _intensity = GVAR(C_isActive) get _presetName select 2; // currentIntensity
 
-private _intensity = ( ( GVAR(C_isActive) get _presetName  select 2 ) + selectRandom [-1,1] * random 0.2 ) max 0;
+ZRN_LOG_MSG_1(pre--Random,_intensity);
+_intensity = _intensity + (selectRandom [-1,1] * random 0.2 * _intensity)  max 0;
+ZRN_LOG_MSG_1(post-Random,_intensity);
 
-_distance = linearConversion [0,1, _intensity, _maxDistance, _minDistance, false] max 0;
-_delay =    linearConversion [0,1, _intensity, _maxDelay,    _minDelay,    false] max 0;
+
+_distance = linearConversion [0,1, _intensity, _maxDistance, _minDistance, true] max 0;
+_delay =    linearConversion [0,1, _intensity, _maxDelay,    _minDelay,    true] max 0;
 
 _sayObj = [_soundName,_presetName, _direction, _distance, _intensity, _maxDistance] call FUNC(local_3d_say3d);
 
-// waitUntil previous sound is played, then wait _delay AndExecute "recursive" function
+ZRN_LOG_MSG_1(POST function Call Local3d_say3d,_sayObj);
 
+// waitUntil previous sound is played, then wait _delay AndExecute "recursive" function
 _statement = {
-    [{_this call FUNC(local_3d_recursive)}, [_this#2,_this#3], _this#1] call CBA_fnc_waitAndExecute;    
+    ZRN_LOG_MSG_1(WaitUntilAndExecute Completed,_this);
+    [{
+        ZRN_LOG_MSG_1(Wait-----AndExecute Completed,_this);
+        [_this#0, _this#1] call FUNC(local_3d_recursive);
+    }, [_this#2,_this#3], _this#1] call CBA_fnc_waitAndExecute;    
 };                
-_condition = { 
-    //ZRN_LOG_1(_this#0);
-    //isNull (_this#0) // breaks and throw errors
-    _this#0 isEqualTo objNull
-    };                          // condition - Needs to return bool
+
+_condition = { _this#0 isEqualTo objNull };                   // condition - Needs to return bool
 _parameter = [_sayObj, _delay, _presetName, _hashMap];      // arguments to be passed on -> _this
 _timeout = 120;                                             // if condition isnt true within this time in S, _timecode will be executed.
-[_condition, _statement, _parameter, _timeout,_statement] call CBA_fnc_waitUntilAndExecute;
 
+[_condition, _statement, _parameter, _timeout,_statement] call CBA_fnc_waitUntilAndExecute;
