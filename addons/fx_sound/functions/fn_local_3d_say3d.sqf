@@ -59,6 +59,8 @@ if (!_exists ) then {
         ZRN_LOG_1(GVAR(C_Objects));
         GVAR(C_Objects) set [_soundPreset, _helperObj];
         ZRN_LOG_MSG_1(Helper Object added to:,GVAR(C_Objects));
+} else {
+    _helperObj = GVAR(C_Objects) get _soundpreset;
 };
 
 // Define Mode of Operation regarding Direction of sound source.
