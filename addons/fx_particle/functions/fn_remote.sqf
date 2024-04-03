@@ -40,7 +40,7 @@
 
 #define COEF_SPEED_HELI 9
 #define COEF_SPEED 5
-#define COEF_WIND  0.2
+#define COEF_WIND  2
 #define PFEH_ATTACH_DELAY 0
 #define PFEH_INTENSITY_DELAY 7 // _duration /  PFEH_INTENSITY_DELAY == _delay
 #define DROP_INTERVAL_MIN 20

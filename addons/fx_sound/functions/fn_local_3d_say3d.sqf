@@ -75,7 +75,7 @@ if (_direction isEqualType "") then {
 private _pos = player getPos [_distance, _direction];
 _pos = [_pos#0, _pos#1, ABOVEGROUND + (getPosASL player # 2)];
 
-_helperObj setPosASL _pos;
+_helperObj setPos _pos;
 
 private _range = (RANGE_MOD * _maxDistance) min ABSOLUTE_MAXRANGE;
 private _pitch = 0.1 + 0.01 * round random 14;

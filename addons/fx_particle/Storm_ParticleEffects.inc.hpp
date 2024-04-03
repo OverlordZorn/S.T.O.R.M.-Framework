@@ -110,13 +110,13 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
     timerPeriod = 1;
     lifeTime = 30;
 
-    position[] = {0, 0, 5};
-    moveVelocity[] =  {0,0,5};
+    position[] = {0, 0, 3};
+    moveVelocity[] =  {0,5,5};
 
     rotationVelocity = 3;
-    weight = 1.00;
+    weight = 1.10;
     volume = 0.85;
-    rubbing = 0.005;
+    rubbing = 0.01;
 
     size[] = {0,3,7,10,12,7,3};
 
@@ -144,11 +144,11 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
 
 	// setParticleRandom
     lifeTimeVar = 10;
-    positionVar[] = {0, 0, 5};
-    moveVelocityVar[] = {0, 0, 3};
+    positionVar[] = {10, 10, 10};
+    moveVelocityVar[] = {0, 5, 5};
    	rotationVelocityVar = 1;
 	sizeVar = 0;
-    colorVar[] = {0, 0, 0, 0.0};	
+    colorVar[] = {0, 0, 0, 0.05};	
     angleVar = 0;
 
 	bounceOnSurface = 1;
@@ -204,7 +204,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
     lifeTime = 27;
 
     position[] = {0, 0, 3};
-    moveVelocity[] =  {50,50,5};
+    moveVelocity[] =  {50,50,3};
 
     rotationVelocity = 0;
     weight = 0.000001;
@@ -232,8 +232,8 @@ class GVAR(Branches) : GVAR(DEFAULT)
 
 	// setParticleRandom
     lifeTimeVar = 0;
-    positionVar[] = {10, 10, 13};
-    moveVelocityVar[] = {4, 4, 5};
+    positionVar[] = {10, 10, 10};
+    moveVelocityVar[] = {4, 4, 2};
    	rotationVelocityVar = 2;
 	sizeVar = 4;
     colorVar[] = {0, 0, 0, 0.5};	

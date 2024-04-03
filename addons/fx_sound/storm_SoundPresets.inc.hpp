@@ -13,13 +13,13 @@ class GVAR(Presets)             // class to be used for 3D sounds
 
     class GVAR(3D_WindLong) : GVAR(3D_Base)             // class to be used for 3D sounds
     {
-        maxDistance = 1500;
-        minDistance = 500;
+        maxDistance = 1000;
+        minDistance = 250;
 
         direction = "WIND";
 
         maxDelay = 30;
-        minDelay = 3;  
+        minDelay = 0;  
 
         sounds[] = {QGVAR(WindLong1), QGVAR(WindLong2)};
     };
@@ -30,7 +30,7 @@ class GVAR(Presets)             // class to be used for 3D sounds
         minDistance = 5;
 
         maxDelay = 30;
-        minDelay = 3;  
+        minDelay = 0;  
 
         direction = "RAND";
 

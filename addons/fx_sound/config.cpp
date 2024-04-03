@@ -46,6 +46,6 @@ class CfgFunctions
 };
 
 
-#include "storm_CfgSFX.inc.inc.hpp"
+#include "storm_CfgSFX.inc.hpp"
 #include "storm_SoundPresets.inc.hpp"
 
