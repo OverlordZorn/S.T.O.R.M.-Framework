@@ -32,8 +32,8 @@ params [
 ];
 
 #define ABOVEGROUND 5
-#define ISSPEECH 0
-#define OFFSET 0
+//#define ISSPEECH 0
+//#define OFFSET 0
 #define ABSOLUTE_MAXRANGE 5000
 #define RANGE_MOD 1.5
 
@@ -78,7 +78,11 @@ _helperObj setPosASL _pos;
 private _range = (RANGE_MOD * _maxDistance) min ABSOLUTE_MAXRANGE;
 private _pitch = 0.1 + 0.01 * round random 14;
 
-private _sayObj = _helperObj say3D [_soundName, _range, _pitch, ISSPEECH, OFFSET];      /* [_soundName, _range, _pitch, ISSPEECH, OFFSET, true];      // additional bool argument once 2.18 hits */
+
+
+ZRN_LOG_MSG_3(Pre-Say3D,_soundName,_range,_pitch);
+
+private _sayObj = _helperObj say3D [_soundName, _range, _pitch];      /* [_soundName, _range, _pitch, ISSPEECH, OFFSET, true];      // additional bool argument once 2.18 hits */
 
 ZRN_LOG_MSG_2(PostSay3D,_sayObj,_soundName);
 
