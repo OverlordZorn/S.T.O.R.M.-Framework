@@ -58,6 +58,7 @@ if (isNil "_presetName") exitWith { ZRN_LOG_MSG(failed: remoteExec failed); fals
 /////////////////////////////////////////////////////////////////////////////
 // Handles In-Transition-Check
 GVAR(S_activeJIP) set [_presetName, true];
+
 [{  
     GVAR(S_activeJIP) set [_this#0, false];
 }, [_presetName], _duration] call CBA_fnc_waitAndExecute;
@@ -67,8 +68,10 @@ GVAR(S_activeJIP) set [_presetName, true];
 if (_intensity == 0) then {
     // Handles Cleanup of JIP in case of decaying(transition-> 0) Effect once transition to 0 is completed.
     [{
-        GVAR(S_activeJIP) deleteAt _this#0;
-        remoteExec ["", _this#0]; // removes entry from JIP Queue
+        params ["_presetName"];
+        ZRN_LOG_MSG_1(cleanup particle,_presetName);
+        GVAR(S_activeJIP) deleteAt _presetName;
+        remoteExec ["", _presetName]; // removes entry from JIP Queue
         if ( count GVAR(S_activeJIP) == 0) then { GVAR(S_activeJIP) = nil; };
     }, [_presetName], _duration] call CBA_fnc_waitAndExecute;
 

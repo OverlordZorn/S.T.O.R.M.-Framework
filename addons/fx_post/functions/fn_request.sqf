@@ -91,7 +91,7 @@ if (isNil "_jipHandle") exitWith { ZRN_LOG_MSG(failed: remoteExec failed);    fa
 if (_intensity == 0) then {
     [{
         remoteExec ["", _this#0];
-        GVAR(S_activeJIPs) deleteAt _this#0;
+        GVAR(S_activeJIPs) deleteAt (_this#0);
 
     }, [_jipHandle], _duration] call CBA_fnc_waitAndExecute;
 

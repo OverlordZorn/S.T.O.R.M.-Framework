@@ -14,7 +14,7 @@
 * Public: Yes
 *
 * GVARS
-*   GVAR(C_isActive) - established by fn_remote_3d ## key = _presetName # value =[_inInTransition, _previousIntensity, _currentIntensity, _targetIntensity]
+*   GVAR(C_isActive) - established by fn_remote_3d ## key = _presetName # value =[_inInTransition, _previousIntensity, _currentIntensity, _targetIntensity, _helperObject,isActive]
 */
 
 
@@ -22,10 +22,15 @@ params [
     ["_presetName",     "",     [""]                ],
     ["_hashMap",        "INIT", ["", createHashMap] ]
 ];
+ZRN_LOG_MSG_2(start,_presetName,_hashMap);
 
-private _exists = _presetName in GVAR(C_isActive);
 
-if (!_exists) exitWith { ZRN_LOG_MSG(completed: preset not in GVAR(C_isActive) anymore); };
+if (isNil QGVAR(C_isActive)) exitWith {ZRN_LOG_MSG_1(failed: C_isActive isNil!,true);};
+
+if (GVAR(C_isActive) get _presetName select 6 isEqualTo false) exitWith { ZRN_LOG_MSG_1(failed: isActive has returned false,GVAR(C_isActive) get _presetName); false}; // exits when isActive tag has turned false; 
+if !(_presetName in GVAR(C_isActive)) exitWith {ZRN_LOG_MSG_2(failed: PresetName not found in C_isActive,_presetName,GVAR(C_isActive));}; // exists when the preset has been removed from hashmap
+
+ZRN_LOG_MSG_1(postFailcheck,true);
 
 if (_hashMap isEqualTo "INIT") then {
     _configPath = (configFile >> QGVAR(Presets));
@@ -33,15 +38,19 @@ if (_hashMap isEqualTo "INIT") then {
     if (_hashMap isEqualto false) exitWith {ZRN_LOG_MSG(failed: _hashMap == false); false};
 };
 
+ZRN_LOG_MSG_1(hashmap,_hashMap);
+
+
 private _maxDistance    = _hashMap get "maxDistance";
 private _minDistance    = _hashMap get "minDistance";
 private _direction      = _hashMap get "direction";
 private _maxDelay       = _hashMap get "maxDelay";
 private _minDelay       = _hashMap get "minDelay";
-//private _previousSound  = _hashMap getOrDefault ["previousSound", ""];
 private _arr            = + (_hashMap get "sounds");
 
+
 /*
+private _previousSound  = _hashMap getOrDefault ["previousSound", ""];
 if (1 < count _arr) then {
     _arr = _arr - [_previousSound];
 };
@@ -52,23 +61,23 @@ private _soundName      = selectRandom _arr;
 
 private _intensity = GVAR(C_isActive) get _presetName select 2; // currentIntensity
 
-ZRN_LOG_MSG_1(pre--Random,_intensity);
 _intensity = _intensity + (selectRandom [-1,1] * random 0.2 * _intensity)  max 0;
-ZRN_LOG_MSG_1(post-Random,_intensity);
-
 
 _distance = linearConversion [0,1, _intensity, _maxDistance, _minDistance, true] max 0;
 _delay =    linearConversion [0,1, _intensity, _maxDelay,    _minDelay,    true] max 0;
 
+ZRN_LOG_MSG_7(local_3d_say3d calling,_soundName,_presetName,_direction,_distance,_intensity,_maxDistance,_sayObj);
 _sayObj = [_soundName,_presetName, _direction, _distance, _intensity, _maxDistance] call FUNC(local_3d_say3d);
 
-ZRN_LOG_MSG_1(POST function Call Local3d_say3d,_sayObj);
+if (_sayObj isEqualTo false) exitWith {
+    ZRN_LOG_MSG_1(failed: _sayOBJ returned as FALSE,true);
+};
+
+
 
 // waitUntil previous sound is played, then wait _delay AndExecute "recursive" function
 _statement = {
-    ZRN_LOG_MSG_1(WaitUntilAndExecute Completed,_this);
     [{
-        ZRN_LOG_MSG_1(Wait-----AndExecute Completed,_this);
         [_this#0, _this#1] call FUNC(local_3d_recursive);
     }, [_this#2,_this#3], _this#1] call CBA_fnc_waitAndExecute;    
 };                

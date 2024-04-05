@@ -13,7 +13,7 @@
 * None
 *
 * Example:
-* ['something', player] call storm_fxSound_fnc_request;
+* ["storm_fx_sound_windBursts", 1,1] call storm_fxSound_fnc_request;
 *
 * Public: Yes
 *
@@ -31,6 +31,7 @@ params [
 	["_intensity",		0,		[0]		]
 ];
 
+/*
 if (_presentName isEqualTo "CLEANUP") exitWith {
 	{
 		// inTransition?
@@ -44,6 +45,8 @@ if (_presentName isEqualTo "CLEANUP") exitWith {
 	ZRN_LOG_MSG(Cleanup Requested!);
 	true
 };
+*/
+
 
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
@@ -58,8 +61,9 @@ if (_presetName in GVAR(S_activeJIP) && { (GVAR(S_activeJIP) get _presetName)#0 
 _array = GVAR(S_activeJIP) getOrDefault [_presetName, [true, 0, time + _duration], true];
 private _previousIntensity = _array#1;
 
-if (_intensity == 0 && { count QGVAR(S_activeJIP) == 0 || { _presetName in QGVAR(S_activeJIP) }}) exitWith {ZRN_LOG_MSG(failed: Intensity == 0 while active sound 3D SFX of same Type); false };
 
+
+if (_intensity == 0 && { count QGVAR(S_activeJIP) == 0 || { _presetName in QGVAR(S_activeJIP) }}) exitWith {ZRN_LOG_MSG(failed: Intensity == 0 while active sound 3D SFX of same Type); false };
 
 [_presetName, _duration, _intensity, _previousIntensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _presetName];
 
@@ -67,14 +71,26 @@ _array set [ 1, _intensity ];
 _array set [ 2, time + _duration ];
 GVAR(S_activeJIP) set [_presetName, _array];
 
-if (_intensity == 0) then {
 
-	[ {
+private _code = if (_intensity == 0) then {
+	{
 		remoteExec ["", _this#0];
-		_this#1 deleteAt _this#2;
-		if (count _this#1 == 0) then { GVAR(S_activeJIP) = nil; };
-	} , [_presetName, QGVAR(S_activeJIP), _presetName], _duration] call CBA_fnc_waitAndExecute;
+		GVAR(S_activeJIP) deleteAt (_this#0);
+		if (count GVAR(S_activeJIP) == 0) then { GVAR(S_activeJIP) = nil; };
+	};
+} else {
+	{
+		GVAR(S_activeJIP) get _this#0 set [0,false];
+		ZRN_LOG_MSG_1(Transition Done,_this#0);
+	};
 };
+
+[ _code , [_presetName], _duration] call CBA_fnc_waitAndExecute;
+
+
+
+
 //ZRN_LOG_MSG_1(:,GVAR(S_activeJIP));
 //ZRN_LOG_MSG_1(Request Successful!,_presetName);
+
 true

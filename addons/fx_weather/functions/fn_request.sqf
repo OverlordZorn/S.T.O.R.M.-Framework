@@ -96,7 +96,6 @@ if (_firstWeatherChange) then {
 };
 
 
-/*
 
 // ##########################################################
 // ################### OVERCAST ############################# 
@@ -235,7 +234,7 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
       _return pushback ["RainOnly", true];
    };
 };
-*/
+
 
 // ##################################################
 // ################### fog params ################### 
@@ -297,7 +296,7 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
    };
 };
 
-/*
+
 
 // ##################################################
 // ################### wind vector ################## 
@@ -339,7 +338,7 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 // ##########################################################
 
 
-*/
+
 
 private _code = switch (_intensity) do {
    case 0: {{

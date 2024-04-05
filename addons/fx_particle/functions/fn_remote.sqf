@@ -224,14 +224,14 @@ private _exitCode = {
     params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
     ZRN_LOG_MSG(Transition pfHandler: exiting);
 
-    (GVAR(C_Active_PartSource) get _this#6) set [2, false];
+    (GVAR(C_Active_PartSource) get (_this#6)) set [2, false];
 
     _spawner setDropInterval  _dropIntervalTarget;
     ZRN_LOG_MSG_2(pfHandler: setDropInterval Exit,_this#0,_drop);
     if ( _intensityTarget isEqualTo 0) then {
 
         ZRN_LOG_MSG(Transition pfHandler: exiting + Intensity==0 -> deleting Spawner);
-        GVAR(C_Active_PartSource) deleteAt _this#6;   
+        GVAR(C_Active_PartSource) deleteAt (_this#6);   
         deleteVehicle _spawner;
 
 
