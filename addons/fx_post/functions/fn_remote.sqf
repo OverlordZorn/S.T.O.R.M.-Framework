@@ -15,7 +15,7 @@
  * Note: 
  *
  * Example:
- * [_effectArray, _duration] remoteExecCall ["cvo_storm_fnc_ppEffect_remote",[0,2] select isDedicated, "CVO_Storm_CC_PP_Effect_JIP_Handle" ];
+ * -
  * 
  * Public: No
  *
@@ -73,7 +73,10 @@ if (_existsVar isEqualto false) then {
 
 if (_intensity == 0) then {
     [ {
-        ppEffectDestroy (missionNamespace getVariable _this#0);
-        if (count GVAR(C_activeEffects) == 0) then { GVAR(C_activeEffects) = nil; };
-     }, [_varName], _duration] call CBA_fnc_waitAndExecute;
+        ppEffectDestroy (missionNamespace getVariable _this);
+
+        GVAR(C_activeEffects) = GVAR(C_activeEffects) - [_this];
+
+        if (count GVAR(C_activeEffects) isEqualTo 0) then { GVAR(C_activeEffects) = nil; };
+     }, _varName, _duration] call CBA_fnc_waitAndExecute;
 };

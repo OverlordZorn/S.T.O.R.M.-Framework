@@ -121,7 +121,8 @@ if (isNil QGVAR(C_Active_PartSource)) then {
 
     private _exitCode  = { 
         { deleteVehicle (_y#0) } forEach GVAR(C_Active_PartSource); 
-        GVAR(C_Active_PartSource) = nil;  
+        GVAR(C_Active_PartSource) = nil;
+        GVAR(C_Attach_pfH_isActive) = nil;  
     };
 
     private _condition = { GVAR(C_Attach_pfH_isActive) };

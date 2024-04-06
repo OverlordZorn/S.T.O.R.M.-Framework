@@ -92,7 +92,7 @@ if (_intensity == 0) then {
     [{
         remoteExec ["", _this#0];
         GVAR(S_activeJIPs) deleteAt (_this#0);
-
+        if (count GVAR(S_activeJIPs) isEqualTo 0) then { GVAR(S_activeJIPs) = nil; };
     }, [_jipHandle], _duration] call CBA_fnc_waitAndExecute;
 
 } else {

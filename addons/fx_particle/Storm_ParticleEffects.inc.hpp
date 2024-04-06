@@ -118,7 +118,7 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
     volume = 0.85;
     rubbing = 0.01;
 
-    size[] = {0,3,7,10,12,7,3};
+    size[] = {0,1,3,5,7,4,1};
 
     color[] = {
 		{0.65, 0.5, 0.5, 0.01}, 
@@ -204,14 +204,14 @@ class GVAR(Branches) : GVAR(DEFAULT)
     lifeTime = 27;
 
     position[] = {0, 0, 3};
-    moveVelocity[] =  {50,50,3};
+    moveVelocity[] =  {0,0,3};
 
     rotationVelocity = 0;
-    weight = 0.000001;
+    weight = 0.000002;
     volume = 0.0;
-    rubbing = 0.1;
+    rubbing = 0.3;
 
-    size[] = {0.1};
+    size[] = {0.01};
 
     color[] = {{0.68, 0.68, 0.68, 1}};
 
@@ -231,21 +231,21 @@ class GVAR(Branches) : GVAR(DEFAULT)
 	emissiveColor[] = {{0,0,0,0}};
 
 	// setParticleRandom
+	sizeVar = 5;
     lifeTimeVar = 0;
-    positionVar[] = {10, 10, 10};
-    moveVelocityVar[] = {4, 4, 2};
+    positionVar[] = {25, 25, 5};
+    moveVelocityVar[] = {3, 3, 1};
    	rotationVelocityVar = 2;
-	sizeVar = 4;
-    colorVar[] = {0, 0, 0, 0.5};	
+    colorVar[] = {0, 0, 0, 0.1};	
     angleVar = 1;
   	bounceOnSurfaceVar = 1;
 
 	// setParticleCircle
-   	circleRadius = 100;
+   	circleRadius = 75;
 	circleVelocity[] = {-2, -2, 1};
 
 	// setDropInterval
-	interval = 0.1;					    // interval of particle's creation
+	interval = 0.15;					    // interval of particle's creation
 	// 0.01+random 0.1
 	interval_min = 2;
 
