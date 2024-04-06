@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={8083.3145,64.907181,8810.4922};
-		dir[]={-0.65283662,-0.32944092,-0.68210936};
-		up[]={-0.227787,0.94417608,-0.23800083};
-		aside[]={-0.72243857,1.4901161e-008,0.6914351};
+		pos[]={8055.3135,50.028111,8796.4238};
+		dir[]={-0.45019242,-0.42035937,-0.78780162};
+		up[]={-0.20856377,0.90735692,-0.36497024};
+		aside[]={-0.86823553,-4.2069587e-008,0.49615568};
 	};
 };
 binarizationWanted=0;
@@ -166,7 +166,7 @@ class Mission
 					position[]={8045.5132,40.458031,8788.5137};
 					combat="CARELESS";
 					expCond="vehicle this == vehicle player";
-					expActiv="[this] execVM ""randomLocationWaypoint_Vehicle.sqf""";
+					expActiv="[vehicle this] call STORM_fnc_randomWaypoint_vehicle";
 					class Effects
 					{
 					};

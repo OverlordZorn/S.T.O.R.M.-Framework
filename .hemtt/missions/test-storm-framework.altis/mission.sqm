@@ -12,10 +12,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={14244.571,19.043514,13044.428};
-		dir[]={0.50852919,-0.54933232,-0.66304755};
-		up[]={0.33431092,0.83560395,-0.43589246};
-		aside[]={-0.79349494,0,-0.60857677};
+		pos[]={14240.646,28.032133,13055.313};
+		dir[]={0.39604834,-0.5736506,-0.71698856};
+		up[]={0.27736989,0.8191002,-0.50213796};
+		aside[]={-0.8753376,-3.6059646e-008,-0.48351672};
 	};
 };
 binarizationWanted=0;
@@ -23,10 +23,8 @@ sourceName="test-storm-framework";
 addons[]=
 {
 	"A3_Characters_F",
-	"A3_Structures_F_Civ_InfoBoards",
 	"A3_Soft_F_Exp_LSV_01",
 	"A3_Structures_F_Mil_Helipads",
-	"A3_Structures_F_Exp_Military_Fortifications",
 	"A3_Air_F_Heli_Light_01",
 	"ace_realisticnames"
 };
@@ -34,7 +32,7 @@ class AddonsMetaData
 {
 	class List
 	{
-		items=6;
+		items=4;
 		class Item0
 		{
 			className="A3_Characters_F";
@@ -44,33 +42,19 @@ class AddonsMetaData
 		};
 		class Item1
 		{
-			className="A3_Structures_F";
-			name="Arma 3 - Buildings and Structures";
-			author="Bohemia Interactive";
-			url="https://www.arma3.com";
-		};
-		class Item2
-		{
 			className="A3_Soft_F_Exp";
 			name="Arma 3 Apex - Unarmored Land Vehicles";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item3
+		class Item2
 		{
 			className="A3_Structures_F_Mil";
 			name="Arma 3 - Military Buildings and Structures";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item4
-		{
-			className="A3_Structures_F_Exp";
-			name="Arma 3 Apex - Buildings and Structures";
-			author="Bohemia Interactive";
-			url="https://www.arma3.com";
-		};
-		class Item5
+		class Item3
 		{
 			className="A3_Air_F";
 			name="Arma 3 Alpha - Aircraft";
@@ -90,37 +74,6 @@ class ScenarioData
 };
 class CustomAttributes
 {
-	class Category0
-	{
-		name="HNEG_emed_ped_session";
-		class Attribute0
-		{
-			property="HNEG_emed_ped_sessionRUN";
-			expression="false";
-			class Value
-			{
-				class data
-				{
-					singleType="SCALAR";
-					value=1;
-				};
-			};
-		};
-		class Attribute1
-		{
-			property="HNEG_emed_ped_sessionATTNOTOOL";
-			expression="false";
-			class Value
-			{
-				class data
-				{
-					singleType="SCALAR";
-					value=1;
-				};
-			};
-		};
-		nAttributes=2;
-	};
 	class Category1
 	{
 		name="Scenario";
@@ -168,7 +121,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=18;
+		items=6;
 		class Item0
 		{
 			dataType="Group";
@@ -203,216 +156,6 @@ class Mission
 		};
 		class Item1
 		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14283.208,5.1505108,13041.099};
-				angles[]={0.054611389,1.518768,0.0026520467};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-				init="_actionName = ""cvo_debug = false"";" \n "_code = {" \n "cvo_debug = false; " \n "};" \n "" \n "this addAction [_actionName, _code];";
-			};
-			id=3;
-			type="Land_InfoStand_V1_F";
-			atlOffset=-0.000831604;
-			class CustomAttributes
-			{
-				class Attribute0
-				{
-					property="ObjectTextureCustom0";
-					expression="_this setObjectTextureGlobal [0,_value]";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="#(rgb,512,512,3)text(1,1,""PuristaLight"",0.3,""#00000000"",""#690000"",""cvo_debug\n=\nFalse"")";
-						};
-					};
-				};
-				nAttributes=1;
-			};
-		};
-		class Item2
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14283.236,5.0649424,13042.563};
-				angles[]={0.14040335,1.518768,0.0026744273};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-				init="_actionName = ""weather apply"";" \n "_code = {" \n "systemChat ""Weather Started"";" \n "[""CVO_Weather_Sandstorm_01"", 5, 1] call cvo_storm_fnc_weather_apply; " \n "};" \n "" \n "this addAction [_actionName, _code];";
-			};
-			id=5;
-			type="Land_InfoStand_V1_F";
-			atlOffset=-0.0042462349;
-			class CustomAttributes
-			{
-				class Attribute0
-				{
-					property="ObjectTextureCustom0";
-					expression="_this setObjectTextureGlobal [0,_value]";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="#(rgb,512,512,3)text(1,1,""PuristaLight"",0.3,""#00000000"",""#690000"",""apply\nweather"")";
-						};
-					};
-				};
-				nAttributes=1;
-			};
-		};
-		class Item3
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14287.066,5.0353088,13042.846};
-				angles[]={0.14040335,1.518768,0.0026744273};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-				init="private _ppeffect = ""CVO_CC_Mars_Storm"";" \n "private _actionName = ""apply PP Effect: "" + _ppeffect;" \n "_code = {" \n "[_ppeffect, 5, 0.5] call cvo_storm_fnc_ppEffect_apply; " \n "};" \n "" \n "this addAction [_actionName, _code];";
-			};
-			id=6;
-			type="Land_InfoStand_V1_F";
-			atlOffset=-0.0055875778;
-			class CustomAttributes
-			{
-				class Attribute0
-				{
-					property="ObjectTextureCustom0";
-					expression="_this setObjectTextureGlobal [0,_value]";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="#(rgb,512,512,3)text(1,1,""PuristaLight"",0.3,""#00000000"",""#690000"",""apply\n PP Effect"")";
-						};
-					};
-				};
-				nAttributes=1;
-			};
-		};
-		class Item4
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14287.114,5.1050701,13042.12};
-				angles[]={0.054611389,1.518768,0.0026520467};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-				init="private _ppeffect = ""CVO_DB_Storm"" ;" \n "private _actionName = ""apply PP Effect: "" + _ppeffect;" \n "_code = {" \n "[_ppeffect, 5, 0.5] call cvo_storm_fnc_ppEffect_apply; " \n "};" \n "" \n "this addAction [_actionName, _code];";
-			};
-			id=9;
-			type="Land_InfoStand_V1_F";
-			atlOffset=-0.00083589554;
-			class CustomAttributes
-			{
-				class Attribute0
-				{
-					property="ObjectTextureCustom0";
-					expression="_this setObjectTextureGlobal [0,_value]";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="#(rgb,512,512,3)text(1,1,""PuristaLight"",0.3,""#00000000"",""#690000"",""apply\n PP Effect"")";
-						};
-					};
-				};
-				nAttributes=1;
-			};
-		};
-		class Item5
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14287.166,5.152092,13041.263};
-				angles[]={0.054611389,1.518768,0.0026520467};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-				init="private _ppeffect = ""CVO_FG_Storm"";" \n "private _actionName = ""apply PP Effect: "" + _ppeffect;" \n "_code = {" \n "[_ppeffect, 5, 0.5] call cvo_storm_fnc_ppEffect_apply; " \n "};" \n "" \n "this addAction [_actionName, _code];";
-			};
-			id=10;
-			type="Land_InfoStand_V1_F";
-			atlOffset=-0.00084686279;
-			class CustomAttributes
-			{
-				class Attribute0
-				{
-					property="ObjectTextureCustom0";
-					expression="_this setObjectTextureGlobal [0,_value]";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="#(rgb,512,512,3)text(1,1,""PuristaLight"",0.3,""#00000000"",""#690000"",""apply\n PP Effect"")";
-						};
-					};
-				};
-				nAttributes=1;
-			};
-		};
-		class Item6
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14287.282,5.2014065,13040.366};
-				angles[]={0.054611389,1.518768,0.0026520467};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-				init="private _actionName = ""apply all PP Effects"";" \n "_code = {" \n "[""CVO_DB_Storm"", 5, 0.5] call cvo_storm_fnc_ppEffect_apply; " \n "[""CVO_FG_Storm"", 5, 0.5] call cvo_storm_fnc_ppEffect_apply; " \n "[""CVO_CC_Mars_Storm"", 5, 0.5] call cvo_storm_fnc_ppEffect_apply; " \n "};" \n "" \n "this addAction [_actionName, _code];";
-			};
-			id=11;
-			type="Land_InfoStand_V1_F";
-			atlOffset=-0.00083971024;
-			class CustomAttributes
-			{
-				class Attribute0
-				{
-					property="ObjectTextureCustom0";
-					expression="_this setObjectTextureGlobal [0,_value]";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="#(rgb,512,512,3)text(1,1,""PuristaLight"",0.3,""#00000000"",""#690000"",""apply\n  all\nPP Effect"")";
-						};
-					};
-				};
-				nAttributes=1;
-			};
-		};
-		class Item7
-		{
 			dataType="Group";
 			side="West";
 			class Entities
@@ -442,7 +185,7 @@ class Mission
 					position[]={14266.34,4.5816088,13022.77};
 					combat="CARELESS";
 					expCond="vehicle this == vehicle player";
-					expActiv="[this] execVM ""randomLocationWaypoint_Vehicle.sqf""";
+					expActiv="[vehicle this] call STORM_fnc_randomWaypoint_vehicle";
 					class Effects
 					{
 					};
@@ -490,7 +233,7 @@ class Mission
 			id=16;
 			atlOffset=-0.0011401176;
 		};
-		class Item8
+		class Item2
 		{
 			dataType="Object";
 			class PositionInfo
@@ -510,45 +253,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="HNEG_emed_emtrDieout3ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
-					property="HNEG_emed_emtrDieout4ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				class Attribute2
-				{
-					property="HNEG_emed_aedInit";
-					expression=" if (!is3DEN) then { _this call compile _value; }; ";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="true";
-						};
-					};
-				};
-				class Attribute3
-				{
 					property="ammoBox";
 					expression="[_this,_value] call bis_fnc_initAmmoBox;";
 					class Value
@@ -560,189 +264,10 @@ class Mission
 						};
 					};
 				};
-				class Attribute4
-				{
-					property="HNEG_emed_emtrDieout1ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				class Attribute5
-				{
-					property="HNEG_emed_emitterInit";
-					expression=" if (!is3DEN) then { _this call compile _value; }; ";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="true";
-						};
-					};
-				};
-				class Attribute6
-				{
-					property="HNEG_emed_emtrDieout2ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				nAttributes=7;
+				nAttributes=1;
 			};
 		};
-		class Item9
-		{
-			dataType="Group";
-			side="West";
-			class Entities
-			{
-				items=1;
-				class Item0
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={14277.094,3.7034814,13047.96};
-						angles[]={0,0.0086555062,0};
-					};
-					side="West";
-					flags=7;
-					class Attributes
-					{
-						name="test_unit";
-					};
-					id=205;
-					type="B_Soldier_A_F";
-					atlOffset=1.1444092e-005;
-					class CustomAttributes
-					{
-						class Attribute0
-						{
-							property="HNEG_emed_emtrDieout3ID";
-							expression="false";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="0";
-								};
-							};
-						};
-						class Attribute1
-						{
-							property="HNEG_emed_emtrDieout4ID";
-							expression="false";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="0";
-								};
-							};
-						};
-						class Attribute2
-						{
-							property="HNEG_emed_aedInit";
-							expression=" if (!is3DEN) then { _this call compile _value; }; ";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="true";
-								};
-							};
-						};
-						class Attribute3
-						{
-							property="pitch";
-							expression="_this setpitch _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="SCALAR";
-									value=1.01;
-								};
-							};
-						};
-						class Attribute4
-						{
-							property="speaker";
-							expression="_this setspeaker _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="Male02ENG";
-								};
-							};
-						};
-						class Attribute5
-						{
-							property="HNEG_emed_emtrDieout1ID";
-							expression="false";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="0";
-								};
-							};
-						};
-						class Attribute6
-						{
-							property="HNEG_emed_emitterInit";
-							expression=" if (!is3DEN) then { _this call compile _value; }; ";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="true";
-								};
-							};
-						};
-						class Attribute7
-						{
-							property="HNEG_emed_emtrDieout2ID";
-							expression="false";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="0";
-								};
-							};
-						};
-						nAttributes=8;
-					};
-				};
-			};
-			class Attributes
-			{
-			};
-			id=204;
-			atlOffset=1.1444092e-005;
-		};
-		class Item10
+		class Item3
 		{
 			dataType="Group";
 			side="West";
@@ -788,7 +313,7 @@ class Mission
 					loiterAltitude=-3.4028235e+038;
 					position[]={14253.712,4.5005388,13034.854};
 					expCond="vehicle this == vehicle player";
-					expActiv="[this] execVM ""randomLocationWaypoint_Heli.sqf""";
+					expActiv="[vehicle this] call STORM_fnc_randomWaypoint_heli";
 					class Effects
 					{
 					};
@@ -841,7 +366,7 @@ class Mission
 			id=206;
 			atlOffset=-4.2915344e-006;
 		};
-		class Item11
+		class Item4
 		{
 			dataType="Object";
 			class PositionInfo
@@ -858,93 +383,7 @@ class Mission
 			type="Land_HelipadSquare_F";
 			atlOffset=0.0020065308;
 		};
-		class Item12
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14273.446,3.765434,13051.083};
-				angles[]={0.030656165,3.0931795,0.0080009829};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-			};
-			id=212;
-			type="Land_BagFence_01_corner_green_F";
-			atlOffset=7.6293945e-006;
-		};
-		class Item13
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14281.444,3.7977798,13051.218};
-				angles[]={0.045302324,1.5222989,0.0013372133};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-			};
-			id=214;
-			type="Land_BagFence_01_corner_green_F";
-		};
-		class Item14
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14281.31,3.4377398,13059.216};
-				angles[]={0.038647637,6.235424,6.2778587};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-			};
-			id=215;
-			type="Land_BagFence_01_corner_green_F";
-			atlOffset=7.6293945e-006;
-		};
-		class Item15
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14273.312,3.4818568,13059.081};
-				angles[]={0.046631888,4.6661463,6.2765174};
-			};
-			side="Empty";
-			flags=4;
-			class Attributes
-			{
-			};
-			id=216;
-			type="Land_BagFence_01_corner_green_F";
-			atlOffset=3.3378601e-006;
-		};
-		class Item16
-		{
-			dataType="Trigger";
-			position[]={14277.265,3.2138209,13055.17};
-			angle=3.1247575;
-			class Attributes
-			{
-				onActivation="execVM ""trigger.sqf""";
-				sizeA=4.2010002;
-				sizeB=4.2010002;
-				sizeC=3.904;
-				activationBy="ANYPLAYER";
-				isRectangle=1;
-				isServerOnly=1;
-			};
-			id=217;
-			type="EmptyDetectorArea10x10";
-			atlOffset=3.8146973e-006;
-		};
-		class Item17
+		class Item5
 		{
 			dataType="Object";
 			class PositionInfo
@@ -964,45 +403,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="HNEG_emed_emtrDieout3ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
-					property="HNEG_emed_emtrDieout4ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				class Attribute2
-				{
-					property="HNEG_emed_aedInit";
-					expression=" if (!is3DEN) then { _this call compile _value; }; ";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="true";
-						};
-					};
-				};
-				class Attribute3
-				{
 					property="ammoBox";
 					expression="[_this,_value] call bis_fnc_initAmmoBox;";
 					class Value
@@ -1014,46 +414,7 @@ class Mission
 						};
 					};
 				};
-				class Attribute4
-				{
-					property="HNEG_emed_emtrDieout1ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				class Attribute5
-				{
-					property="HNEG_emed_emitterInit";
-					expression=" if (!is3DEN) then { _this call compile _value; }; ";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="true";
-						};
-					};
-				};
-				class Attribute6
-				{
-					property="HNEG_emed_emtrDieout2ID";
-					expression="false";
-					class Value
-					{
-						class data
-						{
-							singleType="STRING";
-							value="0";
-						};
-					};
-				};
-				nAttributes=7;
+				nAttributes=1;
 			};
 		};
 	};
