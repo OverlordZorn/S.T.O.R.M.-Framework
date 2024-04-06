@@ -104,7 +104,7 @@ _wp waypointAttachObject _helperObj;
                                     [   { (vehicle (_this#0) distance (_this#1)) < 50 },
                                         {  
                                             // systemChat "Within 50 -> 50kph 30m";
-                                            [{[_this#0] execVM "randomLocationWaypoint_Vehicle.sqf";}, [_this#0], 30] call CBA_fnc_waitAndExecute;
+                                            [{[_this#0] call STORM_fnc_randomWaypoint_vehicle;}, [_this#0], 30] call CBA_fnc_waitAndExecute;
 
 
                             
