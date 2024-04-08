@@ -52,9 +52,10 @@ if (_intensity isEqualTo 0 && { !_exists }) exitWith { ZRN_LOG_MSG(failed: canno
 
 private ["_helperObj"];
 
-if (!_exists ) then {
+if (!_exists) then {
         // use invisible helperObj to play3d the sound from, or, when debug, use big funny arrow
-        _helperClass = ["Helper_Base_F", call {selectRandom ["Sign_Arrow_Large_Green_F", "Sign_Arrow_Large_Blue_F", "Sign_Arrow_Large_Pink_F", "Sign_Arrow_Large_Yellow_F", "Sign_Arrow_Large_Green_F"]} ] select (missionNamespace getVariable ["CVO_Debug", false]);
+        _helperClass = "Helper_Base_F";
+        if (missionNamespace ["STORM_Debug", false]) then { _helperClass = selectRandom ["Sign_Arrow_Large_Green_F", "Sign_Arrow_Large_Blue_F", "Sign_Arrow_Large_Pink_F", "Sign_Arrow_Large_Yellow_F", "Sign_Arrow_Large_Green_F"] };
         _helperObj  = createVehicleLocal [_helperClass, [0,0,0]];
         GVAR(C_isActive) get _presetName set [4, _helperObj];
 } else {
