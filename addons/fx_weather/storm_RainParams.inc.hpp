@@ -48,33 +48,33 @@ class GVAR(RainParams)
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
 		rainDropTexture="a3\data_f\snowflake16_ca.paa";
 		// dropsInTexture - the number of drops that are present in the drop texture
-		texDropCount=4;
+		texDropCount=16;
 		// minimum rain strength when the effect starts to be rendered
-		minRainDensity = 0.01;
+		minRainDensity = 0.001;
 		// distance of the effect
 		effectRadius=25;
 		// coefficient of how much the wind influences water drops
-		windCoef=0.05;
+		windCoef=0.1;
 		// fall speed of the drops
-		dropSpeed=2.5;
+		dropSpeed=6;
 		// random part of the fall speed 
 		rndSpeed=0.5;
 		// coefficient of how much the drop could randomly change direction
 		rndDir=0.5;
 		// width of the single drop
-		dropWidth=0.07;
+		dropWidth=0.2;
 		// height of the single drop
-		dropHeight=0.7;
+		dropHeight=0.2;
 		// color of the drop
 		dropColor[]={0.1, 0.1, 0.1, 0.5};
 		// luminescence of the drop facing to sun
-		lumSunFront=0.0;
+		lumSunFront=0.3;
 		// luminescence of the drop opposite to sun
-		lumSunBack=0.2;
+		lumSunBack=0.3;
 		// coefficient that tells us how much "refracted" light from the scene is added to the drop color
 		refractCoef=0.5;
 		// coefficient to tune color saturation of the refraction effect (0=BW, 1=original color)
-		refractSaturation = 0.5;
+		refractSaturation = 0.3;
 
 		// SINCE Arma 3 v2.07.148385
 		// rain is snow, will be used in "snow" env sound controller (optional, default is false)
@@ -82,6 +82,11 @@ class GVAR(RainParams)
 		// SINCE Arma 3 v2.07.148416
 		// when true, the dropColor is preserved and not affected by eye accommodation (optional, default is false)
 		dropColorStrong=0;	
+	};
+
+	class GVAR(RainParams_Snow_Calm) : GVAR(RainParams_Snow)
+	{
+		dropSpeed=4;
 	};
 
 
@@ -92,7 +97,7 @@ class GVAR(RainParams)
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
 		rainDropTexture="z\storm\addons\based\data\Raven_Voron_256.paa";
 		// dropsInTexture - the number of drops that are present in the drop texture
-		texDropCount=4;
+		texDropCount=1;
 		// minimum rain strength when the effect starts to be rendered
 		minRainDensity = 0.01;
 		// distance of the effect
@@ -100,23 +105,23 @@ class GVAR(RainParams)
 		// coefficient of how much the wind influences water drops
 		windCoef=0.05;
 		// fall speed of the drops
-		dropSpeed=2.5;
+		dropSpeed=0.5;
 		// random part of the fall speed 
 		rndSpeed=0.5;
 		// coefficient of how much the drop could randomly change direction
 		rndDir=0.5;
 		// width of the single drop
-		dropWidth=0.07;
+		dropWidth=0.5;
 		// height of the single drop
-		dropHeight=0.7;
+		dropHeight=0.5;
 		// color of the drop
-		dropColor[]={0.1, 0.1, 0.1, 0.5};
+		dropColor[]={0.1, 0.1, 0.1, 1};
 		// luminescence of the drop facing to sun
-		lumSunFront=0.0;
+		lumSunFront=1;
 		// luminescence of the drop opposite to sun
-		lumSunBack=0.2;
+		lumSunBack=1;
 		// coefficient that tells us how much "refracted" light from the scene is added to the drop color
-		refractCoef=0.5;
+		refractCoef=1;
 		// coefficient to tune color saturation of the refraction effect (0=BW, 1=original color)
 		refractSaturation = 0.5;
 
