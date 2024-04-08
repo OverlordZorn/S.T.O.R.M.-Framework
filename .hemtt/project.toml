@@ -95,7 +95,7 @@ workshop = [
     "2369477168", # Advanced Developer Tools
     "1779063631", # Zeus Enhanced
     "2018593688", # ZEN ACE Compat
-#    "1613905318", # Emitter 3Ditor
+    "1613905318", # Emitter 3Ditor
 ]
 
 mission = "test-storm-framework.stratis"
