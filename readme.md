@@ -121,6 +121,8 @@ I am looking towards Zeus and Editor Modules and potentially more functions.
 - I think i could narrow it down to me using Editor Enhancing Mods like "Emitter 3Ditor" to test some Particle Effects, Saving the Editor Mission with this Module in place, then not loading it again and using this mission without Emitter 3Ditor.
 - Coincidentally, i had a mate have similar issues (fog resets to a fogvalue of 0 repeatally) after he removed "LRG Fundamentals" from the modlist.
 
+### ACE Nightvision FogScaling can cause players to see further with NVG's on.
+https://github.com/acemod/ACE3/issues/9938
 
 
 ## License
