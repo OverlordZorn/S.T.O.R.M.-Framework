@@ -7,6 +7,13 @@ This is the Github Repository for the **S.T.O.R.M. Framework** for Arma 3.
 
 It is an easy and simple to use Framework to Request and Execute Extreme Weather Events like Sandstorms, Snowstorms, etc.
 
+All Effects are Defined in Config as Presets, new Effects can be easily added or existing one can be slightly adjusted via Class Inheritance.
+A simple storm can be defined by the Main Preset.
+
+The Currently supported main presets can be found here:
+https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework/blob/based/addons/framework/Storm_MainPresets.inc.hpp
+
+
 ### Weather Effects Module
 - Handles Execution of relevant Weather Systems, for example:
 - Fog, including adaptation of the "Fogbase" based on the Average Altitude of all players to aim for a consistent experience even on maps with high elevation.
