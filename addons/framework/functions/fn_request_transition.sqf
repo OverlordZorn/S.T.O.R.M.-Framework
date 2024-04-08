@@ -1,34 +1,47 @@
 #include "..\script_component.hpp"
 
 /*
- * Author: [Zorn]
- * Function to apply the Storm Preset, which will take care off all needed groups of effect, be it Post Processing, Weather, Particles etc.
- *
- * Arguments:
- * 0: _storm_preset_name      <STRING> Name of Storm Preset - Capitalisation needs to be exact!
- * 1: _duration               <NUMBER> in Minutes for the duration to be applied.
- * 2: _intensity              <NUMBER> 0..1 Factor of Intensity for the PP Effect 
- *
- * Return Value:
- * none
- *
- * Note: 
- *
- * Example:
- * [_storm_preset_name, _duration, _intensity] call cvo_storm_fnc_storm_request;
- * 
- * Public: No
- */
+* Author: [Zorn]
+* Function to Start a Transition from Current (0 if no previous Storm occoured) to target intensity.
+*
+* Arguments:
+* 0: _stormPreset       <STRING>  Classname of Storm Preset - Capitalisation needs to be exact! - Defines which Effects to call - Currently implemented Presets can be found here: addons/framework/Storm_MainPresets.inc.hpp
+*                       Example: "STORM_Sandstorm"
+*                       Default: "" (will fail)
+* 1: _duration          <NUMBER>  Time in Minutes for the transition to take place.
+*                       Example: 15
+*                       Default: 5
+* 2: _Intensity         <NUMBER> from 0 to 1 where 1 stands for 100% - Intensity of the Storm Effects. The higher the intensity, the stronger the Effects etc.
+*                       Example: 0.75
+*                       Example: 0.5
+* 3: _chainTranisition  <BOOLEAN> if true, when a transition is currently taking place, // NOT IMPLEMENT YET
+*                       Example: true
+*                       Default: false
+*
+* Return Value:
+* array of applied effects and their return [mostly true/false dependend on success
+* OR
+* if _chainTransition is true, it will return the index as Number in the queue. 
+*
+* Note: 
+*
+* Example:
+* [_stormPreset,     _durationInMinutes, _Intensity] call storm_fnc_request_transition;
+* ["STORM_Sandstorm",      10,               0.75  ] call storm_fnc_request_transition;
+* 
+* Public: Yes
+*/
 
 if (!isServer) exitWith {_this call PFUNC(request_transition) };
 
 params [
-   ["_stormPreset",     "",   [""]  ],
-   ["_duration",        5,    [0]   ],
-   ["_intensity",       0.5,  [0]   ]
+   ["_stormPreset",        "",      [""]  ],
+   ["_duration",           5,       [0]   ],
+   ["_intensity",          0.5,     [0]   ],
+   ["_chainTransitions",   false,   [true]]     // currently not in use
 ];
 
-ZRN_LOG_3(_stormPreset,_duration,_intensity);
+ZRN_LOG_4(_stormPreset,_duration,_intensity,_chainTransitions);
 
 private _configPath = (configFile >> QPVAR(mainPresets));
 _test = (configProperties [_configPath, "true", true] apply { toLowerANSI configName _x });
@@ -36,7 +49,8 @@ _test = (configProperties [_configPath, "true", true] apply { toLowerANSI config
 
 if  (_stormPreset == "")                                                                                             exitWith { ZRN_LOG_MSG(failed: Preset not provided); false };
 if !(toLowerANSI _stormPreset in (configProperties [_configPath, "true", true] apply { toLowerANSI configName _x })) exitWith { ZRN_LOG_MSG(failed: Preset not found); false };
-if (!isNil QPVAR(isActive) && {PVAR(isActive) # 2 == true} )                                                         exitWith { ZRN_LOG_MSG(failed: Transition is already taking place); false };
+if (!isNil QPVAR(isActive) && {PVAR(isActive) # 2 == true && {_chainTransitions == false}} )                         exitWith { ZRN_LOG_MSG(failed: Transition is already taking place); false };
+// TODO: ADD CHAIN TRANSITION FUNCTION 
 if (_intensity == 0 && {isNil QPVAR(isActive) } )                                                                    exitWith { ZRN_LOG_MSG(failed: Cannot transition to 0 without previous Storm Transition); false };
 
 // Sanitize
