@@ -9,9 +9,9 @@ It is an easy and simple to use Framework to Request and Execute Extreme Weather
 
 ### Weather Effects Module
 - Handles Execution of relevant Weather Systems, for example:
--- Fog, including adaptation of the "Fogbase" based on the Average Altitude of all players to aim for a consistent experience even on maps with high elevation.
--- Wind Transition beyond the simple "setWind 1" values.
--- Comes with the handling of Rain Parameters, be it Snow or Rain.
+- Fog, including adaptation of the "Fogbase" based on the Average Altitude of all players to aim for a consistent experience even on maps with high elevation.
+- Wind Transition beyond the simple "setWind 1" values.
+- Comes with the handling of Rain Parameters, be it Snow or Rain.
 
 ### Particle Effects
 - Handles the creation of multiple Particle Effect Spawners on each individual client and updating their position based on player movementspeed and Wind.
