@@ -204,6 +204,12 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
     // Apply new Rain Parameters during "noRain" period
    [ { _this call BIS_fnc_setRain; }, [_rainParams], ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
+   [{
+      _this call BIS_fnc_setRain;
+      // If the RainParams Argument isSnow == true, it will set the Humidity to 0.25 do avoid the sound of "extremely drippingly wet footsteps"
+      if ((_this select 15) isEqualTo true) then { 0.25 remoteExec ["setHumidity", [0,2] select isDedicated]; };
+
+   }, _rainParams, ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
    ZRN_LOG_MSG_2(setRainParams--,_duration,_rainParams);
    _return pushback ["RainParams", true];
 
