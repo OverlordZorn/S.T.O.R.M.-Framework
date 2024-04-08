@@ -65,4 +65,6 @@ _avgASL = [_allASL, _avgASL] call BIS_fnc_nearestNum;
 
 _result = _avgASL;
 
+ZRN_LOG_MSG_1(final return,_return);
+
 _result
