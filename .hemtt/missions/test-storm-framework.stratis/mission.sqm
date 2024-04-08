@@ -12,10 +12,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={1689.1039,24.658583,5138.8389};
-		dir[]={-0.054134194,-0.64029568,-0.7662186};
-		up[]={-0.045125116,0.76812851,-0.63870358};
-		aside[]={-0.99751353,0,0.070475437};
+		pos[]={1680.5618,24.658583,5139.4434};
+		dir[]={-0.054134559,-0.64029562,-0.7662186};
+		up[]={-0.045125414,0.76812851,-0.63870353};
+		aside[]={-0.99751341,0,0.070475906};
 	};
 };
 binarizationWanted=0;
@@ -106,11 +106,9 @@ class Mission
 	class Intel
 	{
 		timeOfChanges=1800.0002;
-		startWeather=0;
 		startWind=0.1;
 		startLightnings=1;
 		startWaves=0.1;
-		forecastWeather=0;
 		forecastWind=0.1;
 		forecastWaves=0.1;
 		forecastLightnings=1;

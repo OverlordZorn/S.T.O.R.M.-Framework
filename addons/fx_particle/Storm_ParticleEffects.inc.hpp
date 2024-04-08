@@ -67,7 +67,7 @@ class GVAR(DEFAULT) : Default
 	destroyOnWaterSurface = 0;				// particle can exist - only underwater (-1), only above the water (1), everywhere (0)
 	destroyOnWaterSurfaceOffset = 0;		// offset of water surface in destroyOnWaterSurface parameter
 	destroyAfterCrossing = "false";			// if true, destroy when the whole particle is on the other side of the water surface. Only when _destroyOnWaterSurfaceOffset is enabled, 
-	onSurface = "true";					// placing of particle on (water) surface on start of it is existence, default value is true, works only if circleRadius > 0
+	onSurface = "false";					// placing of particle on (water) surface on start of it is existence, default value is true, works only if circleRadius > 0
 	keepOnSurface = "false";				// true for particle is stay on water surface - see notes below
 	surfaceOffset = 0; 						// offset of water surface in keepOnSurface parameter
 	bounceOnSurface = 0;					// coef of speed's loosing in collision with ground, 0-1 for collisions, -1 disable collision
@@ -95,9 +95,15 @@ class GVAR(DEFAULT) : Default
 	// additional Meta Data
 	// obj = "objNull";
 	interval_min = 2;
+
+	// These Coef Factors are used by the attachTo Mechnaic that ensures particles being where the player is moving towards to
+	coef_speed_heli = 9;
+	coef_speed = 5;
+	coef_wind = 2;
+	offset_height = 1;
 };
 
-class GVAR(Dust_High) : GVAR(DEFAULT)
+class GVAR(Dust) : GVAR(DEFAULT)
 {
     particleShape = "\A3\data_f\cl_basic";
     particleFSNtieth = 1;
@@ -140,7 +146,7 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
 
     angle = 1;
 
-    onSurface = "true";
+    onSurface = "false";
 
 	// setParticleRandom
     lifeTimeVar = 10;
@@ -159,40 +165,37 @@ class GVAR(Dust_High) : GVAR(DEFAULT)
 	circleVelocity[] = {-3, -3, 2};
 
 	// setDropInterval
-	interval = 0.01;					    // interval of particle's creation
+	interval = 0.05;					    // interval of particle's creation
 	// 0.01+random 0.1
 
-	interval_min = 1;
+	interval_min = 2;
 
 };
 
 
-class GVAR(Dust_High_100) : GVAR(Dust_High)
+class GVAR(Dust_100) : GVAR(Dust)
 {
    	circleRadius = 100;
 };
 
-class GVAR(Dust_High_50) : GVAR(Dust_High)
+class GVAR(Dust_50) : GVAR(Dust)
 {
    	circleRadius = 50;
 };
 
-class GVAR(Dust_High_35) : GVAR(Dust_High)
+class GVAR(Dust_35) : GVAR(Dust)
 {
    	circleRadius = 35;
 };
 
 
 
-class GVAR(Dust_Low) : GVAR(Dust_High) 
-{
-    size[] = {0,3,7,10,7,3,0};
-};
+
 
 // Twigs
 class GVAR(Branches) : GVAR(DEFAULT)
 {
-    particleShape = "\A3\data_f\ParticleEffects\Hit_Leaves\Sticks_Green";
+    particleShape = "\A3\data_f\ParticleEffects\Hit_Leaves\Sticks_Green"; 
     particleFSNtieth = 1;
     particleFSIndex = 1;
     particleFSFrameCount = 1;
@@ -204,12 +207,12 @@ class GVAR(Branches) : GVAR(DEFAULT)
     lifeTime = 27;
 
     position[] = {0, 0, 3};
-    moveVelocity[] =  {0,0,3};
+    moveVelocity[] =  {15,15,3};
 
-    rotationVelocity = 0;
-    weight = 0.000002;
+    rotationVelocity = 1;
+    weight = 0.000001;
     volume = 0.0;
-    rubbing = 0.3;
+    rubbing = 0.1;
 
     size[] = {0.01};
 
@@ -225,7 +228,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
 
     angle = 0;
 
-    onSurface = "true";
+    onSurface = "false";
 	bounceOnSurface = 1;
 
 	emissiveColor[] = {{0,0,0,0}};
@@ -245,53 +248,47 @@ class GVAR(Branches) : GVAR(DEFAULT)
 	circleVelocity[] = {-2, -2, 1};
 
 	// setDropInterval
-	interval = 0.15;					    // interval of particle's creation
+	interval = 0.05;					    // interval of particle's creation
 	// 0.01+random 0.1
-	interval_min = 2;
-
+	interval_min = 1;
 };
 
 
-/*
-class particle_emitter_0: Default
+// Snow
+class GVAR(Snow) : GVAR(DEFAULT)
 {
-	interval = 0.03;
-	circleRadius = 50;
-	circleVelocity[] = {0,-1,0};
-	particleFSNtieth = 16;
-	particleFSIndex = 12;
-	particleFSFrameCount = 13;
-	particleFSLoop = 0;
+	interval = 0.001;
+	interval_min = 0.5;
+
+	circleRadius = 0;
+	circleVelocity[] = {2,2,5};
+	particleFSNtieth = 1;
+	particleFSIndex = 0;
+	particleFSFrameCount = 1;
+	particleFSLoop = 1;
 	angleVar = 0;
-	particleShape = "\A3\data_f\ParticleEffects\Universal\Universal.p3d";
+	particleShape = "\A3\Data_f\cl_basic.p3d";
 	particleType = "Billboard";
 	timerPeriod = 1;
-	lifeTime = 15;
-	moveVelocity[] = {2,0,2};
-	rotationVelocity = 1;
-	weight = 0.053;
-	volume = 0.04;
-	rubbing = 0.01;
-	size[] = {13,15};
-	color[] =
-	{
-			{0.08,0.067,0.052,0},
-			{0.6,0.5,0.4,0.2012},
-			{0.42618,0.431949,0.420412,0.183895},
-			{0.6,0.5,0.4,0.166588},
-			{0.6,0.5,0.4,0.15},
-			{0.6,0.5,0.4,0}
-	};
-	animationSpeed[] = {1000};
-	randomDirectionPeriod = 0.1;
-	randomDirectionIntensity = 0.05;
+	lifeTime = 45;
+	moveVelocity[] = {0,0,5};
+	rotationVelocity = 0;
+	weight = 3.0;
+	volume = 1;
+	rubbing = 1;
+	size[] = {0.1};
+	color[] = {{1,1,1,1},{1,1,1,0}};
+	animationSpeed[] = {1};
+	randomDirectionPeriod = 0;
+	randomDirectionIntensity = 0;
 	onTimerScript = "";
 	beforeDestroyScript = "";
-	lifeTimeVar = 5;
-	positionVar[] = {5,1,5};
-	moveVelocityVar[] = {5,1,5};
-	rotationVelocityVar = 20;
-	sizeVar = 0.3;
+	lifeTimeVar = 0;
+	position[] = {-7.5,-7.5,1};
+	positionVar[] = {15,15,5};
+	moveVelocityVar[] = {5,5,5};
+	rotationVelocityVar = 0;
+	sizeVar = 0.1;
 	colorVar[] = {0,0,0,0};
 	randomDirectionPeriodVar = 0;
 	randomDirectionIntensityVar = 0;
@@ -300,8 +297,16 @@ class particle_emitter_0: Default
 	damageTime = 0;
 	damageType = "";
 	angle = 0;
-	position[] = {0,0,0};
+
+	coef_speed_heli = 1;
+	coef_speed = 1;
+	coef_wind = 0.2;
+
+	offset_height = 10;
+
 };
 
-
-*/
+class GVAR(Snow_25) : GVAR(Snow)
+{
+	circleRadius = 25;
+};

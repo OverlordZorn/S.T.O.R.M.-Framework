@@ -30,7 +30,7 @@
  *
  *
  *  created GVARS
- *  GVAR(C_Active_PartSource) set [_effectName, [_spawner, _intensityTarget, _isTransitioning]
+ *  GVAR(C_Active_PartSource) set [_effectName, [_spawner, _intensityTarget, _isTransitioning, COEF_SPEED_HELI, COEF_SPEED, COEF_WIND]
  *  GVAR(C_Attach_pfH_isActive) boolean - gets changed at end of transition - will get checked by attach-to perFrameHandler
  *
  *
@@ -38,24 +38,29 @@
  *
  */
 
-#define COEF_SPEED_HELI 9
-#define COEF_SPEED 5
-#define COEF_WIND  2
-#define PFEH_ATTACH_DELAY 0
-#define PFEH_INTENSITY_DELAY 7 // _duration /  PFEH_INTENSITY_DELAY == _delay
-#define DROP_INTERVAL_MIN 20
-
-
-
-
 
 if (!hasInterface) exitWith {};
+
 
 params [
     ["_effectName",        "",       [""]],
     ["_duration",         300,        [0]],
     ["_intensityTarget",    0,        [0]]
 ];
+
+
+
+
+// #define COEF_SPEED_HELI 9
+// #define COEF_SPEED 5
+// #define COEF_WIND  2
+
+#define PFEH_ATTACH_DELAY 0
+#define PFEH_INTENSITY_DELAY 7 // _duration /  PFEH_INTENSITY_DELAY == _delay
+#define DROP_INTERVAL_MIN 20
+
+
+
 
 ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensityTarget);
 
@@ -103,20 +108,26 @@ if (isNil QGVAR(C_Active_PartSource)) then {
 
     private _codeToRun = {
         private _player = vehicle ace_player;  
-        //_SpeedVector vectorDiff _windVector
-        
         private _isHeli = typeof vehicle player isKindOf "Air";
+        private _coef_speed_heli = 9;
+        private _coef_speed      = 5;
+        private _coef_wind       = 2;
+        private _offset_height   = 1;
+        {
+            if (_isHeli && { _x == "Debug_Helper" } ) then { detach (_y#0); continue };         
 
-        _coef_speed = [COEF_SPEED, COEF_SPEED_HELI] select (_isHeli);
-
-        private _relPosArray = (( velocityModelSpace _player ) vectorMultiply _coef_speed) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply COEF_WIND);
-
-        _relPosArray set [2, (_relPosArray#2) + 1];
-        { 
-            if (_isHeli && { _x == "Debug_Helper" } ) then { detach (_y#0); continue };
-           
+            if (_x isNotEqualTo "Debug_Helper") then {
+                _coef_speed_heli = (GVAR(C_Active_PartSource) get _x) select 3;
+                _coef_speed      = (GVAR(C_Active_PartSource) get _x) select 4;
+                _coef_wind       = (GVAR(C_Active_PartSource) get _x) select 5;
+                _offset_height   = (GVAR(C_Active_PartSource) get _x) select 6;
+            };
+            ZRN_LOG_MSG_4(YOLO,_coef_speed_heli,_coef_speed,_coef_wind,_offset_height);
+            private _coef_speed_selected = [_coef_speed, _coef_speed_heli] select (_isHeli);
+            private _relPosArray = (( velocityModelSpace _player ) vectorMultiply _coef_speed_selected) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply _coef_wind);
+            _relPosArray set [2, (_relPosArray#2) + 1 + _offset_height];
             _y#0 attachTo [_player, _relPosArray];
-             } forEach GVAR(C_Active_PartSource);
+        } forEach GVAR(C_Active_PartSource);
     };
 
     private _exitCode  = { 
@@ -162,6 +173,7 @@ private _preExists = _effectName in GVAR(C_Active_PartSource);
 private _dropIntervalStart = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval_min");
 private _dropIntervalMax   = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval");
 
+
 //private _dropIntervalStart = DROP_INTERVAL_MIN;
 //private _dropIntervalMax = ([_effectName] call BIS_fnc_getCloudletParams) select 2; // #0 setParticleParams, #1 setParticleRandom, #2 setDropInterval
 private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropIntervalStart, _dropIntervalMax, true];
@@ -190,8 +202,14 @@ if (_preExists) then {
     _spawner = createVehicleLocal ["#particlesource", [0,0,0]];
     _spawner setParticleClass _effectName;
 
+    private _coef_speed_heli = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "coef_speed_heli");
+    private _coef_speed      = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "coef_speed");
+    private _coef_wind       = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "coef_wind");
+    private _offset_height   = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "offset_height");
+
+
     _isTransitioning = true;
-    _spawnerArray = [_spawner, _intensityTarget, _isTransitioning];
+    _spawnerArray = [_spawner, _intensityTarget, _isTransitioning, _coef_speed_heli, _coef_speed,_coef_wind,_offset_height];
     GVAR(C_Active_PartSource) set [_effectName, _spawnerArray];
     ZRN_LOG_MSG_2(MSG,_effectName,_spawnerArray);
 };

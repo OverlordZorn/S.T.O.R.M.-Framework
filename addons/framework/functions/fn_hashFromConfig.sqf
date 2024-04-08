@@ -15,7 +15,7 @@
  * Note: 
  *
  * Example:
- * [(configFile >> "CVO_AI_SubSkill_Modifier"), "CVO_AI_Skill_sandstorm_old"] call storm_fnc_hashFromConfig;
+ * [(configFile >> "CVO_AI_SubSkill_Modifier"), "CVO_AI_Skill_reducedVisibility"] call storm_fnc_hashFromConfig;
  * 
  * Public: No
  */

@@ -13,7 +13,7 @@
  * none
  *
  * Example:
- * ["CVO_AI_Skill_sandstorm_old", 1, 1] call storm_mod_skill_fnc_request;
+ * ["CVO_AI_Skill_reducedVisibility", 1, 1] call storm_mod_skill_fnc_request;
  * 
  * Public: Yes
  * GVARS

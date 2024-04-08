@@ -2,7 +2,9 @@
 
 /*
  * Author: [Zorn]
- * Initialises or Readjust perFrameHandler which setFogs overtime while fogbase is modified based on average player ASL - based on global variable - if global variable isNil, perFrameHandler stops.
+ * Starts perFrameHandler and/or adjust GVAR(S_fogParams) - will repeatedly use setFog during tranistion.
+ * If requested, will maintain adjustment beyond transition and adapt fogbase, based on average player ASL
+ * If GVAR isNil, perFrameHandler stops.
  *
  * Arguments:
  * 0: _fogParams_Target
@@ -19,7 +21,7 @@
  * Public: No
   *
  * GVARS
- *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY]; _
+ *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY];
  *
  */
  
@@ -30,7 +32,7 @@ if (!isServer) exitWith {_this remoteExecCall [QFUNC(setFog_avg),2]};
     ["_fog_target",         [0,0,0],    [[]],   [3] ],
     ["_duration",           0,          [0]         ]
 ];
-#define DELAY 30
+#define DELAY 5
 
 private _fog_start = fogParams;
 private _startTime = time;
@@ -50,12 +52,28 @@ private "_condition";
 _condition = { ! isNil QGVAR(S_fogParams) };
 
 private _codeToRun = {
+    private _fnc_scriptName = "PFH_setFog_avg";
+
+
     
     GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target", "_delay"];
     ZRN_LOG_1(GVAR(S_fogParams));
 
     private _avg_ASL = round ([] call FUNC(get_AvgASL));
-    ZRN_LOG_1(_avg_ASL);
+    ZRN_LOG_MSG_1(Pre-Boost:,_avg_ASL);
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Problem: On Maps with a very high base elevation, fog sometimes wont be as intensive as on sea-level, where tested.
+    // When increasing templates base value, the expierence on sea level will be to soupy
+    // Temporary Solution: Boost of avgASL in case of high base elevation of map.
+    // could be made better, for example, simple factor, or investigate if the fogparams can be made more universal but i cant be fucked to investigate rn
+    _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 300, false];
+    ////////////////////////////////////////////////////////////////////////////////
+
+
+
+    ZRN_LOG_MSG_1(PostBoost:,_avg_ASL);
 
     private _currentParams = switch (time > _endTime) do {
         case true: {

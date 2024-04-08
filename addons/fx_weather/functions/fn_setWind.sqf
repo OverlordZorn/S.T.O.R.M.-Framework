@@ -66,7 +66,7 @@ private _exitCode = {
 };
 
 private _condition = { _this#1 > time };
-private _delay = 1;
+private _delay = 0.1;
 
 [{
     params ["_args", "_handle"];

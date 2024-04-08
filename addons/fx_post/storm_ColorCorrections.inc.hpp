@@ -94,7 +94,17 @@ class GVAR(CC_Frosted_Blue_Purple) : GVAR(CC_Default)
 };
 
 
+class GVAR(CC_ColdSnow) : GVAR(CC_Default)
+{
+	colorization_rgba[] = 	{	1.31,	0.81,	0.62,	1.22	};			// RGB - Color -- A - Saturation   (0-> Original Color - 1 -> B&W moltiplied by colorize color)
+};
 
+class GVAR(CC_ColdSnow_Bleak) : GVAR(CC_ColdSnow)
+{
+	brightness = 	0.70;
+	contrast = 		0.90;
+	offset = 		0.10;
+};
  
 
 /* Currently not in use
