@@ -13,7 +13,7 @@
 * true if successful
 *
 * Example:
-* ["Storm_fx_weather_Sandstorm_01", 1, 0.5] call storm_fxWeather_fnc_request;
+* ["Storm_fx_weather_Sandstorm", 1, 0.5] call storm_fxWeather_fnc_request;
 * 
 * Public: No
 *
@@ -80,7 +80,7 @@ if (_firstWeatherChange) then {
 private _return = [];
 
 // ##########################################################
-// ################### FREEZE CURRENT ####################### 
+// ###### FREEZE CURRENT Weather transitions ################ 
 
 if (_firstWeatherChange) then {
 
@@ -92,10 +92,7 @@ if (_firstWeatherChange) then {
    0 setGusts        gusts;
    0 setWaves        waves;
    forceWeatherChange;
-
 };
-
-
 
 // ##########################################################
 // ################### OVERCAST ############################# 
@@ -203,7 +200,6 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
    ( _duration / 3 ) setRain 0;
 
     // Apply new Rain Parameters during "noRain" period
-   [ { _this call BIS_fnc_setRain; }, [_rainParams], ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
    [{
       _this call BIS_fnc_setRain;
       // If the RainParams Argument isSnow == true, it will set the Humidity to 0.25 do avoid the sound of "extremely drippingly wet footsteps"
