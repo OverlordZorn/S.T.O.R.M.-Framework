@@ -101,6 +101,8 @@ class GVAR(Presets)
     };
 
 
+
+
     class GVAR(SnowStorm) : GVAR(Default)
     {
         change_overcast = 1;                            // 0 or 1 - consider it a bool
@@ -120,7 +122,7 @@ class GVAR(Presets)
         fog_value_min = 0.01;                            // 0..1   - Minimum Fog, even with 1% intensity                              
         fog_value_max = 0.4;                            // 0..1   - Maximum Fog Level at 100% intensity
         fog_dispersion = 0.015;                         // 0..1   - Recommend to stay within 0 .. 0.1
-        fog_base = 50;                                 // number - meters +/- above Sea Level
+        fog_base = 150;                                 // number - meters +/- above Sea Level
         fog_mode = 2;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
 
         change_wind = 1;                                // 0 or 1 - consider it a bool
@@ -131,7 +133,15 @@ class GVAR(Presets)
         gusts_value = 1;                                // 0..1   - wind Gusts, changes in windspeed
 
         change_waves = 1;                               // 0 or 1 - consider it a bool
-        waves_value = 0;                                // 0..1
+        waves_value = 0.5;                                // 0..1
+    };
+
+    class GVAR(SnowStorm_Calm) : GVAR(SnowStorm)
+    {
+        rainParams = QGVAR(RainParams_Snow_Calm);          // String - name of RainParams Config Class
+        wind_value = 10;
+        change_gusts = 1;                               // 0 or 1 - consider it a bool
+        gusts_value = 0.3;                                // 0..1   - wind Gusts, changes in windspeed
     };
 
 
