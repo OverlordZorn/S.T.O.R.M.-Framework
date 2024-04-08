@@ -5,7 +5,7 @@ class PVAR(mainPresets)
         author = AUTHOR;
         storm_name = QPVAR(Default);
 
-        mod_skill_preset = ""; // QEGVAR(mod_skill,sandstorm_old)
+        mod_skill_preset = ""; // QEGVAR(mod_skill,reducedVisibility)
         mod_skill_coef = 1;
 
         fx_weather_preset = "";
@@ -25,7 +25,7 @@ class PVAR(mainPresets)
     {
         storm_name = QPVAR(Sandstorm);
 
-        mod_skill_preset = QEGVAR(mod_skill,sandstorm_old);
+        mod_skill_preset = QEGVAR(mod_skill,reducedVisibility);
         mod_skill_coef = 1;
 
         fx_weather_preset = QEGVAR(fx_weather,Sandstorm);
@@ -45,7 +45,7 @@ class PVAR(mainPresets)
     {
         storm_name = QPVAR(Sandstorm);
 
-        mod_skill_preset = QEGVAR(mod_skill,sandstorm_old);
+        mod_skill_preset = QEGVAR(mod_skill,reducedVisibility);
         mod_skill_coef = 1;
 
         fx_weather_preset = QEGVAR(fx_weather,SnowStorm);                                            // Need to make SnowStorm Weather

@@ -17,7 +17,7 @@ class GVAR(Presets)
     };
 
 
-    class GVAR(sandstorm_old) : GVAR(Default)               // EGVAR(mod_skill,sandstorm_old)
+    class GVAR(reducedVisibility) : GVAR(Default)               // EGVAR(mod_skill,reducedVisibility)
     {
         general =           0.40;
         courage =           0.30;
