@@ -30,7 +30,8 @@ if (!isServer) exitWith {_this remoteExecCall [QFUNC(setFog_avg),2]};
 
   params [
     ["_fog_target",         [0,0,0],    [[]],   [3] ],
-    ["_duration",           0,          [0]         ]
+    ["_duration",           0,          [0]         ],
+    ["_boost",              true,       [true]      ]
 ];
 #define DELAY 5
 
@@ -41,7 +42,7 @@ private _endTime = time + _duration;
 private _needPerFrameHandler = isNil QGVAR(S_fogParams);
 
 // S_fogParams gets updated with the new target parameters
-GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY];
+GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY, _boost];
 ZRN_LOG_1(GVAR(S_fogParams));
 
 // If the perFrameHandler is already running, we only need to update the array
@@ -56,21 +57,21 @@ private _codeToRun = {
 
 
     
-    GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target", "_delay"];
+    GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target", "_delay", "_boost"];
     ZRN_LOG_1(GVAR(S_fogParams));
 
     private _avg_ASL = round ([] call FUNC(get_AvgASL));
     ZRN_LOG_MSG_1(Pre-Boost:,_avg_ASL);
 
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // Problem: On Maps with a very high base elevation, fog sometimes wont be as intensive as on sea-level, where tested.
-    // When increasing templates base value, the expierence on sea level will be to soupy
-    // Temporary Solution: Boost of avgASL in case of high base elevation of map.
-    // could be made better, for example, simple factor, or investigate if the fogparams can be made more universal but i cant be fucked to investigate rn
-    _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 300, false];
-    ////////////////////////////////////////////////////////////////////////////////
-
+    if _boost then {
+        ////////////////////////////////////////////////////////////////////////////////
+        // Problem: On Maps with a very high base elevation, fog sometimes wont be as intensive as on sea-level, where tested.
+        // When increasing templates base value, the expierence on sea level will be to soupy
+        // Temporary Solution: Boost of avgASL in case of high base elevation of map.
+        // could be made better, for example, simple factor, or investigate if the fogparams can be made more universal but i cant be fucked to investigate rn
+        _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 230];
+        ////////////////////////////////////////////////////////////////////////////////
+    };
 
 
     ZRN_LOG_MSG_1(PostBoost:,_avg_ASL);
