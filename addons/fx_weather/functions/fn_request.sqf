@@ -193,30 +193,54 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
 
    //retrieve RainParms Value and Rain Value with Intensity
-   _rainParams = [ _hashMap get "rainParams" ] call FUNC(get_rainParams_as_Array);
-   _valueRain = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true ];
+   private _rainParams_target = if (_intensity == 0) then {
+      GVAR(S_previousWeather) getOrDefault ["RainParams", []]
+   } else {
+      [ _hashMap get "rainParams" ] call FUNC(get_rainParams_as_Array);      
+   };
 
-   // remove the rain to create a no-rain period to change rainParams
-   ( _duration / 3 ) setRain 0;
+   private _valueRain = linearConversion [ 0, 1, _intensity, 0, _hashMap get "rain_value", true ];
 
-    // Apply new Rain Parameters during "noRain" period
-   [{
-      _this call BIS_fnc_setRain;
-      // If the RainParams Argument isSnow == true, it will set the Humidity to 0.25 do avoid the sound of "extremely drippingly wet footsteps"
-      if ((_this select 15) isEqualTo true) then { 0.25 remoteExec ["setHumidity", [0,2] select isDedicated]; };
+   ZRN_LOG_MSG_1(rain Params Retrieved,_rainParams_target);
 
-   }, _rainParams, ( _duration * 1/2 ) ] call CBA_fnc_waitAndExecute;
-   ZRN_LOG_MSG_2(setRainParams--,_duration,_rainParams);
+   _rainParams_current = missionNameSpace getVariable [QGVAR(S_current_rainParams), [] ];
+
+   private _transition = "SOFT";
+// if (_rainParams_current isEqualTo []) then { _transition = "SOFT" };
+   if (_rainParams_current isEqualTo _rainParams_target ) then { _transition = "DIRECT"};
+
+
+   missionNameSpace setVariable [QGVAR(S_current_rainParams), _rainParams_target];
+   // If current RainParams isNotEqualTo the Incoming RainParams, pause the rain, apply new Params and restart.
+   switch (_transition) do {
+      case "DIRECT": { [ { _this call BIS_fnc_setRain; } , _rainParams_target, _duration/2] call CBA_fnc_waitAndExecute; };
+      case "SOFT": {
+         // remove the rain to create a no-rain period to change rainParams
+         ( _duration / 3 ) setRain 0;
+
+         // Apply new Rain Parameters during "noRain" period
+         [{
+            // If the RainParams Argument isSnow == true, it will set the Humidity to 0.25 do avoid the sound of "extremely drippingly wet footsteps"
+            ZRN_LOG_MSG_2(CATCHME,_this,_this#15);
+            if ( count _rainParams_target != 0 && {(_this select 15) isEqualTo true} ) then {
+               0.25 remoteExec ["setHumidity", [0,2] select isDedicated];
+            };
+         }, _rainParams_target, ( _duration /2 ) ] call CBA_fnc_waitAndExecute;
+
+         ZRN_LOG_MSG_2(setRainParams--,_duration,_rainParams_target);
+
+         // setRain during the last third of the transition, only if needed. 
+         if ( (_hashMap getOrDefault ["change_rainValue", 0] > 0 )  && (_valueRain > 0) ) then { 
+            [{
+               params ["_duration", "_value"];
+               (_duration * 1/3) setRain _value;
+            }, [_duration,_valueRain],    _duration * 2/3] call CBA_fnc_waitAndExecute;
+            _return pushback ["Rain", true];
+         };
+      };
+   };
    _return pushback ["RainParams", true];
 
-    // setRain during the last third of the transition, only if needed. 
-   if ( (_hashMap getOrDefault ["change_rainValue", 0] > 0 )  && (_valueRain > 0) ) then { 
-      [{
-         params ["_duration", "_value"];
-         (_duration * 1/3) setRain _value;
-      }, [_duration,_valueRain],    _duration * 2/3] call CBA_fnc_waitAndExecute;
-      _return pushback ["Rain", true];
-   };
 } else {
 
    // Set Rain only
@@ -250,7 +274,11 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
 
 
  // Establish _fog_target for the Transition
-   private ["_fog_target", "_fog_Mode"];
+   private ["_fog_target", "_fog_Mode", "_fog_boost"];
+
+   _fog_boost = _hashMap getOrDefault ["fog_boost", 0];
+   _fog_boost = _fog_boost > 0;
+
    switch (_intensity) do {
       case 0: {
          // Handles reset to pre-request weather
@@ -287,7 +315,7 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
       };
       default {
          // fogBase via AvgASL requested.
-         [_fog_target, _duration, _intensity] call FUNC(setFog_avg);
+         [_fog_target, _duration, _fog_boost] call FUNC(setFog_avg);
          ZRN_LOG_MSG_3(setFog_avg-call,_duration,_fog_target,_intensity);
 
          // If fogBase via AvgASL is requested only during initial Tranistion, (Mode=1), perFrameHandler will be terminated after transition.
@@ -297,8 +325,6 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
       };
    };
 };
-
-
 
 // ##################################################
 // ################### wind vector ################## 
@@ -319,7 +345,6 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
    _target_magnitude = linearConversion[0,1,_intensity,0,_hashMap get "wind_value",true];
 
    // Start "recursive", finite  transition.
-
    _forceWindEnd = switch (_hashMap get "forceWindEnd") do {
       case 1: { true };
       default { false};
@@ -332,7 +357,7 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 
 
    if (_intensity == 0) then {
-      [ { missionNamespace setVariable ["ace_weather_disableWindSimulation", nil]; } , [], _duration] call CBA_fnc_waitAndExecute;
+      [{ace_weather_disableWindSimulation = nil}, [], _duration] call CBA_fnc_waitAndExecute;
    };
 };
 
@@ -340,14 +365,36 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 // ##########################################################
 
 
+// ##########################################################
+// ############## ace_weather_temperatureShift ##############
+
+if (!isNil "ace_weather_temperatureShift" && {_hashmap getorDefault ["ace_temp_shift", 0] != 0}) then {
+   if !( ace_weather_temperatureShift in GVAR(S_previousWeather) ) then { GVAR(S_previousWeather) set ["ace_weather_temperatureShift", ace_weather_temperatureShift]; };
+   _tempShift = linearConversion [0,1,_intensity, 0,_hashMap get "ace_temp_shift"];
+   [ { ace_weather_temperatureShift = _this#0; } , [_tempShift], _duration/2] call CBA_fnc_waitAndExecute;
+};
+
+
+// ##########################################################
+// ##########################################################
 
 
 private _code = switch (_intensity) do {
    case 0: {{
-      GVAR(S_previousWeather) = nil;
-
+      // Cleanup
+      GVAR(S_current_rainParams) = nil;
       GVAR(S_inTransition) = nil;
 
+      if ("ace_weather_temperatureShift" in GVAR(S_previousWeather)) then {
+
+         [{
+            ace_weather_temperatureShift = GVAR(S_previousWeather) get "ace_weather_temperatureShift";
+            GVAR(S_previousWeather) = nil;   
+         } , [], _duration/2] call CBA_fnc_waitAndExecute;
+
+      } else {
+         GVAR(S_previousWeather) = nil;
+      };
       ZRN_LOG_MSG(Transition Complete & S_previousWeather weather has been restored);
     }};
    default {{
