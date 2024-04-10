@@ -86,7 +86,7 @@ class CustomAttributes
 				class data
 				{
 					singleType="STRING";
-					value="if !isMultiplayer then {CVO_Debug = true};" \n "duration = 1;" \n "intensity = 1;" \n "useAISteeringComponent true;";
+					value="";
 				};
 			};
 		};
