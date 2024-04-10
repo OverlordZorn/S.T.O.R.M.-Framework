@@ -22,6 +22,7 @@ class GVAR(Presets)
         fog_dispersion = 0;                             // 0..1   - Recommend to stay within 0 .. 0.1
         fog_base = 0;                                   // number - meters +/- above Sea Level
         fog_mode = 0;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
+        fog_boost = 0;
 
         change_wind = 0;                                // 0 or 1 - consider it a bool
         wind_value = 0;                                 // Number - 0.. - ~32m/s is classified as hurricane - see "beaufort wind scale" for reference
@@ -32,6 +33,8 @@ class GVAR(Presets)
 
         change_waves = 0;                               // 0 or 1 - consider it a bool
         waves_value = 0;                                // 0..1
+
+        ace_temp_shift = 0;                             // if Ace_weather is detected, it will modify the temperature shift by the value in °C.
     };
 
     class GVAR(ClearSky) : GVAR(Default)
@@ -55,6 +58,7 @@ class GVAR(Presets)
         fog_dispersion = 0;                             // 0..1   - Recommend to stay within 0 .. 0.1
         fog_base = 0;                                   // number - meters +/- above Sea Level
         fog_mode = 0;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
+        fog_boost = 0;
 
         change_wind = 1;                                // 0 or 1 - consider it a bool
         wind_value = 0;                                 // Number - 0.. - ~32m/s is classified as hurricane - see "beaufort wind scale" for reference
@@ -85,12 +89,13 @@ class GVAR(Presets)
 
         fog_value_min = 0.01;                            // 0..1   - Minimum Fog, even with 1% intensity                              
         fog_value_max = 0.4;                            // 0..1   - Maximum Fog Level at 100% intensity
-        fog_dispersion = 0.015;                         // 0..1   - Recommend to stay within 0 .. 0.1
-        fog_base = 100;                                 // number - meters +/- above Sea Level
+        fog_dispersion = 0.013;                         // 0..1   - Recommend to stay within 0 .. 0.1
+        fog_base = 180;                                 // number - meters +/- above Sea Level
         fog_mode = 2;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
+        fog_boost = 1;
 
         change_wind = 1;                                // 0 or 1 - consider it a bool
-        wind_value = 32;                                // Number - 0.. - ~32m/s is classified as hurricane - see "beaufort wind scale" for reference
+        wind_value = 20;                                // Number - 0.. - ~32m/s is classified as hurricane - see "beaufort wind scale" for reference
         forceWindEnd = 1;                               // 0 or 1 - consider it a bool
 
         change_gusts = 1;                               // 0 or 1 - consider it a bool
@@ -121,12 +126,13 @@ class GVAR(Presets)
 
         fog_value_min = 0.01;                            // 0..1   - Minimum Fog, even with 1% intensity                              
         fog_value_max = 0.4;                            // 0..1   - Maximum Fog Level at 100% intensity
-        fog_dispersion = 0.015;                         // 0..1   - Recommend to stay within 0 .. 0.1
-        fog_base = 150;                                 // number - meters +/- above Sea Level
+        fog_dispersion = 0.013;                         // 0..1   - Recommend to stay within 0 .. 0.1
+        fog_base = 180;                                 // number - meters +/- above Sea Level
         fog_mode = 2;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
+        fog_boost = 1;
 
         change_wind = 1;                                // 0 or 1 - consider it a bool
-        wind_value = 32;                                // Number - 0.. - ~32m/s is classified as hurricane - see "beaufort wind scale" for reference
+        wind_value = 20;                                // Number - 0.. - ~32m/s is classified as hurricane - see "beaufort wind scale" for reference
         forceWindEnd = 1;                               // 0 or 1 - consider it a bool
 
         change_gusts = 1;                               // 0 or 1 - consider it a bool
@@ -134,6 +140,8 @@ class GVAR(Presets)
 
         change_waves = 1;                               // 0 or 1 - consider it a bool
         waves_value = 0.5;                                // 0..1
+
+        ace_temp_shift = -15;                             // if Ace_weather is active, it will modify the ace_weather_temperatureShift by the value in °C.
     };
 
     class GVAR(SnowStorm_Calm) : GVAR(SnowStorm)
@@ -143,9 +151,6 @@ class GVAR(Presets)
         change_gusts = 1;                               // 0 or 1 - consider it a bool
         gusts_value = 0.3;                                // 0..1   - wind Gusts, changes in windspeed
     };
-
-
-
 
 
     class GVAR(Test) : GVAR(Default)
@@ -169,6 +174,7 @@ class GVAR(Presets)
         fog_dispersion = 0.015;                         // 0..1   - Recommend to stay within 0 .. 0.1
         fog_base = 50;                                  // number - meters +/- above Sea Level
         fog_mode = 1;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
+        fog_boost = 1;
 
         change_wind = 1;                                // 0 or 1 - consider it a bool
         wind_value = 32;                                // Number - 0.. - ~32m/s is classified as hurricane - see "beaufort wind scale" for reference
