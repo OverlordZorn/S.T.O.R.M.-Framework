@@ -16,7 +16,7 @@
 // #################################################################################################################################################################################################
 
 class Default;
-class GVAR(DEFAULT) : Default
+class GVAR(DEFAULT) : Default				// GVAR(TEST) 
 {
 	interval = 0.5;					    	// interval of particle's creation
 	circleRadius = 0;						// radius around emitter where particles are created
@@ -116,23 +116,23 @@ class GVAR(Dust) : GVAR(DEFAULT)
     timerPeriod = 1;
     lifeTime = 30;
 
-    position[] = {0, 0, 3};
-    moveVelocity[] =  {0,5,5};
+    position[] = {-5, -5, -5};
+    moveVelocity[] =  {-5,-5,-5};
 
     rotationVelocity = 3;
-    weight = 1.10;
+    weight = 1.20;
     volume = 0.85;
-    rubbing = 0.01;
+    rubbing = 0.02;
 
-    size[] = {0,1,3,5,7,4,1};
+    size[] = {0,1,3,5,7,5,2};
 
     color[] = {
 		{0.65, 0.5, 0.5, 0.01}, 
-		{0.65, 0.6, 0.5, 0.03}, 
-		{1,   0.95, 0.8, 0.07},
+		{0.65, 0.6, 0.5, 0.05}, 
+		{1,   0.95, 0.8, 0.08},
 		{1,   0.95, 0.8, 0.10},
-		{1,   0.95, 0.8, 0.07},
-		{0.65, 0.6, 0.5, 0.01}, 
+		{1,   0.95, 0.8, 0.08},
+		{0.65, 0.6, 0.5, 0.05}, 
 		{0.65, 0.6, 0.5, 0.00}
 	};
 
@@ -150,12 +150,12 @@ class GVAR(Dust) : GVAR(DEFAULT)
 
 	// setParticleRandom
     lifeTimeVar = 10;
-    positionVar[] = {10, 10, 10};
-    moveVelocityVar[] = {0, 5, 5};
+    positionVar[] = {10, 10, 15};
+    moveVelocityVar[] = {10, 10, 10};
    	rotationVelocityVar = 1;
 	sizeVar = 0;
     colorVar[] = {0, 0, 0, 0.05};	
-    angleVar = 0;
+    angleVar = 360;
 
 	bounceOnSurface = 1;
   	bounceOnSurfaceVar = 0.0;
@@ -165,7 +165,7 @@ class GVAR(Dust) : GVAR(DEFAULT)
 	circleVelocity[] = {-3, -3, 2};
 
 	// setDropInterval
-	interval = 0.05;					    // interval of particle's creation
+	interval = 0.01;					    // interval of particle's creation
 	// 0.01+random 0.1
 
 	interval_min = 2;
@@ -188,6 +188,31 @@ class GVAR(Dust_35) : GVAR(Dust)
    	circleRadius = 35;
 };
 
+class GVAR(SnowBurst) : GVAR(Dust)
+{
+	color[] = {
+		{0.5,	 0.5, 	0.65, 	0.01}, 
+		{0.5,	 0.6, 	0.65, 	0.03}, 
+		{0.8,	0.95, 	1,    	0.07},
+		{0.8,	0.95, 	1,    	0.10},
+		{0.8,	0.95, 	1,    	0.07},
+		{0.5,	 0.6, 	0.65, 	0.01}, 
+		{0.5,	 0.6, 	0.65, 	0.00}
+	};
+};
+class GVAR(SnowBurst_35) : GVAR(SnowBurst)
+{
+   	circleRadius = 35;
+};
+class GVAR(SnowBurst_50) : GVAR(SnowBurst)
+{
+   	circleRadius = 50;
+};
+class GVAR(SnowBurst_75) : GVAR(SnowBurst)
+{
+   	circleRadius = 75;
+};
+
 
 
 
@@ -206,22 +231,22 @@ class GVAR(Branches) : GVAR(DEFAULT)
     timerPeriod = 1;
     lifeTime = 27;
 
-    position[] = {0, 0, 3};
-    moveVelocity[] =  {15,15,3};
+    position[] = {-10, -10, 0.5};
+    moveVelocity[] =  {-15,-15,3};
 
     rotationVelocity = 1;
     weight = 0.000001;
     volume = 0.0;
     rubbing = 0.1;
 
-    size[] = {0.01};
+    size[] = {0.2};
 
     color[] = {{0.68, 0.68, 0.68, 1}};
 
     animationSpeed[] = {1.5, 1};	
 
     randomDirectionPeriod = 13;
-    randomDirectionIntensity = 13; 
+    randomDirectionIntensity = 7; 
 
     onTimerScript = "";
     beforeDestroyScript = "";
@@ -229,18 +254,18 @@ class GVAR(Branches) : GVAR(DEFAULT)
     angle = 0;
 
     onSurface = "false";
-	bounceOnSurface = 1;
+	bounceOnSurface = 0;
 
 	emissiveColor[] = {{0,0,0,0}};
 
 	// setParticleRandom
-	sizeVar = 5;
+	sizeVar = 3;
     lifeTimeVar = 0;
-    positionVar[] = {25, 25, 5};
-    moveVelocityVar[] = {3, 3, 1};
+    positionVar[] = {20, 20, 5};
+    moveVelocityVar[] = {30, 30, 10};
    	rotationVelocityVar = 2;
     colorVar[] = {0, 0, 0, 0.1};	
-    angleVar = 1;
+    angleVar = 100;
   	bounceOnSurfaceVar = 1;
 
 	// setParticleCircle
