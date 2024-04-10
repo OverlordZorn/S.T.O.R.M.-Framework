@@ -21,7 +21,13 @@
  * 	None
 */
 
+
+/*
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NOT IN USE ANYMORE
+
 params [   ["_presetName", "", [""]]    ];
+
 
 //Check if EffectName given
 if (_presetName isEqualTo "") exitWith {
@@ -51,3 +57,4 @@ _weatherPresetMap
 
 
 
+*/
