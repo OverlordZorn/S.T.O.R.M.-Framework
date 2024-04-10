@@ -108,7 +108,7 @@ if (isNil QGVAR(C_Active_PartSource)) then {
 
     private _codeToRun = {
         private _player = vehicle ace_player;  
-        private _isHeli = typeof vehicle player isKindOf "Air";
+        private _isHeli = vehicle player isKindOf "Air";
         private _coef_speed_heli = 9;
         private _coef_speed      = 5;
         private _coef_wind       = 2;
@@ -117,13 +117,17 @@ if (isNil QGVAR(C_Active_PartSource)) then {
             if (_isHeli && { _x == "Debug_Helper" } ) then { detach (_y#0); continue };         
 
             if (_x isNotEqualTo "Debug_Helper") then {
-                _coef_speed_heli = (GVAR(C_Active_PartSource) get _x) select 3;
-                _coef_speed      = (GVAR(C_Active_PartSource) get _x) select 4;
-                _coef_wind       = (GVAR(C_Active_PartSource) get _x) select 5;
-                _offset_height   = (GVAR(C_Active_PartSource) get _x) select 6;
+                _coef_speed_heli = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 3;
+                _coef_speed      = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 4;
+                _coef_wind       = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 5;
+                _offset_height   = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 6;
             };
-            ZRN_LOG_MSG_4(YOLO,_coef_speed_heli,_coef_speed,_coef_wind,_offset_height);
-            private _coef_speed_selected = [_coef_speed, _coef_speed_heli] select (_isHeli);
+            private _coef_speed_selected = [_coef_speed, _coef_speed_heli] select _isHeli;
+
+            ZRN_LOG_MSG_4(catchMeHeliCrash,_coef_speed_selected,_coef_speed,_coef_speed_heli,GVAR(C_Active_PartSource));
+
+
+
             private _relPosArray = (( velocityModelSpace _player ) vectorMultiply _coef_speed_selected) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply _coef_wind);
             _relPosArray set [2, (_relPosArray#2) + 1 + _offset_height];
             _y#0 attachTo [_player, _relPosArray];
