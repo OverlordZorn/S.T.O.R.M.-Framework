@@ -1,5 +1,5 @@
-//#include "\x\cba\addons\main\script_macros_common.hpp"
-//#include "\x\cba\addons\xeh\script_xeh.hpp"
+//#include '\x\cba\addons\main\script_macros_common.hpp'
+//#include '\x\cba\addons\xeh\script_xeh.hpp'
 
 #include "\z\storm\addons\based\script_version.hpp"
 #include "\z\storm\addons\based\script_mod.hpp"
@@ -111,6 +111,10 @@
     #define ZRN_LOG_6(A,B,C,D,E,F) diag_log (DEBUG_HEADER + (format [' A: %1 - B: %2 - C: %3 - D: %4 - E: %5 - F: %6',RETNIL(A),RETNIL(B),RETNIL(C),RETNIL(D),RETNIL(E),RETNIL(F)]))
     #define ZRN_LOG_7(A,B,C,D,E,F,G) diag_log (DEBUG_HEADER + (format [' A: %1 - B: %2 - C: %3 - D: %4 - E: %5 - F: %6 - H: %7',RETNIL(A),RETNIL(B),RETNIL(C),RETNIL(D),RETNIL(E),RETNIL(F),RETNIL(G)]))
     #define ZRN_LOG_8(A,B,C,D,E,F,G,H) diag_log (DEBUG_HEADER + (format [' A: %1 - B: %2 - C: %3 - D: %4 - E: %5 - F: %6 - H: %7 - I: %8',RETNIL(A),RETNIL(B),RETNIL(C),RETNIL(D),RETNIL(E),RETNIL(F),RETNIL(G),RETNIL(H)]))
+
+    #define ZRN_LOG_HMO(var1) { if ('#' in _x || 'Meth' in _x) then {continue}; diag_log (DEBUG_HEADER + (format [' %3 - %1 - %2', _x, _y, Q(MSG)])) } forEach var1;
+    #define ZRN_LOG_MSG_HMO(MSG,var1) { if ('#' in _x || 'Meth' in _x) then {continue}; diag_log (DEBUG_HEADER + (format [' %3 - %1 - %2', _x, _y, Q(MSG)])) } forEach var1;
+
 #else
     #define ZRN_SCRIPTNAME(var1)
 
@@ -131,7 +135,15 @@
     #define ZRN_LOG_6(A,B,C,D,E,F)
     #define ZRN_LOG_7(A,B,C,D,E,F,G)
     #define ZRN_LOG_8(A,B,C,D,E,F,G,H)
+
+    #define ZRN_LOG_HMO(var1)
+    #define ZRN_LOG_MSG_HMO(MSG,var1)
 #endif
 
 
+
+// hashMapObjects
+
+#define OGET(var1) (_self get Q(var1))
+#define OSET(var1,var2) (_self set [Q(var1), var2])
 

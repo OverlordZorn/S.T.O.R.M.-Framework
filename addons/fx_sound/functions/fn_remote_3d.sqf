@@ -2,13 +2,14 @@
 
 /*
 * Author: Zorn
-* Establishes pfH for the transition of the intensity + Starts a recursive loop for the actual execution.
+* Establishes hashMapObject which maintains a loop based on parameters inside the hmo - can be updated on the fly and will clean itself up once intensity reaches 0 again.
 *
 * Arguments:
 *   0:  _PresetName
 *   1:  _duration       in secounds
-*   2:  _intensity
-*   3:  _previousIntensity      gets provides so in case of JIP, the client will start with the same parameters instead of  up with the same 
+*   2:  _startTime      based on CBA_MissionTime
+*   3:  _intensity
+*
 *
 *
 * Return Value:
@@ -20,166 +21,158 @@
 * Public: No
 *
 * GVARS
-*   GVAR(C_isActive) // key = _presetName # value =[_inInTransition, _previousIntensity, _currentIntensity, _targetIntensity, helperObj, sayObj,isActive]
+*   GVAR(C_FX_Sound_Array) // array of active hashMapObjects
 *
 */
+
+// TODO why does the obj Helper not get stored in the hashmapObject?
+
+
+#define ABOVEGROUND 5
+#define ABSOLUTE_MAXRANGE 5000   // Somewhere between 5000 and 7500 seems to be a hard limit - if source obj is beyond that distance (maybe obj render distance?) then it will not be audible - Needs more testing
+#define RANGE_MOD 1.5
+
                     
+params ["_presetName", "_startTime", "_duration", "_intensity"];
+
+private _varName =[_presetName,"HMO"] joinString "_";
+private _hmo = missionNameSpace getVariable [_varName, "404"];
+
+if (_hmo isEqualTo "404") then {
+    ZRN_LOG_MSG_1(creating new HMO for,_presetName);
+
+    private _cfg = (configFile >> QGVAR(Presets) >> _presetName);
+
+    _hmo = createHashMapObject [[
+        ["isActive", true],
+
+        ["varName", _varName],
+        ["presetName", _presetName],
+//        ["effectType", COMPONENT], // returns any, isnt used currently anyway
+        ["helperObj", ""],
+
+        ["serverTimeStart", _startTime],
+        ["serverTimeEnd", (_startTime + _duration)],
+
+        ["intensityStart", 0],
+        ["intensityCurrent", 0.01],
+        ["intensityTarget", _intensity],
+
+        ["soundArrayFull", getArray (_cfg >> "sounds")],
+        ["soundArrayCurrent", []],
+
+        ["delayMin", getNumber (_cfg >> "delayMin")],
+        ["delayMax", getNumber (_cfg >> "delayMax")],
+
+        ["distanceMin", getNumber (_cfg >> "DistanceMin")],
+        ["distanceMax", getNumber (_cfg >> "distanceMax")],
+
+        ["direction", [_cfg >> "Direction"] call BIS_fnc_getCfgData],
+
+    	["#flags", ["noCopy","unscheduled"]],
+
+//    	["#str", { OGET(presetName) }],
+
+    	["#create", {
+            _fnc_scriptName = "#create";
+//          _self call ["Meth_Create_Helper", []]; // gets checked in the loop anyway
+            [ { _this#0 call ["Meth_Loop", []]; } , [_self], 1] call CBA_fnc_waitAndExecute;
+        }],
 
 
-params [
-    ["_presetName",             "",     [""]    ],
-    ["_duration",               60,     [0]     ],
-    ["_intensity",              0,      [0]     ],
-    ["_previousIntensity",      0,      [0]     ]
-];
+    	["#delete", {
+            _fnc_scriptName = "#delete";
 
-ZRN_LOG_MSG_4(start,_presetName,_duration,_intensity,_previousIntensity);
+            deleteVehicle OGET(HelperObj);
+            [OGET(presetName),"HMO"] joinString "_";
+    
+            ZRN_LOG_MSG_1(HMO deleted,OGET(presetName));
+        }],
 
-#define DELAY 5
+        // Methods
+        ["Meth_Create_Helper",{
+            _fnc_scriptName = "Meth_Create_Helper";
+            _helperObj = createVehicleLocal ["Storm_FX_Sound_Helper", [0,0,0]];
+            OSET(helperObj,_helperObj);
+        }],
+    	["Meth_Loop", {
+            _fnc_scriptName = "Meth_Loop";
 
-if (_PresetName isEqualTo "") exitWith {false};
+            if (!OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
 
+            if (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper", []]; };
 
-if ( _intensity == 0 && { missionNamespace getVariable [QGVAR(C_isActive), false] isEqualTo false } )        exitWith { ZRN_LOG_MSG(failed: intensity == 0 while no active effect); false };
-//Check if config Exists
-if !(_PresetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found); false };
+            // Establish Intensity
+            private _intensityCurrent = linearConversion [OGET(serverTimeStart), OGET(serverTimeEnd), CBA_missionTime, OGET(intensityStart), OGET(intensityTarget),true];
+            OSET(intensityCurrent,_intensityCurrent);
+            
+            if ( _intensityCurrent == 0 && { CBA_missionTime > OGET(serverTimeEnd) } ) then { OSET(isActive,false) };
+            
+            // Slightly Randomizes Intensity for the Effects
+            _intensityCurrent = _intensityCurrent + (selectRandom[-1,1] * _intensityCurrent * 0.2);
 
+            // Establish Delay
+            private _delay = linearConversion [0,1, _intensityCurrent, OGET(delayMax), OGET(delayMin), true];
+            // establishes Distance
+            private _distance = linearConversion [0,1,_intensityCurrent, OGET(distanceMax), OGET(distanceMin),true];
 
-_duration = _duration min 60;
-_intensity = _intensity max 0 min 1;
-
-
-if (missionNamespace getVariable [QGVAR(C_isActive), false] isEqualTo false) then {
-    GVAR(C_isActive) = createHashMap;
-    ZRN_LOG_MSG_1(hashmap on client created: isActive,GVAR(C_isActive));
-    };
-
-
-private _exists = false;
-if (count GVAR(C_isActive) > 0) then { _exists = _presetName in GVAR(C_isActive) };
-
-private ["_arr", "_currentIntensity", "_targetIntensity", "_exitDueTransitionActive", "_startRecursive"];
-
-if (_exists) then {
-    // retrieve and update existing Entry
-    _startRecursive = false;
-    _arr = GVAR(C_isActive) get _presetName;
-    _previousIntensity = _arr select 1;
-    _currentIntensity = _arr select 1;
-    _targetIntensity = _intensity;
-    _exitDueTransitionActive = _arr select 0;
-    _arr set [1, _previousIntensity];
-    _arr set [2, _currentIntensity];
-    _arr set [3, _targetIntensity];
-    ZRN_LOG_MSG_2(Retrieve existing Entry,_arr,GVAR(C_isActive));
-} else {
-    // create new entry
-    _startRecursive = true;
-    _previousIntensity = 0;
-    _currentIntensity = 0.01;       // Starts with 0.01 intensity to avoid the fail of the first recursive call
-    _targetIntensity = _intensity;
-    GVAR(C_isActive) set [_presetName,[true, _previousIntensity, _currentIntensity, _targetIntensity,objNull,objNull,true] ];
-    _exitDueTransitionActive = false;
-    ZRN_LOG_MSG_1(New Entry,GVAR(C_isActive));
-};
-
-if (_exitDueTransitionActive) exitWith {ZRN_LOG_MSG(failed: Transition already taking place); false };
-
-
-////////////////////////////////////////////////////
-// perFrameHandler for transition of Intensity //
-//////////////////////////////////////////////////
-
-private _startTime = time;
-private _endTime = time + _duration;
-private _condition = { _this#1 > time };
-
-private _parameters = [_startTime, _endTime, _presetName];
-
-
-private _codeToRun = {
-    private _exists = _this#2 in GVAR(C_isActive);
-    if (!_exists) exitWith { ZRN_LOG_MSG_1(PFH: doesnt exist anymore,_this#2); };
-    private _arr = GVAR(C_isActive) get _this#2;
-
-    _currentIntensity = linearConversion [_this#0, _this#1, time, _arr#1, _arr#3, true];
-    _arr set [2, _currentIntensity];
-};
-private _exitCode = {
-    private _exists = _this#2 in GVAR(C_isActive);
-    if (!_exists) exitWith { ZRN_LOG_MSG_1(PFH during exit: doesnt exist anymore,_this#2); };
-    private _arr = GVAR(C_isActive) get _this#2;
-    _tgtInt = _arr#3;
-    _arr set [0,false];
-    _arr set [1,_tgtInt];
-    _arr set [2,_tgtInt];
-    ZRN_LOG_MSG_1(PFH-Transition exited,true);
-};
-
-ZRN_LOG_MSG_3(PFH PARAMS,_startTime,_endTime,_presetName);
-
-_handle = [{
-    params ["_args", "_handle"];
-    _args params ["_codeToRun", "_parameters", "_exitCode", "_condition"];
-
-    if (_parameters call _condition) then {
-        _parameters call _codeToRun;
-    } else {
-        _handle call CBA_fnc_removePerFrameHandler;
-        _parameters call _exitCode;
-    };
-}, DELAY, [_codeToRun, _parameters, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
-//////////////////////////////////////////////////
-
-
-
-//////////////////////////////////////////////////
-///////// Starts recursive function  /////////////
-//////////////////////////////////////////////////
-
-if (_startRecursive) then {
-    [_presetName] call FUNC(local_3d_recursive);
-    ZRN_LOG_MSG_1(Recursive Function Started,true);
-};
-
-//////////////////////////////////////////////////
-// 1. Wait until end of transition
-// 2. check if current _sayOBJ is objNull or not, if its not objNull, it waits until it gets objNull.
-// 3. deletes the helperObject which functions as the soundsource of say3d
-// 4. check if isActive is empty, if so, delete isActive
-//////////////////////////////////////////////////
-
-
-if (_intensity == 0) then {
-    ZRN_LOG_MSG_1(Intensity 0 detected,true);
-    [{
-        ZRN_LOG_MSG_1(1. Wait until end of Transition done,true);
-        if (!isNil QGVAR(C_isActive)) then {
-            params ["_presetName"];
-            _parameter = [_presetName];                
-            _condition = { GVAR(C_isActive) get (_this#0) isEqualTo objNull };
-            _timeout = 120;
-
-            _statement = {
-                ZRN_LOG_MSG_1(2. sayObj done - start cleanup,true);
-                params ["_presetName"];
-                deleteVehicle (GVAR(C_isActive) get _presetName select 4); // cleanup of helper object (( sound source))
-                ZRN_LOG_MSG_1(helperObject deleted,true);
-                GVAR(C_isActive) deleteAt _presetName;
-                if (count GVAR(C_isActive) isEqualTo 0) then {
-                    GVAR(C_isActive) = nil;
-                    ZRN_LOG_MSG_1(C_isActive has been cleaned up,true);
-                };
-                ZRN_LOG_MSG_1(5. cleanup full completed,true);
+            // Establishes Direction
+            private _direction =  switch (OGET(direction)) do {
+                case "RAND": { round random 360 };
+                case "WIND": { wind + 180 };
+                default {OGET(direction)};
             };
 
+            // Establishes Position and move HelperObj
+            private _pos = player getPos [_distance, _direction];
+            _pos set [2,_pos#2 + ABOVEGROUND];
+
+            OGET(helperObj) setPos _pos;
+
+            // Establish Soundfile and Arrays
+            if (count (OGET(soundArrayCurrent)) == 0) then { OSET(soundArrayCurrent,+ OGET(soundArrayFull)); };
+            private _soundName = selectRandom OGET(soundArrayCurrent);
+            OSET(soundArrayCurrent,OGET(soundArrayCurrent) - [_soundName]);
+
+            // PLay the sound
+            private _range = (RANGE_MOD * OGET(distanceMax)) min ABSOLUTE_MAXRANGE;
+            private _sayObj = OGET(helperObj) say3D [_soundName,_range];
+
+            // Wait until _sayObj is objNull (once the sound is played), then execute a WaitAndExecute to call itself again.
+            ZRN_LOG_1(_sayObj);
+            _statement = {
+                ZRN_LOG_MSG_1(WaitUntil condition done,_this#0);
+                [ { _this#0 call ["Meth_Loop",[]] } , [_this#2], _this#1] call CBA_fnc_waitAndExecute;
+            };                                            // Code to be executed once condition true
+            _condition = { _this#0 isEqualTo objNull };                 // condition - Needs to return bool
+            _parameter = [_sayObj,_delay, _self];                              // arguments to be passed on -> _this
+            _timeout = 120;                                             // if condition isnt true within this time in S, _timecode will be executed.
             [_condition, _statement, _parameter, _timeout,_statement] call CBA_fnc_waitUntilAndExecute;
+        }],
+        ["Meth_Update", {
+            _fnc_scriptName = "Meth_Update";
+            ZRN_LOG_MSG_1(called,OGET(presetName));
 
+            params ["_presetName", "_startTime", "_duration", "_intensity"];
 
-        }
-    } , [_presetName], _duration] call CBA_fnc_waitAndExecute;
+            ZRN_LOG_MSG_4(params,_presetName,_startTime,_duration,_intensity);
+
+            ZRN_LOG_MSG_HMO(Pre-Update,_self);
+            ZRN_LOG_4(OGET(serverTimeStart),OGET(serverTimeEnd),OGET(intensityStart),OGET(intensityTarget));
+
+            OSET(serverTimeStart,_startTime);
+            OSET(serverTimeEnd,_startTime + _duration);
+            OSET(intensityStart,OGET(intensityCurrent));
+            OSET(intensityTarget,_intensity);
+
+            ZRN_LOG_MSG_HMO(PostUpdate,_self);
+            ZRN_LOG_4(OGET(serverTimeStart),OGET(serverTimeEnd),OGET(intensityStart),OGET(intensityTarget));
+        }]
+    ], []];
+
+    missionNamespace setVariable [_varName, _hmo];
+
+} else {
+    ZRN_LOG_MSG_1(retrieving previous HMO for,_presetName);
+    _hmo call ["Meth_Update", _this];
 };
-
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
-// GVAR(C_isActive) // key = _presetName # value =[_inInTransition, _previousIntensity, _currentIntensity, _targetIntensity, helperObj, sayObj,isActive]

@@ -27,70 +27,44 @@ if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
 
 params [
 	["_presetName",		"",		[""]	],
-	["_duration",		1,		[0]		],
+	["_duration",		2,		[0]		],
 	["_intensity",		0,		[0]		]
 ];
 
-/*
-if (_presentName isEqualTo "CLEANUP") exitWith {
+/*if (_presentName isEqualTo "CLEANUP") exitWith {
 	{
-		// inTransition?
-		if (_y#0) then {
-			_parameter = [ _x, _y#2 ];
-			_condition = { time > _this#1 };	// Waits until the individual last transition has been completed
-			_statement = { [_this#0] call FUNC(request); };
-			[_condition, _statement, _parameter] call CBA_fnc_waitUntilAndExecute;
-		}
+		[_x] call FUNC(request);
 	} foreach QGVAR(S_activeJIP);
 	ZRN_LOG_MSG(Cleanup Requested!);
 	true
-};
-*/
-
+};*/
 
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
 
-if  (_presetName isEqualTo "")                                                                               	exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
-if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) 	exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
-if ( _intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
-if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = createHashMap; };
-if (_presetName in GVAR(S_activeJIP) && { (GVAR(S_activeJIP) get _presetName)#0 } )                             exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
+if  (_presetName isEqualTo "" )                                                                               	exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
+if !(_presetName in ( configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x } ) )	exitWith { ZRN_LOG_MSG(failed: effectName not found);    false };
 
-//_presetName = [inTransition, _previousIntensity, _endTime]
-_array = GVAR(S_activeJIP) getOrDefault [_presetName, [true, 0, time + _duration], true];
-private _previousIntensity = _array#1;
+ZRN_LOG_3(_intensity,GVAR(S_activeJIP),_presetName);
+ZRN_LOG_2(isNil QGVAR(S_activeJIP),isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))});
 
+if  (_intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
 
+if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = []; };
 
-if (_intensity == 0 && { count QGVAR(S_activeJIP) == 0 || { _presetName in QGVAR(S_activeJIP) }}) exitWith {ZRN_LOG_MSG(failed: Intensity == 0 while active sound 3D SFX of same Type); false };
+[_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _presetName];
 
-[_presetName, _duration, _intensity, _previousIntensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _presetName];
+GVAR(S_activeJIP) pushBack _presetName;
 
-_array set [ 1, _intensity ];
-_array set [ 2, time + _duration ];
-GVAR(S_activeJIP) set [_presetName, _array];
-
-
-private _code = if (_intensity == 0) then {
-	{
+if (_intensity == 0) then {
+	ZRN_LOG_MSG_2(Preparing Cleanup,_duration,_presetName);
+	[{
+		ZRN_LOG_MSG_2(Pre--Cleanup,GVAR(S_activeJIP),_this#0);
 		remoteExec ["", _this#0];
-		GVAR(S_activeJIP) deleteAt (_this#0);
+		GVAR(S_activeJIP) = GVAR(S_activeJIP) -[_this#0];
+		ZRN_LOG_MSG_2(Post-Cleanup,GVAR(S_activeJIP),_this#0);
 		if (count GVAR(S_activeJIP) == 0) then { GVAR(S_activeJIP) = nil; };
-	};
-} else {
-	{
-		GVAR(S_activeJIP) get _this#0 set [0,false];
-		ZRN_LOG_MSG_1(Transition Done,_this#0);
-	};
+	}, [_presetName], _duration] call CBA_fnc_waitAndExecute;
 };
-
-[ _code , [_presetName], _duration] call CBA_fnc_waitAndExecute;
-
-
-
-
-//ZRN_LOG_MSG_1(:,GVAR(S_activeJIP));
-//ZRN_LOG_MSG_1(Request Successful!,_presetName);
 
 true

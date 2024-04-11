@@ -43,3 +43,4 @@ class CfgFunctions
 };
 
 #include "Storm_MainPresets.inc.hpp"
+#include "Storm_CfgVehicles.inc.hpp"
