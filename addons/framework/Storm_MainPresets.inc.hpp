@@ -68,11 +68,7 @@ class PVAR(mainPresets)
         fx_post_presets[] = {QEGVAR(fx_post,CC_ColdSnow), QEGVAR(fx_post,FG_Storm), QEGVAR(fx_post,DB_20)};
         fx_post_coef = 1;
 
-<<<<<<< Updated upstream
-        fx_particle_presets[] = {QEGVAR(fx_particle,Snow), QEGVAR(fx_particle,Snow_25)};                                    // Removed QEGVAR(fx_particle,Branches), QEGVAR(fx_particle,Dust_35),
-=======
         fx_particle_presets[] = {QEGVAR(fx_particle,Branches), QEGVAR(fx_particle,Snow)};               /// , QEGVAR(fx_particle,Snow_25)
->>>>>>> Stashed changes
         fx_particle_coef = 1;
         
         fx_sound_presets[] = {QEGVAR(fx_sound,3D_WindLong),QEGVAR(fx_sound,3D_WindBursts)};
