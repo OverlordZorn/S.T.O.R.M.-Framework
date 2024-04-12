@@ -2,81 +2,73 @@
 
 /*
 * Author: Zorn
-* Creates, Adjusts and ParticleEffects over time with intensity. 
+* To be executed on the server, will remoteExecute all needed Fnc Calls and Handle JIP
 *
 * Arguments:
-* 0: _presetName    <STRING> Name of Particle Effect Preset - Capitalisation needs to be exact!
-* 1: _duration          <NUMBER> in Minutes for the duration to be applied.
-* 2: _intensity         <NUMBER> 0..1 Factor of Intensity for the PP Effect 
+*	0:	_presetName		<STRING>	Name of desired preset
+*	1:	_duration		<NUMBER>	Duration in Minutes - Time of the transition from current to target
+*	2:	_intensity		<Number>	0..1 Intensity Value - 1 means 100%, 0 means 0% - 0 Will reset and cleanup previous effects
 *
 * Return Value:
-* _pe_effect_JIP_handle  <STRING>
+* None
 *
 * Example:
-* ["CVO_PE_Default", 5, 0.5] call cvo_storm_fnc_particle_request;
-* 
-* Public: No
+* ["storm_fx_sound_windBursts", 1,1] call storm_fxSound_fnc_request;
+*
+* Public: Yes
 *
 * GVARS
-*  GVAR(S_activeJIP) set [_presetName, inTransition]; // Monitors active JIP - key == jipHandle, value == is this effect currently in transition?
-*
+*  	GVAR(S_activeJIP) set [_presetName, [isTransitioning, previous_intensity, _endTime]
 *
 */
 
 
-
 if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
 
-
 params [
-   ["_presetName",             "", [""] ],
-   ["_duration",               1,  [0]  ],
-   ["_intensity",              0,  [0]  ]
+	["_presetName",		"",		[""]	],
+	["_duration",		2,		[0]		],
+	["_intensity",		0,		[0]		]
 ];
 
+ZRN_LOG_MSG_1(init,_this);
+
+/*if (_presentName isEqualTo "CLEANUP") exitWith {
+	{
+		[_x] call FUNC(request);
+	} foreach QGVAR(S_activeJIP);
+	ZRN_LOG_MSG(Cleanup Requested!);
+	true
+};*/
 
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
 
-ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
 
-//Check if config Exists
-if  (_presetName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
-if !(_presetName in (configProperties [configFile >> "CfgCloudlets", "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found); false };
-if ( _intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )             exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
-if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = createHashMap; };
-if (_presetName in GVAR(S_activeJIP) && { (GVAR(S_activeJIP) get _presetName) } )                            exitWith { ZRN_LOG_MSG(failed: this effectName is currently in Transition); false };
-
-/////////////////////////////////////////////////////////////////////////////
-// RemoteExec the request
-private _presetName = [_presetName, _duration, _intensity] remoteExecCall [QFUNC(remote), [0,2] select isDedicated, _presetName];
-// _presetName will also be used for the JIP Handle
-if (isNil "_presetName") exitWith { ZRN_LOG_MSG(failed: remoteExec failed); false };
-
-/////////////////////////////////////////////////////////////////////////////
+// Check Fail conditions
+if  (_presetName isEqualTo "" )                                                                               	exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
+if !(_presetName in ( configProperties [configFile >> "CfgCloudlets", "true", true] apply { configName _x } ) )	exitWith { ZRN_LOG_MSG(failed: effectName not found);    false };
+if  (_intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
 
 
-/////////////////////////////////////////////////////////////////////////////
-// Handles In-Transition-Check
-GVAR(S_activeJIP) set [_presetName, true];
-
-[{  
-    GVAR(S_activeJIP) set [_this#0, false];
-}, [_presetName], _duration] call CBA_fnc_waitAndExecute;
-/////////////////////////////////////////////////////////////////////////////
+// Execute Remotely on the clients
+[_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote), [0,2] select isDedicated, _presetName];
 
 
+// Store JIP Handle in JIP Array
+if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = []; };
+GVAR(S_activeJIP) pushBack _presetName;
+
+
+// If Transition to 0, delete JIP upon completion
 if (_intensity == 0) then {
-    // Handles Cleanup of JIP in case of decaying(transition-> 0) Effect once transition to 0 is completed.
-    [{
-        params ["_presetName"];
-        ZRN_LOG_MSG_1(cleanup particle,_presetName);
-        GVAR(S_activeJIP) deleteAt _presetName;
-        remoteExec ["", _presetName]; // removes entry from JIP Queue
-        if ( count GVAR(S_activeJIP) isEqualTo 0) then { GVAR(S_activeJIP) = nil; };
-    }, [_presetName], _duration] call CBA_fnc_waitAndExecute;
-
+	[{
+		remoteExec ["", _this#0];
+		GVAR(S_activeJIP) = GVAR(S_activeJIP) -[_this#0];
+		// Cleanup Array if empty
+        if (count GVAR(S_activeJIP) == 0) then { GVAR(S_activeJIP) = nil; };
+	}, [_presetName], _duration] call CBA_fnc_waitAndExecute;
 };
 
-ZRN_LOG_MSG_1(completed!,_presetName);
+ZRN_LOG_MSG(request successful);
 true

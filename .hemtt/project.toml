@@ -40,8 +40,8 @@ workshop = [
     "1779063631", # Zeus Enhanced
     "2018593688", # ZEN ACE Compat
 #    "1613905318", # Emitter 3Ditor
-    "1645973522", # Intercept Minimal Dev
-    "1585582292", # Arma Debug Engine
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
 ]
 
 dlc = [
@@ -71,6 +71,35 @@ workshop = [
     "1779063631", # Zeus Enhanced
     "2018593688", # ZEN ACE Compat
 #    "1613905318", # Emitter 3Ditor
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
+]
+
+mission = "test-storm-framework.altis"
+
+parameters = [
+    "-skipIntro",           # These parameters are passed to the Arma 3 executable
+    "-noSplash",            # They do not need to be added to your list
+    "-showScriptErrors",    # You can add additional parameters here
+    "-debug",
+    "-filePatching",
+    "-window",
+    "-noPause",
+    "-noPauseAudio",
+]
+dlc = [
+]
+optionals = [
+]
+
+[hemtt.launch.Debugger]
+workshop = [
+    "450814997", # CBA_A3's Workshop ID
+    "463939057", # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+    "2018593688", # ZEN ACE Compat
+#    "1613905318", # Emitter 3Ditor
     "1645973522", # Intercept Minimal Dev
     "1585582292", # Arma Debug Engine
 ]
@@ -92,7 +121,7 @@ dlc = [
 optionals = [
 ]
 
-[hemtt.launch.Stratis]
+[hemtt.launch.Emitter]
 workshop = [
     "450814997", # CBA_A3's Workshop ID
     "463939057", # ACE3
@@ -100,8 +129,20 @@ workshop = [
     "1779063631", # Zeus Enhanced
     "2018593688", # ZEN ACE Compat
     "1613905318", # Emitter 3Ditor
-    "1645973522", # Intercept Minimal Dev
-    "1585582292", # Arma Debug Engine
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
+]
+
+[hemtt.launch.Stratis]
+workshop = [
+    "450814997", # CBA_A3's Workshop ID
+    "463939057", # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+    "2018593688", # ZEN ACE Compat
+#    "1613905318", # Emitter 3Ditor
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
 ]
 
 mission = "test-storm-framework.stratis"
@@ -130,8 +171,8 @@ workshop = [
     "1779063631", # Zeus Enhanced
     "2018593688", # ZEN ACE Compat
 #    "1613905318", # Emitter 3Ditor
-    "1645973522", # Intercept Minimal Dev
-    "1585582292", # Arma Debug Engine
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
 ]
 
 mission = "test-storm-framework.SefrouRamal"
@@ -163,8 +204,8 @@ workshop = [
 #    "1613905318", # Emitter 3Ditor
     "3043043427", # Korsac
     "3043678553", # Korsac, Sullen Skies
-    "1645973522", # Intercept Minimal Dev
-    "1585582292", # Arma Debug Engine 
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine 
 ]
 
 mission = "test-storm-framework.VTF_Korsac_Winter"
@@ -195,8 +236,8 @@ workshop = [
 #    "1613905318", # Emitter 3Ditor
     "3043043427", # Korsac
     "3043678553", # Korsac, Sullen Skies
-    "1645973522", # Intercept Minimal Dev
-    "1585582292", # Arma Debug Engine
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
 ]
 
 mission = "test-storm-framework.VTF_Korsac"

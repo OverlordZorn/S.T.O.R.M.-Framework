@@ -1,293 +1,143 @@
- #include "..\script_component.hpp"
+#include "..\script_component.hpp"
 
 /*
- * Author: [Zorn]
- * Function to apply the Particle Effects - Handles creation, deletion and adjustment of intensity of particlespawners on each client locally.
- * Intensity will be regulated simply by dropInterval (The bigger the number, the less particles)
- * If the same Effect has already been called, it will instead adjust the already existing PE spawner.
- * If _intensityTarget == 0, the function will ether exit in case the spawner doesnt exist already or transition the spawner to 0 intensity and afterwards, the spawner will be deleted.  
- * If a transition is currently taking place (GVAR(C_Active_PartSource)#_x#3), then the funciton will simply fail silently.
- *
- * Arguments:
- * 0: _EffectName           <STRING> CfgCloudlet Classname of the desired Particle Effect. 
- * 1: _intensityTarget      <Number> 0..1 Intensity of Effect with 1 having the strongest Effect. 
- * 2: _duration             <Number> in seconds. Defines the Duration of the Transition. 
- *
- * Return Value:
- * none - intended to be remoteExecCall -> returns JIP Handle
- *
- * Note: 
- *
- * Example:
- *
- * ["CVO_PE_Leafes", 600, 0.75] remoteExecCall ["storm_fxParticle_fnc_remote",[0,2] select isDedicated, _jip_handle_string];
- * ["CVO_PE_Leafes", 600]       remoteExecCall ["storm_fxParticle_fnc_remote",[0,2] select isDedicated, _jip_handle_string];
- * ["CLEANUP"]                  remoteExecCall ["storm_fxParticle_fnc_remote",[0,2] select isDedicated, _jip_handle_string];
- * ["CVO_PE_Leafes"]                      call   storm_fxParticle_fnc_remote;
- * ["CLEANUP"]                            call   storm_fxParticle_fnc_remote;
- * 
- * Public: No
- *
- *
- *  created GVARS
- *  GVAR(C_Active_PartSource) set [_effectName, [_spawner, _intensityTarget, _isTransitioning, COEF_SPEED_HELI, COEF_SPEED, COEF_WIND]
- *  GVAR(C_Attach_pfH_isActive) boolean - gets changed at end of transition - will get checked by attach-to perFrameHandler
- *
- *
- *
- *
- */
+* Author: Zorn
+* Establishes hashMapObject which maintains a loop based on parameters inside the hmo - can be updated on the fly and will clean itself up once intensity reaches 0 again.
+*
+* Arguments:
+*   0:  _PresetName
+*   1:  _duration       in secounds
+*   2:  _startTime      based on CBA_MissionTime
+*   3:  _intensity
+*
+* Return Value:
+* None
+*
+* Example:
+* ["", 60, 1] call storm_fx_Particle_fnc_remote_3d;
+*
+* Public: No
+*
+* GVARS
+*   GVAR(C_FX_Sound_Array) // array of active hashMapObjects
+*
+*/
 
+#define DELAY 1
+//private _delay = 1;
 
 if (!hasInterface) exitWith {};
 
+params ["_presetName", "_startTime", "_duration", "_intensity"];
 
-params [
-    ["_effectName",        "",       [""]],
-    ["_duration",         300,        [0]],
-    ["_intensityTarget",    0,        [0]]
-];
+private _varName =[_presetName,"HMO"] joinString "_";
+private _hmo = missionNameSpace getVariable [_varName, "404"];
 
+if (_hmo isEqualTo "404") then {
 
+    private _cfg = (configFile >> "CfgCloudlets" >> _presetName);
 
+    _hmo = createHashMapObject [
+        [
+            ["isActive", true],
+            ["inTransition", true],
 
-// #define COEF_SPEED_HELI 9
-// #define COEF_SPEED 5
-// #define COEF_WIND  2
+            ["varName", _varName],
+            ["presetName", _presetName],
+            //["delay", DELAY],
 
-#define PFEH_ATTACH_DELAY 0
-#define PFEH_INTENSITY_DELAY 7 // _duration /  PFEH_INTENSITY_DELAY == _delay
-#define DROP_INTERVAL_MIN 20
+            ["helperObj", ""],
 
+            ["missionTimeStart", _startTime],
+            ["missionTimeEnd", (_startTime + _duration)],
 
+            ["intensityStart", 0],
+            ["intensityCurrent", 0.01],
+            ["intensityTarget", _intensity],
 
+            ["coefSpeedHeli", getNumber (_cfg >> "coefSpeedHeli")],
+            ["coefSpeed", getNumber (_cfg >> "coefSpeed")],
+            ["coefWind", getNumber (_cfg >> "coefWind")],
 
-ZRN_LOG_MSG_3(INIT,_effectName,_duration,_intensityTarget);
+            ["offsetHeight", getNumber (_cfg >> "offsetHeight")],
 
-// CLEANUP MODE
-if ( _effectName isEqualTo "CLEANUP")  exitWith {
-    if ( missionNamespace getVariable [QPVAR(DEBUG), false] ) then {
-        // Deletes Debug Red Arrow
-        deleteVehicle ( (GVAR(C_Active_PartSource) get "Debug_Helper") select 0 ); 
-        GVAR(C_Active_PartSource) deleteAt "Debug_Helper";
-        ZRN_LOG_MSG_1(Cleanup: Helper Deleted,_effectName);
-    };
+            ["intervalMax", getNumber (_cfg >> "interval")],        //most particles dropped at int 1
+            ["intervalMin", getNumber (_cfg >> "intervalMin")],     //least particles dropped at int 0
 
-        // Transition to 0 over Default duration for each existing Particle Spawner
-    {  
-        ZRN_LOG_MSG_1(Requesting Cleanup for:,_x#1);        
-        [_x] call FUNC(remote);
-    } forEach GVAR(C_Active_PartSource);
-};
+//            ["#str", { OGET(varName) }],
 
-_intensity = _intensity max 0 min 1;
-_duration  =  _duration min 60;
+            ["#flags", ["noCopy","unscheduled"]],
 
-if ( _effectName isEqualTo "")  exitWith {ZRN_LOG_MSG(failed: effectName not provided); false};
+            ["#create", {
+                _fnc_scriptName = "#create";
+                [ { _this#0 call ["Meth_Loop", []]; } , [_self], 1] call CBA_fnc_waitAndExecute;
+            }],
 
-///////////////////////////////////////////////////
-// Handles framework for first new particle Source 
-///////////////////////////////////////////////////
+            ["#delete", {
+                _fnc_scriptName = "#delete";
+                deleteVehicle OGET(helperObj);
+y            }],
+            ["Meth_Create_Helper",{
+                _fnc_scriptName = "Meth_Create_Helper";
+                _helperObj = createVehicleLocal ["#particlesource", [0,0,0]];
+                _helperObj setPos getPos player;
+                _helperObj setParticleClass OGET(presetName);
+                OSET(helperObj,_helperObj);
+            }],
 
-if (isNil QGVAR(C_Active_PartSource)) then {
-    //GVAR(C_Active_PartSource) Nested Array of particle spawners [_spawnerObj, "IdentString",_intensity] 
-    GVAR(C_Active_PartSource) = createHashMap;
-    GVAR(C_Attach_pfH_isActive) = true;
-   
-    // Adds Debug_Helper Object (arrow)
-    if (missionNamespace getVariable [QPVAR(DEBUG), false]) then {
-            _helper = createVehicleLocal [ "Sign_Arrow_Large_F", [0,0,0] ];
-            GVAR(C_Active_PartSource) set [ "Debug_Helper", [_helper]];
-    };
+            ["Meth_Update", {
+                _fnc_scriptName = "Meth_Update";
+                params ["_presetName", "_startTime", "_duration", "_intensity"];
+                OSET(missionTimeStart,_startTime);
+                OSET(missionTimeEnd,_startTime + _duration);
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // ATTACH-TO PER FRAME HANDLER
-    // Start pfEH to re-attach all Particle Spawners according to player speed & wind.
-    // watch GVAR(C_Attach_pfH_isActive), if inactive, stop/exit the pfH and delete remaining particle spawners + the particle array
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                OSET(intensityStart,OGET(intensityCurrent));
+                OSET(intensityTarget,_intensity);
 
-    private _codeToRun = {
-        private _player = vehicle ace_player;  
-        private _isHeli = vehicle player isKindOf "Air";
-        private _coef_speed_heli = 9;
-        private _coef_speed      = 5;
-        private _coef_wind       = 2;
-        private _offset_height   = 1;
-        {
-            if (_isHeli && { _x == "Debug_Helper" } ) then { detach (_y#0); continue };         
+                OSET(inTransition,true);
+            }],
 
-            if (_x isNotEqualTo "Debug_Helper") then {
-                _coef_speed_heli = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 3;
-                _coef_speed      = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 4;
-                _coef_wind       = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 5;
-                _offset_height   = (GVAR(C_Active_PartSource) getOrDefault [_x, [0,0,0,9,5,2,1]]) select 6;
-            };
-            private _coef_speed_selected = [_coef_speed, _coef_speed_heli] select _isHeli;
+            ["Meth_Loop",{
+                _fnc_scriptName = "Meth_Loop";
+                //default header
+                if !(OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
+                if  (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper", []]; };
 
-            ZRN_LOG_MSG_4(catchMeHeliCrash,_coef_speed_selected,_coef_speed,_coef_speed_heli,GVAR(C_Active_PartSource));
+                private _player = vehicle ace_player;
 
+                // Update Effects only during Transition
+                private "_intensityCurrent";
+                if (OGET(inTransition)) then {
+                    // Establish Intensity
+                    _intensityCurrent = linearConversion [OGET(missionTimeStart), OGET(missionTimeEnd), CBA_missionTime, OGET(intensityStart), OGET(intensityTarget),true];
 
+                    OSET(intensityCurrent,_intensityCurrent);             
+                    if ( _intensityCurrent == 0 && { CBA_missionTime > OGET(missionTimeEnd) } ) then { OSET(isActive,false) };
+                    if ( _intensityCurrent == OGET(intensityTarget) ) then {OSET(inTransition,false)}; 
 
-            private _relPosArray = (( velocityModelSpace _player ) vectorMultiply _coef_speed_selected) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply _coef_wind);
-            _relPosArray set [2, (_relPosArray#2) + 1 + _offset_height];
-            _y#0 attachTo [_player, _relPosArray];
-        } forEach GVAR(C_Active_PartSource);
-    };
+                    // Establish and apply dropInterval
+                    private _dropInterval = linearConversion[0,1,_intensityCurrent,OGET(intervalMin),OGET(intervalMax),true];
+                    OGET(helperObj) setDropInterval _dropInterval;
+                };
 
-    private _exitCode  = { 
-        { deleteVehicle (_y#0) } forEach GVAR(C_Active_PartSource); 
-        GVAR(C_Active_PartSource) = nil;
-        GVAR(C_Attach_pfH_isActive) = nil;  
-    };
-
-    private _condition = { GVAR(C_Attach_pfH_isActive) };
-    private _delay = PFEH_ATTACH_DELAY;
-
-    [{
-        params ["_args", "_handle"];
-        _args params ["_codeToRun", "_exitCode", "_condition"];
-
-        if ([] call _condition) then {
-            [] call _codeToRun;
-        } else {
-            _handle call CBA_fnc_removePerFrameHandler;
-            [] call _exitCode;
-        };
-    }, _delay, [_codeToRun, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-};
-
-///////////////////////////////////////////////////
-///////////////////////////////////////////////////
+                //Establish Offset for attachTo based on PlayerMovementVector + WindSpeedVector
+                private _coefSpeed = [OGET(coefSpeed), OGET(CoefSpeedHeli)] select (_player isKindOf "Air");
+                private _relPos = (( velocityModelSpace _player ) vectorMultiply _coefSpeed) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply OGET(coefWind));
+                _relPos set [2, _relPos#2 + 1 + OGET(offsetHeight)];
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Check if a spawner of that type already exists, 
-// if not, create, setParticleClass, store as _name = [_obj,_intensity,_isTransitioning] and add it to the array.
-// if already exists, take previous intensity and set as start inensity. 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// [_effectName, [_spawner, _intensityTarget, _isTransitioning]]
-
-private _intensityStart = 0;
-private _preExists = _effectName in GVAR(C_Active_PartSource);
-
-private _dropIntervalStart = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval_min");
-private _dropIntervalMax   = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "interval");
-
-
-//private _dropIntervalStart = DROP_INTERVAL_MIN;
-//private _dropIntervalMax = ([_effectName] call BIS_fnc_getCloudletParams) select 2; // #0 setParticleParams, #1 setParticleRandom, #2 setDropInterval
-private _dropIntervalTarget = linearConversion [0, 1, _intensityTarget, _dropIntervalStart, _dropIntervalMax, true];
-
-
-private ["_spawner", "_spawnerArray"];
-if (_preExists) then {
-
-    _spawnerArray = GVAR(C_Active_PartSource) get _effectName;
-    if (_spawnerArray#2) exitWith {false}; // exits when transition of this PE is already in progress.    
-   
-    _spawner = _spawnerArray#0; 
-    _intensityStart = _spawnerArray#1;
-    _spawnerArray set [3, true];
-    _dropIntervalStart = linearConversion [0, 1, _intensityTarget, DROP_INTERVAL_MIN, _dropIntervalMax, true];
-
+                // Attach the object to the new offset
+                OGET(helperObj) attachTo [_player, _relPos];
+  
+                // Restart the Function until isActive is false
+                [{
+                    _this#0 call ["Meth_Loop", []]
+                } , [_self], 5] call CBA_fnc_waitAndExecute;
+            }]
+        ],
+        []
+    ];
+    missionNamespace setVariable [_varName, _hmo];
 } else {
-
-    if (_intensityTarget == 0) exitWith {
-        // Interrupts cration of a new particle spwaner if the target intensity is 0. 
-        // Stops the reAttach pfh there is no other already existing particlesource. (parseNumber Bool => 0,1 # if Debugmode, expect 1 obj in array to consider it empty, if not, 0 means empty)
-        if ( count GVAR(C_Active_PartSource) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then { GVAR(C_Attach_pfH_isActive) = false; };
-        false
-    };
-
-    _spawner = createVehicleLocal ["#particlesource", [0,0,0]];
-    _spawner setParticleClass _effectName;
-
-    private _coef_speed_heli = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "coef_speed_heli");
-    private _coef_speed      = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "coef_speed");
-    private _coef_wind       = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "coef_wind");
-    private _offset_height   = getNumber (configFile >> "CfgCloudlets" >> _effectname >> "offset_height");
-
-
-    _isTransitioning = true;
-    _spawnerArray = [_spawner, _intensityTarget, _isTransitioning, _coef_speed_heli, _coef_speed,_coef_wind,_offset_height];
-    GVAR(C_Active_PartSource) set [_effectName, _spawnerArray];
-    ZRN_LOG_MSG_2(MSG,_effectName,_spawnerArray);
+    _hmo call ["Meth_Update", _this];
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// TRANSITION PER FRAME HANDLER
-////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////// Particle Intensity will simply be adjusted over time via setDropInterval /////////////
-///////////// Maybe in Future, Intensity could be applied via colorAlpha, Size, ...    /////////////
-///////////// Problem: bad solution solution for non-dust-like particles like leafes   /////////////
-///////////// Therefore, for now, particle quantitiy has been chosen as the regulator  /////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-private _startTime = time;
-private _endTime = _startTime + _duration;
-
-
-//// params inside the pfEH
-private _parameters = [ _spawner, _startTime, _endTime, _dropIntervalStart, _dropIntervalTarget, _intensityTarget,_effectName ];
-
-private _codeToRun = {
-    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
-    _drop = linearConversion [ _this#1, _this#2 , time, _this#3, _this#4 ];
-    _this#0 setDropInterval _drop;
-    ZRN_SCRIPTNAME(pFH);
-    ZRN_LOG_MSG_2(Transition pfHandler: setDropInterval,_this#0,_drop);
-}; 
-
-private _exitCode = {   
-    params [ "_spawner", "_startTime", "_endTime", "_dropIntervalStart", "_dropIntervalTarget", "_intensityTarget","_effectName" ];
-    ZRN_LOG_MSG(Transition pfHandler: exiting);
-
-    (GVAR(C_Active_PartSource) get (_this#6)) set [2, false];
-
-    _spawner setDropInterval  _dropIntervalTarget;
-    ZRN_LOG_MSG_2(pfHandler: setDropInterval Exit,_this#0,_drop);
-    if ( _intensityTarget isEqualTo 0) then {
-
-        ZRN_LOG_MSG(Transition pfHandler: exiting + Intensity==0 -> deleting Spawner);
-        GVAR(C_Active_PartSource) deleteAt (_this#6);   
-        deleteVehicle _spawner;
-
-
-        if ( count GVAR(C_Active_PartSource) == ( parseNumber ( missionNamespace getVariable [QPVAR(DEBUG), false] ) ) ) then {
-            GVAR(C_Attach_pfH_isActive) = false;
-        };
-
-        
-    };
-};
-
-private _condition = {  _this#2 >= time };
-
-private _delay = _duration / PFEH_INTENSITY_DELAY;
-
-[{
-    params ["_args", "_handle"];
-    _args params ["_codeToRun", "_parameters", "_exitCode", "_condition"];
-
-    if (_parameters call _condition) then {
-        _parameters call _codeToRun;
-    } else {
-        _handle call CBA_fnc_removePerFrameHandler;
-        _parameters call _exitCode;
-    };
-}, _delay, [_codeToRun, _parameters, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
-
-ZRN_LOG_MSG_1(completed,_effectName);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////// ## Notes ##/////////////////////////////////////////////////
-/////////////////// Handling of the Debug_arrow during "CLEANUP" could be optimized, ///////////////
-/////////////////// but its happening so rarely, i dont think its gonna be necessary ///////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-

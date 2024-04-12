@@ -94,13 +94,13 @@ class GVAR(DEFAULT) : Default				// GVAR(TEST)
 
 	// additional Meta Data
 	// obj = "objNull";
-	interval_min = 2;
+	intervalMin = 2;
 
 	// These Coef Factors are used by the attachTo Mechnaic that ensures particles being where the player is moving towards to
-	coef_speed_heli = 9;
-	coef_speed = 5;
-	coef_wind = 2;
-	offset_height = 1;
+	coefSpeedHeli = 9;
+	coefSpeed = 5;
+	coefWind = 2;
+	offsetHeight = 1; 
 };
 
 class GVAR(Dust) : GVAR(DEFAULT)
@@ -120,9 +120,9 @@ class GVAR(Dust) : GVAR(DEFAULT)
     moveVelocity[] =  {-5,-5,-5};
 
     rotationVelocity = 3;
-    weight = 1.20;
+    weight = 1.05;
     volume = 0.85;
-    rubbing = 0.02;
+    rubbing = 0.013;
 
     size[] = {0,1,3,5,7,5,2};
 
@@ -168,7 +168,7 @@ class GVAR(Dust) : GVAR(DEFAULT)
 	interval = 0.01;					    // interval of particle's creation
 	// 0.01+random 0.1
 
-	interval_min = 2;
+	intervalMin = 2;
 
 };
 
@@ -232,7 +232,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
     lifeTime = 27;
 
     position[] = {-10, -10, 0.5};
-    moveVelocity[] =  {-15,-15,3};
+    moveVelocity[] =  {-15,-15,10};
 
     rotationVelocity = 1;
     weight = 0.000001;
@@ -275,7 +275,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
 	// setDropInterval
 	interval = 0.05;					    // interval of particle's creation
 	// 0.01+random 0.1
-	interval_min = 1;
+	intervalMin = 1;
 };
 
 
@@ -283,7 +283,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
 class GVAR(Snow) : GVAR(DEFAULT)
 {
 	interval = 0.001;
-	interval_min = 0.5;
+	intervalMin = 0.5;
 
 	circleRadius = 0;
 	circleVelocity[] = {2,2,5};
@@ -323,11 +323,11 @@ class GVAR(Snow) : GVAR(DEFAULT)
 	damageType = "";
 	angle = 0;
 
-	coef_speed_heli = 1;
-	coef_speed = 1;
-	coef_wind = 0.2;
+	coefSpeedHeli = 1;
+	coefSpeed = 1;
+	coefWind = 0.2;
 
-	offset_height = 10;
+	offsetHeight = 10;
 
 };
 
