@@ -39,7 +39,7 @@ private _varName =[_presetName,"HMO"] joinString "_";
 private _hmo = missionNameSpace getVariable [_varName, "404"];
 
 if (_hmo isEqualTo "404") then {
-    ZRN_LOG_MSG_1(creating new HMO for,_presetName);
+
 
     private _cfg = (configFile >> QGVAR(Presets) >> _presetName);
 
@@ -48,7 +48,7 @@ if (_hmo isEqualTo "404") then {
 
         ["varName", _varName],
         ["presetName", _presetName],
-//        ["effectType", COMPONENT], // returns any, isnt used currently anyway
+
         ["helperObj", ""],
 
         ["serverTimeStart", _startTime],
@@ -71,11 +71,8 @@ if (_hmo isEqualTo "404") then {
 
     	["#flags", ["noCopy","unscheduled"]],
 
-//    	["#str", { OGET(presetName) }],
-
     	["#create", {
             _fnc_scriptName = "#create";
-//          _self call ["Meth_Create_Helper", []]; // gets checked in the loop anyway
             [ { _this#0 call ["Meth_Loop", []]; } , [_self], 1] call CBA_fnc_waitAndExecute;
         }],
 
@@ -86,7 +83,6 @@ if (_hmo isEqualTo "404") then {
             deleteVehicle OGET(HelperObj);
             [OGET(presetName),"HMO"] joinString "_";
     
-            ZRN_LOG_MSG_1(HMO deleted,OGET(presetName));
         }],
 
         // Methods
@@ -123,7 +119,7 @@ if (_hmo isEqualTo "404") then {
                 default {OGET(direction)};
             };
 
-            // Establishes Position and move HelperObj
+            // Establishes relative position from player and move HelperObj to said position
             private _pos = player getPos [_distance, _direction];
             _pos set [2,_pos#2 + ABOVEGROUND];
 
@@ -139,7 +135,6 @@ if (_hmo isEqualTo "404") then {
             private _sayObj = OGET(helperObj) say3D [_soundName,_range];
 
             // Wait until _sayObj is objNull (once the sound is played), then execute a WaitAndExecute to call itself again.
-            ZRN_LOG_1(_sayObj);
             _statement = {
                 ZRN_LOG_MSG_1(WaitUntil condition done,_this#0);
                 [ { _this#0 call ["Meth_Loop",[]] } , [_this#2], _this#1] call CBA_fnc_waitAndExecute;
@@ -151,28 +146,19 @@ if (_hmo isEqualTo "404") then {
         }],
         ["Meth_Update", {
             _fnc_scriptName = "Meth_Update";
-            ZRN_LOG_MSG_1(called,OGET(presetName));
 
             params ["_presetName", "_startTime", "_duration", "_intensity"];
-
-            ZRN_LOG_MSG_4(params,_presetName,_startTime,_duration,_intensity);
-
-            ZRN_LOG_MSG_HMO(Pre-Update,_self);
-            ZRN_LOG_4(OGET(serverTimeStart),OGET(serverTimeEnd),OGET(intensityStart),OGET(intensityTarget));
 
             OSET(serverTimeStart,_startTime);
             OSET(serverTimeEnd,_startTime + _duration);
             OSET(intensityStart,OGET(intensityCurrent));
             OSET(intensityTarget,_intensity);
 
-            ZRN_LOG_MSG_HMO(PostUpdate,_self);
-            ZRN_LOG_4(OGET(serverTimeStart),OGET(serverTimeEnd),OGET(intensityStart),OGET(intensityTarget));
         }]
     ], []];
 
     missionNamespace setVariable [_varName, _hmo];
 
 } else {
-    ZRN_LOG_MSG_1(retrieving previous HMO for,_presetName);
     _hmo call ["Meth_Update", _this];
 };
