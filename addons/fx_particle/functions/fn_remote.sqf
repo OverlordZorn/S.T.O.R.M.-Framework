@@ -30,7 +30,6 @@ if (!hasInterface) exitWith {};
 
 params ["_presetName", "_startTime", "_duration", "_intensity"];
 
-ZRN_LOG_MSG_1(init,_this);
 private _varName =[_presetName,"HMO"] joinString "_";
 private _hmo = missionNameSpace getVariable [_varName, "404"];
 
@@ -45,7 +44,7 @@ if (_hmo isEqualTo "404") then {
 
             ["varName", _varName],
             ["presetName", _presetName],
-//            ["delay", DELAY],
+            //["delay", DELAY],
 
             ["helperObj", ""],
 
@@ -76,17 +75,14 @@ if (_hmo isEqualTo "404") then {
 
             ["#delete", {
                 _fnc_scriptName = "#delete";
-                ZRN_LOG_MSG_1(Pre-Cleanup,OGET(helperObj));
                 deleteVehicle OGET(helperObj);
-                ZRN_LOG_MSG_1(PostCleanup,OGET(helperObj));
-            }],
+y            }],
             ["Meth_Create_Helper",{
                 _fnc_scriptName = "Meth_Create_Helper";
                 _helperObj = createVehicleLocal ["#particlesource", [0,0,0]];
                 _helperObj setPos getPos player;
                 _helperObj setParticleClass OGET(presetName);
                 OSET(helperObj,_helperObj);
-                ZRN_LOG_MSG_1(helperObject created!,_helperObj);
             }],
 
             ["Meth_Update", {
