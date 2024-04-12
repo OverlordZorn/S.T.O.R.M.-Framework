@@ -2,10 +2,10 @@
 
 /*
 * Author: Zorn
-* To be executed on the server, will remoteExecute all needed Fnc Calls and Handle JIP
+* To be executed on the server, will remoteExecute on client and Handle JIP
 *
 * Arguments:
-*	0:	_presetName		<STRING>	Name of desired preset from CVO SFX Soundpresets
+*	0:	_presetName		<STRING>	Name of desired preset
 *	1:	_duration		<NUMBER>	Duration in Minutes - Time of the transition from current to target
 *	2:	_intensity		<Number>	0..1 Intensity Value - 1 means 100%, 0 means 0% - 0 Will reset and cleanup previous effects
 *
@@ -18,7 +18,7 @@
 * Public: Yes
 *
 * GVARS
-*  	GVAR(S_activeJIP) set [_presetName, [isTransitioning, previous_intensity, _endTime]
+*  	GVAR(S_activeJIP) Array of _presetName // _presetName == jipHandle
 *
 */
 
@@ -42,29 +42,31 @@ params [
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
 
+
+// Check Fail conditions
 if  (_presetName isEqualTo "" )                                                                               	exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
 if !(_presetName in ( configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x } ) )	exitWith { ZRN_LOG_MSG(failed: effectName not found);    false };
-
-ZRN_LOG_3(_intensity,GVAR(S_activeJIP),_presetName);
-ZRN_LOG_2(isNil QGVAR(S_activeJIP),isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))});
-
 if  (_intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
 
-if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = []; };
 
+// Execute Remotely on the clients
 [_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _presetName];
 
+
+// Store JIP Handle in JIP Array
+if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = []; };
 GVAR(S_activeJIP) pushBack _presetName;
 
+
+// If Transition to 0, delete JIP upon completion
 if (_intensity == 0) then {
-	ZRN_LOG_MSG_2(Preparing Cleanup,_duration,_presetName);
 	[{
-		ZRN_LOG_MSG_2(Pre--Cleanup,GVAR(S_activeJIP),_this#0);
 		remoteExec ["", _this#0];
 		GVAR(S_activeJIP) = GVAR(S_activeJIP) -[_this#0];
-		ZRN_LOG_MSG_2(Post-Cleanup,GVAR(S_activeJIP),_this#0);
+		// Cleanup Array if empty
 		if (count GVAR(S_activeJIP) == 0) then { GVAR(S_activeJIP) = nil; };
 	}, [_presetName], _duration] call CBA_fnc_waitAndExecute;
 };
 
+ZRN_LOG_MSG(request successful);
 true
