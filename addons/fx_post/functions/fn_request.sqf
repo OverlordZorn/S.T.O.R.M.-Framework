@@ -44,9 +44,7 @@ private _jipHandle = [ ADDON, getText(_cfg >> "ppEffectType"), getNumber(_cfg >>
 if ( _intensity == 0 && { isNil QGVAR(S_activeJIPs) || { !(_jipHandle in GVAR(S_activeJIPs))} } ) exitWith {   ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
 
 if (isNil QGVAR(S_activeJIPs)) then {
-    GVAR(S_activeJIPs) = createHashMap;
-} else {
-    if ( GVAR(S_activeJIPs) getOrDefault [_jipHandle, false] ) exitWith { ZRN_LOG_MSG(failed: This Type and Layer is currently in Transition!); false };
+    GVAR(S_activeJIPs) = [];
 };
 
 
@@ -79,25 +77,14 @@ private _jipHandle = [_presetName, _resultArray, _duration, _intensity] remoteEx
 if (isNil "_jipHandle") exitWith { ZRN_LOG_MSG(failed: remoteExec failed);    false };
 
 /////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-
-// Sets Transition to false post Transition
-[{ GVAR(S_activeJIPs) set [_this#0, false]; }, [_jipHandle], _duration] call CBA_fnc_waitAndExecute;
-
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-
 // Handles Cleanup of JIP in case of decaying(transition-> 0) Effect once transition to 0 is completed.
+
 if (_intensity == 0) then {
     [{
         remoteExec ["", _this#0];
-        GVAR(S_activeJIPs) deleteAt (_this#0);
+        GVAR(S_activeJIPs) = GVAR(S_activeJIPs) - (_this#0);
         if (count GVAR(S_activeJIPs) isEqualTo 0) then { GVAR(S_activeJIPs) = nil; };
     }, [_jipHandle], _duration] call CBA_fnc_waitAndExecute;
-
-} else {
-    // true for _inTransition;
-    GVAR(S_activeJIPs) set [_jipHandle, true];
 };
 
 ZRN_LOG_MSG_1(completed!,_presetName);
