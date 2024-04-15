@@ -73,7 +73,7 @@ if (_hmo isEqualTo "404") then {
 
             ["#create", {
                 _fnc_scriptName = "#create";
-                [ { _this#0 call ["Meth_Loop", []]; } , [_self], 1] call CBA_fnc_waitAndExecute;
+                [ { _this#0 call ["Meth_Loop"]; } , [_self], 1] call CBA_fnc_waitAndExecute;
             }],
 
 
@@ -107,7 +107,7 @@ if (_hmo isEqualTo "404") then {
                 _fnc_scriptName = "Meth_Loop";
 
                 if (!OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
-                if (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper", []]; };
+                if (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };
 
                 // Establish Intensity
                 private "_intensityCurrent";
@@ -152,15 +152,14 @@ if (_hmo isEqualTo "404") then {
                 // Wait until _sayObj is objNull (once the sound is played), then execute a WaitAndExecute to call itself again.
                 _statement = {
                     ZRN_LOG_MSG_1(WaitUntil condition done,_this#0);
-                    [ { _this#0 call ["Meth_Loop",[]] } , [_this#2], _this#1] call CBA_fnc_waitAndExecute;
+                    [ { _this#0 call ["Meth_Loop"] } , [_this#2], _this#1] call CBA_fnc_waitAndExecute;
                 };                                                          // Code to be executed once condition true
                 _condition = { _this#0 isEqualTo objNull };                 // condition - Needs to return bool
                 _parameter = [_sayObj,_delay, _self];                       // arguments to be passed on -> _this
                 _timeout = 120;                                             // if condition isnt true within this time in S, _timecode will be executed.
                 [_condition, _statement, _parameter, _timeout,_statement] call CBA_fnc_waitUntilAndExecute;
             }]
-        ],
-        []
+        ]
     ];
 
     missionNamespace setVariable [_varName, _hmo];

@@ -37,6 +37,8 @@ class CfgFunctions
 
 			class request_transition {};
             class hashFromConfig {};
+			class jipMonitor {};
+			class jipCheck {};
 		};
 
 	}; 

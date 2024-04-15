@@ -70,7 +70,7 @@ if (_hmo isEqualTo "404") then {
 
             ["#create", {
                 _fnc_scriptName = "#create";
-                [ { _this#0 call ["Meth_Loop", []]; } , [_self], 1] call CBA_fnc_waitAndExecute;
+                [ { _this#0 call ["Meth_Loop"]; } , [_self], 1] call CBA_fnc_waitAndExecute;
             }],
 
             ["#delete", {
@@ -101,7 +101,7 @@ y            }],
                 _fnc_scriptName = "Meth_Loop";
                 //default header
                 if !(OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
-                if  (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper", []]; };
+                if  (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };
 
                 private _player = vehicle ace_player;
 
@@ -131,7 +131,7 @@ y            }],
   
                 // Restart the Function until isActive is false
                 [{
-                    _this#0 call ["Meth_Loop", []]
+                    _this#0 call ["Meth_Loop"]
                 } , [_self], 5] call CBA_fnc_waitAndExecute;
             }]
         ],

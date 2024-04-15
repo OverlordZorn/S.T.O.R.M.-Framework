@@ -18,7 +18,6 @@
  * Public: No
   *
  * GVARS
- *      GVAR(S_activeJIPs) set [_jipHandle, inTransition]
  *
  */
 
@@ -77,15 +76,8 @@ private _jipHandle = [_presetName, _resultArray, _duration, _intensity] remoteEx
 if (isNil "_jipHandle") exitWith { ZRN_LOG_MSG(failed: remoteExec failed);    false };
 
 /////////////////////////////////////////////////////////////////////////////
-// Handles Cleanup of JIP in case of decaying(transition-> 0) Effect once transition to 0 is completed.
+// handoff _jipHandle to jipMonitor
 
-if (_intensity == 0) then {
-    [{
-        remoteExec ["", _this#0];
-        GVAR(S_activeJIPs) = GVAR(S_activeJIPs) - (_this#0);
-        if (count GVAR(S_activeJIPs) isEqualTo 0) then { GVAR(S_activeJIPs) = nil; };
-    }, [_jipHandle], _duration] call CBA_fnc_waitAndExecute;
-};
-
-ZRN_LOG_MSG_1(completed!,_presetName);
-true
+private _expiry = -1;
+if (_intensity == 0) then { _expiry = CBA_MissionTime + _duration; };
+[_expiry, _jipHandle] call PFUNC(jipMonitor);
