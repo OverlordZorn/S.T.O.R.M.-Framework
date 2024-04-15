@@ -45,9 +45,9 @@ private _ppEffectType = getText (_configPath >> "ppEffectType");
 
 
 private _properties = switch (_ppEffectType) do {
-    case "ColorCorrections": {(configProperties [(configFile >> QGVAR(Presets) >> QGVAR(CC_Default) ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer", "baseArray"]};
-    case "FilmGrain":        {(configProperties [(configFile >> QGVAR(Presets) >> QGVAR(FG_Default) ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer", "baseArray"]};
-    case "DynamicBlur":      {(configProperties [(configFile >> QGVAR(Presets) >> QGVAR(DB_Default) ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","layer", "baseArray"]};
+    case "ColorCorrections": {(configProperties [(configFile >> QGVAR(Presets) >> QGVAR(CC_Default) ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","ppEffectLayer", "baseArray"]};
+    case "FilmGrain":        {(configProperties [(configFile >> QGVAR(Presets) >> QGVAR(FG_Default) ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","ppEffectLayer", "baseArray"]};
+    case "DynamicBlur":      {(configProperties [(configFile >> QGVAR(Presets) >> QGVAR(DB_Default) ), "true", true] apply { configName _x }) - ["ppEffectType","ppEffectPrio","ppEffectLayer", "baseArray"]};
 };
 
 ZRN_LOG_1(_properties);

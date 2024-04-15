@@ -2,7 +2,7 @@ class GVAR(FG_Default)
 {
 	ppEffectType = "FilmGrain";
 	ppEffectPrio = "2000";
-	layer = 0;
+	ppEffectLayer = 0;
 
 	intensity =   0.005;		// 0..1
 	sharpness =    1.25;		// 1..20

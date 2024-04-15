@@ -2,7 +2,7 @@ class GVAR(CC_Default)
 {
 	ppEffectType = "ColorCorrections";
 	ppEffectPrio = "1500";
-	layer = 0;
+	ppEffectLayer = 0;
 
 	brightness = 1;															
 	contrast = 1;
@@ -113,7 +113,7 @@ class GVAR(CC_Radial_Default)
 {
 	ppEffectType = "ColorCorrections";
 	ppEffectPrio = "1600";
-	layer = 1;
+	ppEffectLayer = 1;
 
 	brightness = 1;															
 	contrast = 1;
