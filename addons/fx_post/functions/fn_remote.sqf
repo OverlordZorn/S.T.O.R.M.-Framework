@@ -37,7 +37,7 @@ if (_effectArray isEqualTo []) exitWith {};
 
 private _ppEffectType = getText   (configFile >> QGVAR(Presets) >> _effectName >> "ppEffectType");
 private _ppEffectPrio = getNumber (configFile >> QGVAR(Presets) >> _effectName >> "ppEffectPrio");
-private _layer        = getNumber (configFile >> QGVAR(Presets) >> _effectName >> "layer");
+private _ppEffectLayer        = getNumber (configFile >> QGVAR(Presets) >> _effectName >> "ppEffectLayer");
 
 
 if (isNil QGVAR(C_activeEffects)) then {
@@ -47,7 +47,7 @@ if (isNil QGVAR(C_activeEffects)) then {
 
 // Defines custom Variablename as String 
 // missionNameSpace has only lowercase letters
-private _varName = toLower ([ADDON,_ppEffectType,_layer,handle]joinstring "_");
+private _varName = toLower ([ADDON,_ppEffectType,_ppEffectLayer,handle]joinstring "_");
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _varName : %1", _varName];
 

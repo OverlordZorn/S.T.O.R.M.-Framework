@@ -37,8 +37,8 @@ ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
 if  (_presetName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false};
 if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
 
-private _configPath = (configFile >> QGVAR(Presets) >> _presetName ); 
-private _jipHandle = [ ADDON, getText(_configPath >> "ppEffectType"), getNumber(_configPath >> "layer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
+private _cfg = (configFile >> QGVAR(Presets) >> _presetName ); 
+private _jipHandle = [ ADDON, getText(_cfg >> "ppEffectType"), getNumber(_cfg >> "ppEffectLayer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
 
 // Check fail when _intensity == 0 while no Prev effect
 if ( _intensity == 0 && { isNil QGVAR(S_activeJIPs) || { !(_jipHandle in GVAR(S_activeJIPs))} } ) exitWith {   ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
@@ -55,7 +55,7 @@ private _effectArray = [_presetName] call FUNC(getConfig);
 
 
 // Check if given Class is Default (Parent)
-if (configName inheritsFrom _configPath isEqualTo "") then {
+if (configName inheritsFrom _cfg isEqualTo "") then {
 
     // i dont remember why i made this but i guess it has a reason lol
     // Default Class -> ignore Intensity
@@ -63,7 +63,7 @@ if (configName inheritsFrom _configPath isEqualTo "") then {
 } else {
 
     // Non Default Class -> Apply Intensity based of _effectArray and _baseArray (Parent: Default)
-    private   _baseArray = getArray (_configPath >> "baseArray");
+    private   _baseArray = getArray (_cfg >> "baseArray");
 
     if (_effectArray isEqualTo false) exitWith {false};
     if !( _baseArray isEqualType [] ) exitWith {false};

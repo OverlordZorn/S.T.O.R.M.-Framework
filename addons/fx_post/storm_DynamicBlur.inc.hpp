@@ -2,7 +2,7 @@ class GVAR(DB_Default)
 {
 	ppEffectType = "DynamicBlur";
 	ppEffectPrio = "401";				// 400 seems to be already used by *something*
-	layer = 0;
+	ppEffectLayer = 0;
 
 	blurriness =   0.00;		// 0..
 	
