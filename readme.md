@@ -12,7 +12,14 @@ A simple storm can be defined by the Main Preset.
 
 The Currently supported main presets can be found here:
 https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework/blob/based/addons/framework/Storm_MainPresets.inc.hpp
-
+- `STORM_Sandstorm`
+- `STORM_Sandstorm_Light`
+- `STORM_Sandstorm_Green`
+- `STORM_Duststorm_Green`
+- `STORM_SnowStorm`
+- `STORM_SnowStorm_Bleak`
+- `STORM_SnowStorm_Calm`
+- `STORM_SnowStorm_Calm_Bleak`
 
 ### Weather Effects Module
 - Handles Execution of relevant Weather Systems, for example:
