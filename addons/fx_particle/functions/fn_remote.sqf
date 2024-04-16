@@ -76,7 +76,7 @@ if (_hmo isEqualTo "404") then {
             ["#delete", {
                 _fnc_scriptName = "#delete";
                 deleteVehicle OGET(helperObj);
-y            }],
+            }],
             ["Meth_Create_Helper",{
                 _fnc_scriptName = "Meth_Create_Helper";
                 _helperObj = createVehicleLocal ["#particlesource", [0,0,0]];

@@ -18,7 +18,7 @@
 
 params ["_jipHandle"];
 
-private _exists if ( isNil QPVAR(jipMonitor_HMO) ) then {
+private _exists = if ( isNil QPVAR(jipMonitor_HMO) ) then {
     ZRN_LOG_MSG_1(HMO doenst exist yet,false);
     false
 } else {

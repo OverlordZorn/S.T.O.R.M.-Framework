@@ -24,8 +24,8 @@
 
 
 params [
-    ["_expiry",     false,  [0,false]    ],
-    ["_jipHandle",  "",     [""]         ]
+    ["_expiry",     -1,     [0]     ],
+    ["_jipHandle",  "",     [""]    ]
 ];
 
 private _hmo = missionNameSpace getVariable [QPVAR(jipMonitor_HMO), "404"];
@@ -41,7 +41,7 @@ if (_hmo isEqualTo "404") then {
 
         ["varName", QPVAR(jipMonitor_HMO)],
         ["#flags", ["noCopy", "sealed", "unscheduled"]],
-        ["#str", { QPVAR(jipMonitor_HMO) }],
+//      ["#str", { QPVAR(jipMonitor_HMO) }],
 
 // Meth_Check
     	["Meth_Check", {
@@ -51,6 +51,9 @@ if (_hmo isEqualTo "404") then {
             private _indexActive  = OGET(arrayActive)  findIf { _x#1 isEqualTo _jipHandle };
             private _indexPassive = OGET(arrayPassive) findIf { _x#1 isEqualTo _jipHandle };
             private _return = [false, true] select (_indexActive > - 1 || _indexPassive > -1);
+
+            ZRN_LOG_MSG_2(Checked,_jipHandle,_return);
+
             _return
         }],
 // Meth_Update
@@ -62,6 +65,8 @@ if (_hmo isEqualTo "404") then {
             // check if jipHandle already exists in arrayActive or arrayPassive
             private _indexActive  = OGET(arrayActive)  findIf { _x#1 isEqualTo _jipHandle };
             private _indexPassive = OGET(arrayPassive) findIf { _x#1 isEqualTo _jipHandle };
+
+            ZRN_LOG_5(_this,_expiry,_jipHandle,_indexActive,_indexPassive);
 
             if (_expiry isEqualTo -1) then {
                 // remove entry from arrayActive if already exists
@@ -84,17 +89,17 @@ if (_hmo isEqualTo "404") then {
 
                 // add Entry to Active Array and re-sort the array
                 _self call ["Meth_NewActiveEntry", _this];
-
             };
         }],
 
 // Meth_NewActiveEntry
         ["Meth_NewActiveEntry",{
             _fnc_scriptName = "Meth_NewActiveEntry";
-            // start pfH when arrayActive was previously empty
-            private _start_pfH = false;
-            if (count OGET(arrayActive) == 0) then { _start_pfH = true };
 
+            ZRN_LOG_MSG_1(Init,_this);
+
+            // start pfH when arrayActive was previously empty
+            private _start_pfH = count OGET(arrayActive) == 0;
             OGET(arrayActive) pushBack _this;
 
             // sort if needed
@@ -103,11 +108,11 @@ if (_hmo isEqualTo "404") then {
                 OSET(arrayActive,_newArray);
 
             };
-            
+            ZRN_LOG_1(_start_pfH);
             // start pfH if not previously active
             if (_start_pfH) then { _self call ["Meth_pfH_Start"] };
-
         }],
+
 // Meth_pfH_Start
         ["Meth_pfH_Start", {
             _fnc_scriptName = "Meth_pfH_Start";
@@ -132,11 +137,19 @@ if (_hmo isEqualTo "404") then {
             private _fnc_scriptName = "Meth_pfH_Stop";
             private _handle = OGET(pfHHandle);
             if (_handle isNotEqualTo -1) then { [_handle] call CBA_fnc_removePerFrameHandler };
-            OSET(handle,-1);
+            OSET(pfHHandle,-1);
 
             // delete _HMO if active && passive is empty
+            // Active can be considered Empty already, otherwise the pfH wouldnt have stopped
+            if ( count OGET(arrayPassive) == 0 ) then {
+                // HMO can be cleaned up!
+                PVAR(jipMonitor_HMO) = nil;                
+            };
         }]
     ]];
+
+    ZRN_LOG_MSG_1(HMO created,_hmo isEqualType createHashMap);
+    PVAR(jipMonitor_HMO) = _hmo;
 };
 
-_hmo call ["Meth_Update", [_jipHandle,_expiry]];
+_hmo call ["Meth_Update", _this];
