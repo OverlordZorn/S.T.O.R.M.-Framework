@@ -3,23 +3,33 @@
 /*
 * Author: Zorn
 * This function takes in changes to currently active jipHandlers for the S.T.O.R.M. Framework.
-* More importantly, it will montior changes to the jip handle when their "expiry time" is reached. Once expiry time < missionTime
+* More importantly, it will montior changes to the jip handle when their "expiry time" is reached. 
+* Once expiry time < missionTime, the handle will get removed from the JIP stack via remoteExec ["",_handle]
 * 
+* 2 arrays are being maintained. 
+*
+*   If a new handle has no expriy date, it will be added to the passive array, so it can be checked via storm_fnc_jipCheck if it already exists.
+*   
+*   If a handle gets provided with an expiry date, it will be added to the active array and will be sorted by acending expiry, the item that expires first will be on index 0.
+*   Aditionally, a pfH starts, checking the expiry date of the first item vs current mission time. Once reached, it will remoteExec ["",_handle], and, if arrayActive empty, stop the pfH.
+*    
+*   Why so complicated? If the transition of an effect-module, which was initially set to go from x to 0 gets updated again (to anything >0) and instead, does not lead to the termination of said effect,
+*   the termination of the JIP needs to be canceled. Therefore, an active monitor is needed.
 *
 * Arguments:
 *
+*   0   _expiry     <Number>    Time of Expiry, based on CBA_MissionTime + duration of effect. <-1> means no expiry -> passive Array
+*   1   _jipHandle  <String>    String of the JIP handle
 * Return Value:
 * None
 *
 * Example:
-* ['something', player] call cvo_fnc_sth
+* [_expiry, _handle]  call Storm_fnc_jipMonitor;
 *
-* Public: Yes
+* Public: No
 *
-*   PVAR(jipMonitor_HMO) -> jipMonitor
+*   
 *
-*   PVAR(arrayActive)  Storm_arrayActive  [[_expiry, _jipHandle], [...]]
-*   PVAR(arrayPassive) Storm_arrayPassive [[_expiry, _jipHandle], [...]]
 */
 
 
