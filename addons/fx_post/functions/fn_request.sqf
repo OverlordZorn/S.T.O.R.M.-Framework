@@ -10,10 +10,10 @@
  * 2: _intensity         <NUMBER> 0..1 Factor of Intensity for the PP Effect 
  *
  * Return Value:
- * _pp_effect_JIP_handle  <STRING>
+ * boolean - true if success, else false
  *
  * Example:
- * ["CVO_CC_Alias", 5, 0.5] call storm_fxPost_fnc_request;
+ * ["CVO_CC_Alias", 5, 0.5] call storm_fx_post_fnc_request;
  * 
  * Public: No
   *
@@ -34,18 +34,14 @@ ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
 
 
 if  (_presetName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false};
-if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found);    false};
+if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found); false};
 
 private _cfg = (configFile >> QGVAR(Presets) >> _presetName ); 
-private _jipHandle = [ ADDON, getText(_cfg >> "ppEffectType"), getNumber(_cfg >> "ppEffectLayer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
+private _jipHandle = [QADDON, getText(_cfg >> "ppEffectType"), getNumber(_cfg >> "ppEffectLayer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
+
 
 // Check fail when _intensity == 0 while no Prev effect
-if ( _intensity == 0 && { isNil QGVAR(S_activeJIPs) || { !(_jipHandle in GVAR(S_activeJIPs))} } ) exitWith {   ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
-
-if (isNil QGVAR(S_activeJIPs)) then {
-    GVAR(S_activeJIPs) = [];
-};
-
+if ( _intensity == 0 && { !( [_jipHandle] call PFUNC(jipExists) ) } ) exitWith {   ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
 
 private "_resultArray";
 private _effectArray = [_presetName] call FUNC(getConfig);
@@ -66,18 +62,18 @@ if (configName inheritsFrom _cfg isEqualTo "") then {
     if !( _baseArray isEqualType [] ) exitWith {false};
 
     _resultArray = [_effectArray, _intensity, _baseArray] call FUNC(convertIntensity);
-
 };
 
-/////////////////////////////////////////////////////////////////////////////
-// RemoteExec the request
 
+// RemoteExec the request
 private _jipHandle = [_presetName, _resultArray, _duration, _intensity] remoteExecCall [QFUNC(remote), [0,2] select isDedicated, _jipHandle];
 if (isNil "_jipHandle") exitWith { ZRN_LOG_MSG(failed: remoteExec failed);    false };
 
-/////////////////////////////////////////////////////////////////////////////
-// handoff _jipHandle to jipMonitor
 
+// handoff _jipHandle to jipMonitor
 private _expiry = -1;
 if (_intensity == 0) then { _expiry = CBA_MissionTime + _duration; };
 [_expiry, _jipHandle] call PFUNC(jipMonitor);
+
+ZRN_LOG_MSG(request successful);
+true

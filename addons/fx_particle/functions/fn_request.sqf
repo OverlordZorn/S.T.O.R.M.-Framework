@@ -33,42 +33,24 @@ params [
 
 ZRN_LOG_MSG_1(init,_this);
 
-/*if (_presentName isEqualTo "CLEANUP") exitWith {
-	{
-		[_x] call FUNC(request);
-	} foreach QGVAR(S_activeJIP);
-	ZRN_LOG_MSG(Cleanup Requested!);
-	true
-};*/
-
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
 
-
 // Check Fail conditions
-if  (_presetName isEqualTo "" )                                                                               	exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
-if !(_presetName in ( configProperties [configFile >> "CfgCloudlets", "true", true] apply { configName _x } ) )	exitWith { ZRN_LOG_MSG(failed: effectName not found);    false };
-if  (_intensity == 0 && { isNil QGVAR(S_activeJIP) || { !(_presetName in GVAR(S_activeJIP))} } )                exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of same type); false };
+if  ( _presetName isEqualTo "" )                                                                               	 exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
+if !( _presetName in ( configProperties [configFile >> "CfgCloudlets", "true", true] apply { configName _x } ) ) exitWith { ZRN_LOG_MSG(failed: effectName not found); false };
+if  ( _intensity == 0 && { !( [_presetName] call PFUNC(jipExists) ) } ) 											 exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
 
 
 // Execute Remotely on the clients
 [_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote), [0,2] select isDedicated, _presetName];
 
 
-// Store JIP Handle in JIP Array
-if (isNil QGVAR(S_activeJIP)) then { GVAR(S_activeJIP) = []; };
-GVAR(S_activeJIP) pushBack _presetName;
+// handoff _jipHandle to jipMonitor
+private _expiry = -1;
+if (_intensity == 0) then { _expiry = CBA_MissionTime + _duration; };
+[_expiry, _presetName] call PFUNC(jipMonitor);
 
-
-// If Transition to 0, delete JIP upon completion
-if (_intensity == 0) then {
-	[{
-		remoteExec ["", _this#0];
-		GVAR(S_activeJIP) = GVAR(S_activeJIP) -[_this#0];
-		// Cleanup Array if empty
-        if (count GVAR(S_activeJIP) == 0) then { GVAR(S_activeJIP) = nil; };
-	}, [_presetName], _duration] call CBA_fnc_waitAndExecute;
-};
 
 ZRN_LOG_MSG(request successful);
 true

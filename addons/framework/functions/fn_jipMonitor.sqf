@@ -2,7 +2,7 @@
 
 /*
 * Author: Zorn
-* This function takes in changes to currently active jipHandlers for the S.T.O.R.M. Framework.
+* This function handles currently active jipHandlers for the S.T.O.R.M. Framework, mainly for "client side effects" like particles etc.
 * More importantly, it will montior changes to the jip handle when their "expiry time" is reached. 
 * Once expiry time < missionTime, the handle will get removed from the JIP stack via remoteExec ["",_handle]
 * 
@@ -19,7 +19,7 @@
 * Arguments:
 *
 *   0   _expiry     <Number>    Time of Expiry, based on CBA_MissionTime + duration of effect. <-1> means no expiry -> passive Array
-*   1   _jipHandle  <String>    String of the JIP handle
+*   1   _jipHandle  <String>    String of the JIP handle - usually the _presetName when applicable
 * Return Value:
 * None
 *
@@ -51,16 +51,17 @@ if (_hmo isEqualTo "404") then {
 
         ["varName", QPVAR(jipMonitor_HMO)],
         ["#flags", ["noCopy", "sealed", "unscheduled"]],
-//      ["#str", { QPVAR(jipMonitor_HMO) }],
+        ["#str", { QPVAR(jipMonitor_HMO) }],
 
-// Meth_Check
-    	["Meth_Check", {
-            _fnc_scriptName = "Meth_Check";
+// Meth_Exists
+    	["Meth_Exists", {
+            _fnc_scriptName = "Meth_Exists";
             params ["_jipHandle"];
 
+            // Checks if _jipHandle already exists within ether of the arrays, if so, return true
             private _indexActive  = OGET(arrayActive)  findIf { _x#1 isEqualTo _jipHandle };
             private _indexPassive = OGET(arrayPassive) findIf { _x#1 isEqualTo _jipHandle };
-            private _return = [false, true] select (_indexActive > - 1 || _indexPassive > -1);
+            private _return = [false, true] select (_indexActive > -1 || _indexPassive > -1);
 
             ZRN_LOG_MSG_2(Checked,_jipHandle,_return);
 
@@ -127,8 +128,9 @@ if (_hmo isEqualTo "404") then {
         ["Meth_pfH_Start", {
             _fnc_scriptName = "Meth_pfH_Start";
             // entry = [expiry, handle]
-            if (OGET(pfHHandle) != -1) exitWith {ZRN_LOG_MSG_1(MSG,A);};
+            if (OGET(pfHHandle) != -1) exitWith {ZRN_LOG_MSG(pfH not started - already active);};
 
+            // Start perFrameHandler
             private _handle = [{
                 if (PVAR(jipMonitor_HMO) get "arrayActive" select 0 select 0 < CBA_MissionTime) then {
                     private _entry = PVAR(jipMonitor_HMO) get "arrayActive" deleteAt 0;
@@ -163,3 +165,5 @@ if (_hmo isEqualTo "404") then {
 };
 
 _hmo call ["Meth_Update", _this];
+
+true
