@@ -141,10 +141,12 @@ With this licence you are free to adapt (i.e. modify, rework or update) and shar
 https://www.bohemia.net/community/licenses/arma-public-license-nd
 
 ### Why?
-Everyone benefits from a better mod instead of 10 different versions of the same mod flooding the workshop...
+Everyone benefits from a better mod instead of 10 different versions of the same mod flooding the workshop, especially during the early phase of its lifecycle.
 
 If people choose to modify this mod, I would prefer if they contribute direclty to the mod itself. I am happy to look at incoming PR's.
 
 Be it new features and simple additional presets - for the individual modules like particles, PostProcessing Effects or whole Storm Presets - I am happy to colaborate with people within the scope of the project.
 
 I plan to provide an easy to use Extention Framework, complete with hemtt integration and folder structure, config templates etc and instructions on how to edit, built and publish, but thats a project for the future.
+
+Once most planned features are fleshed out and released, I am open to change the license for the mod but until then I simply ask people to ether submit a PR or write an extension mod that overwrites existing functionality with a dependency on the original mod.
