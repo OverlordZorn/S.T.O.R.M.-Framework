@@ -130,7 +130,7 @@ if (_hmo isEqualTo "404") then {
                 // Establishes Direction
                 private _direction =  switch (OGET(direction)) do {
                     case "RAND": { round random 360 };
-                    case "WIND": { wind + 180 };
+                    case "WIND": { windDir + 180 };
                     default {OGET(direction)};
                 };
 
