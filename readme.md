@@ -128,6 +128,7 @@ https://github.com/acemod/ACE3/issues/9938
 ## License
 ### Arma Public License No Derivatives (APL-ND)
 ![APL-ND](https://www.bohemia.net/assets/img/licenses/APL-ND.png)
+
 No Derivatives - If you remix, transform, or build upon the material, you may not distribute the modified material.
 
 With this licence you are free to adapt (i.e. modify, rework or update) and share (i.e. copy, distribute or transmit) the material under the following conditions:
