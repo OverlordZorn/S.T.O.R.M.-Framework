@@ -1,19 +1,21 @@
 <p align="center">
-<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework" title="Go to GitHub repo"><img src="https://img.shields.io/static/v1?label=OverlordZorn&message=S.T.O.R.M.-Weather-Framework&color=darkgreen&logo=github" alt="OverlordZorn - S.T.O.R.M.-Weather-Framework"></a></p>
+<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/t/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"><img alt="Github Created At" src="https://img.shields.io/github/created-at/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen">
+
 
 <p align="center">
-<a href="/CONTRIBUTING.md" title="Go to contributions doc"><img src="https://img.shields.io/badge/contributions-welcome-darkgreen" alt="contributions - welcome"></a></p>
+<img alt="GitHub Release" src="https://img.shields.io/github/v/release/overlordzorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"><img alt="GitHub License" src="https://img.shields.io/badge/license-APL%20SA-darkgreen?style=for-the-badge&link=https%3A%2F%2Fgithub.com%2FOverlordZorn%2FS.T.O.R.M.-Weather-Framework%2Fblob%2Fbased%2FLICENSE"><img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen">
 
 <p align="center">
-<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework/releases/"><img src="https://img.shields.io/github/release/OverlordZorn/S.T.O.R.M.-Weather-Framework?include_prereleases=&sort=semver&color=darkgreen" alt="GitHub release"></a>
-<a href="#license"><img src="https://img.shields.io/badge/License-APL--SA-darkgreen" alt="License"></a>
-<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework/issues"><img src="https://img.shields.io/github/issues/OverlordZorn/S.T.O.R.M.-Weather-Framework" alt="issues - S.T.O.R.M.-Weather-Framework"></a>
-<p align="center">
-<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework"><img src="https://img.shields.io/github/forks/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=social" alt="forks - S.T.O.R.M.-Weather-Framework"></a>
-<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework"><img src="https://img.shields.io/github/stars/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=social" alt="stars - S.T.O.R.M.-Weather-Framework"></a>
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/forks/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen">
 
 <p align="center">
-<a href="https://discord.gg/B6pNcSSR5X"><img src="https://img.shields.io/discord/1230123144334016543?label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="stars - S.T.O.R.M.-Weather-Framework Discord"></a>
+<img alt="Contributions Welcome" src="https://img.shields.io/badge/CONTRIBUTIONS-WELCOME-darkgreen?style=for-the-badge">
+
+
+<p align="center">
+<img alt="Discord" src="https://img.shields.io/discord/1230123144334016543?style=for-the-badge&logo=discord&label=Discord&color=darkgreen&link=https%3A%2F%2Fdiscord.com%2Finvite%2FB6pNcSSR5X">
+<p align="center">
+<img alt="Static Badge" src="https://img.shields.io/badge/steamworkshop-DEV%20%22Closed%22%20Beta-darkgreen?style=for-the-badge&logo=steam&label=Steam%20Workshop&link=https%3A%2F%2Fsteamcommunity.com%2Fsharedfiles%2Ffiledetails%2F%3Fid%3D3224327412">
 
 
 ## Dependencies
