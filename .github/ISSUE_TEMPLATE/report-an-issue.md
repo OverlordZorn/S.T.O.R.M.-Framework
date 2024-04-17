@@ -29,12 +29,16 @@ Take a screenshot and provide an .rpt.
 
 **RPT's**
 having access to Server and Client .rpt's is very helpful.
+provide RPT via ether
+https://pastebin.com/
+https://gist.github.com/
+drag&drop the whole file
+dont copy the content into the issue.
 
 **Versions:**
-S.T.O.R.M.: x.x.x
 Arma3: 2.xx
+S.T.O.R.M.: x.x.x
 cba: x.x.x
-ace: x.x.x
 
 **Additional context**
 Add any other context about the problem here.
