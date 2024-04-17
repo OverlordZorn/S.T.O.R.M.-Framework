@@ -5,7 +5,7 @@ class CfgVehicles
     {
         author = MOD_NAME_BEAUTIFIED;
         displayName = "S.T.O.R.M. Helper";
-    //  icon = "\A3\Misc_F\Helpers\data\ui\icons\Sign_Arrow_F"; example for later make a version for Client and Server
+        icon = PATH_TO_ADDON_3(data,icons,logo_256.paa);
     };
     class Storm_FX_Sound_Helper : Storm_Base_Helper
     {

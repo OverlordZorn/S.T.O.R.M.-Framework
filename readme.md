@@ -1,5 +1,5 @@
 <p align="center">
-<img alt="STORM Framework Logo" src="extras\branding\logo+storm+framework.png" width="600" height="600">
+<img alt="STORM Framework Logo" src="extras\branding\logo+storm+framework.png" width="300" height="300">
 
 <p align="center">
 <a href="https://github.com/OverlordZorn/S.T.O.R.M.-Framework">
@@ -182,3 +182,16 @@ With this license you are free to adapt (i.e. modify, rework or update) and shar
 > Share Alike - If you adapt, or build upon this material, you may distribute the resulting material only under the same license.
 
 https://www.bohemia.net/community/licenses/arma-public-license-share-alike
+
+
+
+## Thanks to
+- Bohemia Interactive for creating not only Arma3 but a game Series that good me hooked since OFP showed up in my live via a Demo and Video in a Games Magazine
+- Everyone in the ACE3 Discord for sharing their wealth of knowledge and experience
+- Alias for creating his Stom Scripts, which have been a great inspiration
+
+
+## Especially to Everyone in the 24th Chorni Voron
+<p align="center">Thanks for enduring my absense while i was working nonstop on this mod
+<p align="center">
+<img alt="STORM Framework Logo" src="extras\branding\voron.png" width="300" height="300" href="http://discord.chornivoron.net">

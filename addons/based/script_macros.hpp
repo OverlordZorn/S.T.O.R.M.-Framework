@@ -69,10 +69,10 @@
 
 //////// Selfmade
 // Paths
-#define PATH_TO_FNC QUOTE(MAINPREFIX\PREFIX\addons\COMPONENT\functions)
-#define PATH_TO_ADDON(var1) QUOTE(MAINPREFIX\PREFIX\addons\COMPONENT\var1)
-#define PATH_TO_ADDON_2(var1,var2) QUOTE(MAINPREFIX\PREFIX\addons\COMPONENT\var1\var2)
-#define PATH_TO_ADDON_3(var1,var2,var3) QUOTE(MAINPREFIX\PREFIX\addons\COMPONENT\var1\var2\var3)
+#define PATH_TO_FNC QUOTE(\MAINPREFIX\PREFIX\addons\COMPONENT\functions)
+#define PATH_TO_ADDON(var1) QUOTE(\MAINPREFIX\PREFIX\addons\COMPONENT\var1)
+#define PATH_TO_ADDON_2(var1,var2) QUOTE(\MAINPREFIX\PREFIX\addons\COMPONENT\var1\var2)
+#define PATH_TO_ADDON_3(var1,var2,var3) QUOTE(\MAINPREFIX\PREFIX\addons\COMPONENT\var1\var2\var3)
 
 
 // CBA Settings
