@@ -1,3 +1,18 @@
+<p align="center">
+<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework" title="Go to GitHub repo"><img src="https://img.shields.io/static/v1?label=OverlordZorn&message=S.T.O.R.M.-Weather-Framework&color=darkgreen&logo=github" alt="OverlordZorn - S.T.O.R.M.-Weather-Framework"></a></p>
+
+<p align="center">
+<a href="/CONTRIBUTING.md" title="Go to contributions doc"><img src="https://img.shields.io/badge/contributions-welcome-darkgreen" alt="contributions - welcome"></a></p>
+
+<p align="center">
+<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework/releases/"><img src="https://img.shields.io/github/release/OverlordZorn/S.T.O.R.M.-Weather-Framework?include_prereleases=&sort=semver&color=darkgreen" alt="GitHub release"></a>
+<a href="#license"><img src="https://img.shields.io/badge/License-APL--SA-darkgreen" alt="License"></a>
+<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework/issues"><img src="https://img.shields.io/github/issues/OverlordZorn/S.T.O.R.M.-Weather-Framework" alt="issues - S.T.O.R.M.-Weather-Framework"></a>
+<p align="center">
+<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework"><img src="https://img.shields.io/github/forks/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=social" alt="forks - S.T.O.R.M.-Weather-Framework"></a>
+<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework"><img src="https://img.shields.io/github/stars/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=social" alt="stars - S.T.O.R.M.-Weather-Framework"></a>
+
+
 ## Dependencies
 "cba_common"
 
@@ -133,27 +148,16 @@ https://github.com/acemod/ACE3/issues/9938
 
 
 ## License
-### Arma Public License No Derivatives (APL-ND)
-![APL-ND](https://www.bohemia.net/assets/img/licenses/APL-ND.png)
+### ARMA PUBLIC LICENSE SHARE ALIKE (APL-SA) 
+![APL-SA](https://data.bistudio.com/images/license/APL-SA.png)
 
-No Derivatives - If you remix, transform, or build upon the material, you may not distribute the modified material.
 
-With this licence you are free to adapt (i.e. modify, rework or update) and share (i.e. copy, distribute or transmit) the material under the following conditions:
 
-   Attribution - You must attribute the material in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the material).
-   Noncommercial - You may not use this material for any commercial purposes.
-   Arma Only - You may not convert or adapt this material to be used in other games than Arma.
-   No Derivatives - If you remix, transform, or build upon the material, you may not distribute the modified material.
+With this license you are free to adapt (i.e. modify, rework or update) and share (i.e. copy, distribute or transmit) the material under the following conditions:
 
-https://www.bohemia.net/community/licenses/arma-public-license-nd
+> Attribution - You must attribute the material in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the material).
+> Noncommercial - You may not use this material for any commercial purposes.
+> Arma Only - You may not convert or adapt this material to be used in other games than Arma.
+> Share Alike - If you adapt, or build upon this material, you may distribute the resulting material only under the same license.
 
-### Why?
-Everyone benefits from a better mod instead of 10 different versions of the same mod flooding the workshop, especially during the early phase of its lifecycle.
-
-If people choose to modify this mod, I would prefer if they contribute direclty to the mod itself. I am happy to look at incoming PR's.
-
-Be it new features and simple additional presets - for the individual modules like particles, PostProcessing Effects or whole Storm Presets - I am happy to colaborate with people within the scope of the project.
-
-I plan to provide an easy to use Extention Framework, complete with hemtt integration and folder structure, config templates etc and instructions on how to edit, built and publish, but thats a project for the future.
-
-Once most planned features are fleshed out and released, I am open to change the license for the mod but until then I simply ask people to ether submit a PR or write an extension mod that overwrites existing functionality with a dependency on the original mod.
+https://www.bohemia.net/community/licenses/arma-public-license-share-alike
