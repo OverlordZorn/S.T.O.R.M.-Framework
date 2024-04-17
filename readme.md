@@ -12,6 +12,9 @@
 <a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework"><img src="https://img.shields.io/github/forks/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=social" alt="forks - S.T.O.R.M.-Weather-Framework"></a>
 <a href="https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework"><img src="https://img.shields.io/github/stars/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=social" alt="stars - S.T.O.R.M.-Weather-Framework"></a>
 
+<p align="center">
+<a href="https://discord.gg/B6pNcSSR5X"><img src="https://img.shields.io/discord/1230123144334016543?label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="stars - S.T.O.R.M.-Weather-Framework Discord"></a>
+
 
 ## Dependencies
 "cba_common"
