@@ -1,37 +1,33 @@
 <p align="center">
-<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/t/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"><img alt="Github Created At" src="https://img.shields.io/github/created-at/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen">
-
-
-<p align="center">
-<img alt="GitHub Release" src="https://img.shields.io/github/v/release/overlordzorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"><img alt="GitHub License" src="https://img.shields.io/badge/license-APL%20SA-darkgreen?style=for-the-badge&link=https%3A%2F%2Fgithub.com%2FOverlordZorn%2FS.T.O.R.M.-Weather-Framework%2Fblob%2Fbased%2FLICENSE"><img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen">
+<img alt="STORM Framework Logo" src="extras\branding\logo+storm+framework.png" width="600" height="600">
 
 <p align="center">
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/forks/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen">
+<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Framework">
+<img alt="GitHub Repository" src="https://img.shields.io/badge/github_repository-S.T.O.R.M._Framework-darkgreen?style=for-the-badge&logo=github"><img alt="GitHub Commit Activity" src="https://img.shields.io/github/commit-activity/t/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"><img alt="Github Created At" src="https://img.shields.io/github/created-at/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"></a>
+<p align="center">
+<a href="https://github.com/OverlordZorn/S.T.O.R.M.-Framework/releases/tag/v0.5.0.0.beta"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/overlordzorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"></a><a href="https://github.com/OverlordZorn/S.T.O.R.M.-Framework/blob/based/LICENSE"><img alt="GitHub License" src="https://img.shields.io/badge/license-APL%20SA-darkgreen?style=for-the-badge"></a><a href="https://github.com/OverlordZorn/S.T.O.R.M.-Framework/issues"><img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"></a><a href="https://github.com/OverlordZorn/S.T.O.R.M.-Framework/fork"><img alt="GitHub Repo forks" src="https://img.shields.io/github/forks/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"></a><a href="https://github.com/OverlordZorn/S.T.O.R.M.-Framework/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/OverlordZorn/S.T.O.R.M.-Weather-Framework?style=for-the-badge&color=darkgreen"></a>
 
 <p align="center">
-<img alt="Contributions Welcome" src="https://img.shields.io/badge/CONTRIBUTIONS-WELCOME-darkgreen?style=for-the-badge">
-
-
+<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3224327412"><img alt="Static Badge" src="https://img.shields.io/badge/steamworkshop-DEV%20%22Closed%22%20Beta-darkgreen?style=for-the-badge&logo=steam&label=Steam%20Workshop"></a>
 <p align="center">
-<img alt="Discord" src="https://img.shields.io/discord/1230123144334016543?style=for-the-badge&logo=discord&label=Discord&color=darkgreen&link=https%3A%2F%2Fdiscord.com%2Finvite%2FB6pNcSSR5X">
+<a href=""><img alt="Contributions Welcome" src="https://img.shields.io/badge/CONTRIBUTIONS-WELCOME-darkgreen?style=for-the-badge"></a>
 <p align="center">
-<img alt="Static Badge" src="https://img.shields.io/badge/steamworkshop-DEV%20%22Closed%22%20Beta-darkgreen?style=for-the-badge&logo=steam&label=Steam%20Workshop&link=https%3A%2F%2Fsteamcommunity.com%2Fsharedfiles%2Ffiledetails%2F%3Fid%3D3224327412">
+<a href="https://discord.com/invite/B6pNcSSR5X"><img alt="Discord" src="https://img.shields.io/discord/1230123144334016543?style=for-the-badge&logo=discord&label=Discord&color=darkgreen"></a>
+
+# S.T.O.R.M. Framework
+
+The **S.T.O.R.M. Framework** is an effort to make technically complex, but dynamic and immersive weather events easily available. 
+
+The framework takes care of the complexity that comes with the Arma 3's engine and handles everything needed: be it global, serverside weather parameters and AI SubSkills or local, clientside post processing, particle and sound sources.
+
+It is Join In Progress & Dedicated Server compatible and aims to be as performance efficient as possible.
 
 
-## Dependencies
-"cba_common"
+Mission Makers or Zeus Game Masters can ether, simply apply a `MainPresets` which has all details for an individual storm defined, or craft their own experience by directly requesting individual `Module Presets`.
 
-## New Phone, who this?
+It comes with several `MainPresets` and `Module Presets` and can easily be expanded on. Those Presets are stored as Config Classes, to be found ![here!](addons/framework/Storm_MainPresets.inc.hpp)
 
-This is the Github Repository for the **S.T.O.R.M. Framework** for Arma 3.
-
-It is an easy and simple to use Framework to Request and Execute Extreme Weather Events like Sandstorms, Snowstorms, etc.
-
-All Effects are Defined in Config as Presets, new Effects can be easily added or existing one can be slightly adjusted via Class Inheritance.
-A simple storm can be defined by the Main Preset.
-
-The Currently supported main presets can be found here:
-https://github.com/OverlordZorn/S.T.O.R.M.-Weather-Framework/blob/based/addons/framework/Storm_MainPresets.inc.hpp
+The following classnames are currently included as `MainPresets`:
 - `STORM_Sandstorm`
 - `STORM_Sandstorm_Light`
 - `STORM_Sandstorm_Green`
@@ -70,16 +66,19 @@ Handles and Maintains JIP Handles for individual client side effects and deletes
 
 ## How to Use
 ### Request Transition
-Currently, there is only one Main Function to rule them all. Execute this to request a simple Storm transition.
+Currently, there is only one Main Function implemented, but there is more to follow.  
 
-Once a transition is active, any further requests will be denied. 
-You will have to wait until the transition is completed to execute the next transition, including a reset to 0 request.
+`[presetName, duration in minutes, intensity] call storm_fnc_request_transition`.
+- PresetName: String of desired MainPreset classname
+- Duration: In minutes, minimum is 1 minute.
+- Intensity: Target Intensity - from 0 to 1 where 1 stands for 100% Intensity
 
-Once you reached the end of the transition, you can ether readjust the intensity, for example from 0 to 10% to 30%.
-OR, you can request a "Reset" by requesting the Same Storm to transition back to 0%.
+
+This function will request a transition from "current" state (0 intensity if no active storm), to the desired state over the provided duration.
+
+To reset the storm, remove all effects and return to the previous conditions, simply request a transition with the same parameters, but have 0 as the target Intensity.
 
 #### Example
-!! This is not a working code snippet, just example usages of the function. you would have to find your own ways to time the call of these Functions !!
 ```sqf
 // Will request the "STORM_Sandstorm" Template, to transition from 0% to 30% over the duration of 10 Minutes.
 ["STORM_Sandstorm", 10, 0.30] call storm_fnc_request_transition;
@@ -129,16 +128,22 @@ Requesting a Transition to 0 from a previously established Storm will result in 
 */
 ```
 
-### Planned, at some point
-I am looking towards Zeus and Editor Modules and potentially more functions.
+### Planned Features
+- Monitor Client FPS and adjust Particle Droprate for each client.
+- Zeus Gamemaster and Editor Modules.
+- Support for various Special Effects - due to the potential complexity, they will require their own individual module/addon.
+- Various Special Effects
+- More Presets
+- Mod Template for easy creation of Preset Extensions
+- Zeus HUD during Active Storms displaying summary and/or detailed information of the currently active effects.
+
 
 ## Known Issues
-### while technically, you can transition from one Storm Preset into another, it is not advised.
-- Post Processing Effects are made for there to be always only one active per type(ColorCorrection, FilmGrain, Dynamic Blur) and layer (needed for multiple effects of the same type above each other, only really intended for Special effects like blinking etc)
-- The cleanup process by transitioning back to 0 will hick up. some other and some effects from the previous storm will remain and not propperly cleaned up.
+### while technically possible, you can transition from one Storm Preset into another, but it is a bad idea.
+- While some modules support only "on active effect" and therefore, can easily be overwritten by other MainPresets, the remaining Modules can have multiple, different effects be active at the same time. This can cause individual effects to remain active even after a transition back to 0. Manual cleanup would be neededj.
 
 ### Considerations due to Engine Limitations
-- Snow/Rain will only occour above an overcast level of 0.5. Overcast transitions, unless using `forceWeatherChange`, can take up to ~50 minutes.
+- Snow/Rain will only occour above an overcast level of 0.5. Overcast transitions, unless using `forceWeatherChange`, can take up to ~45 ingame minutes.
 
 ### Join In Progress
 - I bet i missed some JIP Edgecases
@@ -148,8 +153,19 @@ I am looking towards Zeus and Editor Modules and potentially more functions.
 - I think i could narrow it down to me using Editor Enhancing Mods like "Emitter 3Ditor" to test some Particle Effects, Saving the Editor Mission with this Module in place, then not loading it again and using this mission without Emitter 3Ditor.
 - Coincidentally, i had a mate have similar issues (fog resets to a fogvalue of 0 repeatally) after he removed "LRG Fundamentals" from the modlist.
 
-### ACE Nightvision FogScaling can cause players to see further with NVG's on.
-https://github.com/acemod/ACE3/issues/9938
+### ACE Nightvision FogScaling 
+- can cause players to see further with NVG's on.
+- https://github.com/acemod/ACE3/issues/9938
+
+
+## Credits and Contributions
+tba.
+
+## Dependencies
+cba
+
+
+## Colaboration
 
 
 ## License
