@@ -7,8 +7,11 @@
     [MOD_NAME_BEAUTIFIED, "Main - Debug"],                                 // Pretty name of the category where the setting can be found. Can be stringtable entry.
     [true],                                                 // data for this setting: [min, max, default, number of shown trailing decimals]
     nil,                                                    // "_isGlobal" flag. Set this to true to always have this setting synchronized between all clients in multiplayer
-    { missionNameSpace setVariable [QPVAR(DEBUG), _this]; },// function that will be executed once on mission start and every time the setting is changed.
-    false                                                   //
+    {
+        missionNameSpace setVariable [QPVAR(DEBUG), _this];
+        [_this] call PFUNC(toggleDebugHelper);
+    },                                                      // function that will be executed once on mission start and every time the setting is changed.
+    false                                                   
 ] call CBA_fnc_addSetting;
 
 // TODO set debug default to false

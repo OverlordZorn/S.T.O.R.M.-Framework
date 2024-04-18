@@ -37,9 +37,11 @@ class CfgFunctions
             tag = Q(PREFIX);
         	file = PATH_TO_FNC;
 
-            class cba_settings_initialized { postInit = 1; };
             class randomWaypoint_Heli {};
             class randomWaypoint_Vehicle {};
+
+            class cba_settings_initialized { postInit = 1; };
+            class toggleDebugHelper {};
         };
 	}; 
 };

@@ -16,4 +16,13 @@ class CfgVehicles
         displayName = "S.T.O.R.M. FX Particle Helper";
     };
 
+
+    class Sign_Arrow_Large_F;
+    class Storm_Debug_Helper : Sign_Arrow_Large_F
+    {
+        scope = 1;
+        author = MOD_NAME_BEAUTIFIED;
+        displayName = "S.T.O.R.M. Helper";
+        icon = PATH_TO_ADDON_3(data,icons,logo_256.paa);
+    };
 };
