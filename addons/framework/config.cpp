@@ -40,7 +40,6 @@ class CfgFunctions
 			class jipMonitor {};
 			class jipExists {};
 		};
-
 	}; 
 };
 
