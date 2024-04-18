@@ -21,6 +21,9 @@ exclude = [
     "*.md",
     "/.vscode/",
     "*.drawio",
+    "/extras/",
+    "/docs/",
+    "/docs2/",
 ]
 
 [version]
