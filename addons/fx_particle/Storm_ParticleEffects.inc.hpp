@@ -120,8 +120,8 @@ class GVAR(Dust) : GVAR(DEFAULT)
     moveVelocity[] =  {-5,-5,-5};
 
     rotationVelocity = 3;
-    weight = 1.05;
-    volume = 0.85;
+    weight = 1.30;
+    volume = 1.00;
     rubbing = 0.013;
 
     size[] = {0,1,3,5,7,5,2};
@@ -282,10 +282,10 @@ class GVAR(Branches) : GVAR(DEFAULT)
 // Snow
 class GVAR(Snow) : GVAR(DEFAULT)
 {
-	interval = 0.001;
-	intervalMin = 0.5;
+	interval = 0.0005;
+	intervalMin = 0.1;
 
-	circleRadius = 0;
+	circleRadius = 5;
 	circleVelocity[] = {2,2,5};
 	particleFSNtieth = 1;
 	particleFSIndex = 0;
@@ -295,7 +295,7 @@ class GVAR(Snow) : GVAR(DEFAULT)
 	particleShape = "\A3\Data_f\cl_basic.p3d";
 	particleType = "Billboard";
 	timerPeriod = 1;
-	lifeTime = 45;
+	lifeTime = 30;
 	moveVelocity[] = {0,0,5};
 	rotationVelocity = 0;
 	weight = 3.0;
@@ -309,8 +309,8 @@ class GVAR(Snow) : GVAR(DEFAULT)
 	onTimerScript = "";
 	beforeDestroyScript = "";
 	lifeTimeVar = 0;
-	position[] = {-7.5,-7.5,1};
-	positionVar[] = {15,15,5};
+	position[] = {-10,-10,1};
+	positionVar[] = {20,20,3};
 	moveVelocityVar[] = {5,5,5};
 	rotationVelocityVar = 0;
 	sizeVar = 0.1;
@@ -323,9 +323,9 @@ class GVAR(Snow) : GVAR(DEFAULT)
 	damageType = "";
 	angle = 0;
 
-	coefSpeedHeli = 1;
-	coefSpeed = 1;
-	coefWind = 0.2;
+	coefSpeedHeli = 3;
+	coefSpeed = 2;
+	coefWind = 1.5;
 
 	offsetHeight = 10;
 
