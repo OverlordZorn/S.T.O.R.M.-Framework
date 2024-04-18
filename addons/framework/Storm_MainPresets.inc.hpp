@@ -3,6 +3,8 @@ class PVAR(mainPresets)
     class PVAR(Default)
     {
         author = AUTHOR;
+        description = "";
+
         mod_skill_preset = ""; // QEGVAR(mod_skill,reducedVisibility)
         mod_skill_coef = 1;
 
