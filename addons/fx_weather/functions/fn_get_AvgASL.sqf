@@ -29,6 +29,8 @@ private _allPlayers = call BIS_fnc_listPlayers;
 private _allASL = [];
 private _filteredPlayers = [];
 
+
+
 if (count _allPlayers > 3) then {
 	// Removes Zeus players based on zeus.
 	_filteredPlayers =_allPlayers select {getAssignedCuratorLogic _x isEqualTo objNull};
@@ -65,6 +67,6 @@ _avgASL = [_allASL, _avgASL] call BIS_fnc_nearestNum;
 
 _result = _avgASL;
 
-ZRN_LOG_MSG_1(final return,_return);
+ZRN_LOG_MSG_1(final return,_result);
 
 _result
