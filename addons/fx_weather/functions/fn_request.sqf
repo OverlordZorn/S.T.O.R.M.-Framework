@@ -213,7 +213,16 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
    missionNameSpace setVariable [QGVAR(S_current_rainParams), _rainParams_target];
    // If current RainParams isNotEqualTo the Incoming RainParams, pause the rain, apply new Params and restart.
    switch (_transition) do {
-      case "DIRECT": { [ { _this call BIS_fnc_setRain; } , _rainParams_target, _duration/2] call CBA_fnc_waitAndExecute; };
+      case "DIRECT": {
+         [
+            {
+               _return = _this call BIS_fnc_setRain;
+               ZRN_LOG_MSG_2(Direct BisFncsetRain,_return,_this);
+            },
+            _rainParams_target,
+            _duration/2
+         ] call CBA_fnc_waitAndExecute;
+      };
       case "SOFT": {
          // remove the rain to create a no-rain period to change rainParams
          ( _duration / 3 ) setRain 0;
@@ -225,6 +234,9 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
             if ( count _rainParams_target != 0 && {(_this select 15) isEqualTo true} ) then {
                0.25 remoteExec ["setHumidity", [0,2] select isDedicated];
             };
+            _return = _this call BIS_fnc_setRain;
+            ZRN_LOG_MSG_2(Soft bisFncsetRain,_return,_this);
+
          }, _rainParams_target, ( _duration /2 ) ] call CBA_fnc_waitAndExecute;
 
          ZRN_LOG_MSG_2(setRainParams--,_duration,_rainParams_target);
