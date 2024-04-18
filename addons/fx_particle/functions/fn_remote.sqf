@@ -23,7 +23,7 @@
 *
 */
 
-#define DELAY 1
+#define DELAY 0
 //private _delay = 1;
 
 if (!hasInterface) exitWith {};
@@ -103,8 +103,6 @@ if (_hmo isEqualTo "404") then {
                 if !(OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
                 if  (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };
 
-                private _player = vehicle ace_player;
-
                 // Update Effects only during Transition
                 private "_intensityCurrent";
                 if (OGET(inTransition)) then {
@@ -121,18 +119,18 @@ if (_hmo isEqualTo "404") then {
                 };
 
                 //Establish Offset for attachTo based on PlayerMovementVector + WindSpeedVector
-                private _coefSpeed = [OGET(coefSpeed), OGET(CoefSpeedHeli)] select (_player isKindOf "Air");
-                private _relPos = (( velocityModelSpace _player ) vectorMultiply _coefSpeed) vectorDiff (( _player vectorWorldToModel wind ) vectorMultiply OGET(coefWind));
+                private _coefSpeed = [OGET(coefSpeed), OGET(CoefSpeedHeli)] select ((vehicle ace_player) isKindOf "Air");
+                private _relPos = (( velocityModelSpace (vehicle ace_player) ) vectorMultiply _coefSpeed) vectorDiff (( (vehicle ace_player) vectorWorldToModel wind ) vectorMultiply OGET(coefWind));
                 _relPos set [2, _relPos#2 + 1 + OGET(offsetHeight)];
 
 
                 // Attach the object to the new offset
-                OGET(helperObj) attachTo [_player, _relPos];
+                OGET(helperObj) attachTo [(vehicle ace_player), _relPos];
   
                 // Restart the Function until isActive is false
                 [{
                     _this#0 call ["Meth_Loop"]
-                } , [_self], 5] call CBA_fnc_waitAndExecute;
+                } , [_self], DELAY] call CBA_fnc_waitAndExecute;
             }]
         ],
         []
