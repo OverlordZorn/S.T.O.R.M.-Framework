@@ -22,7 +22,7 @@ class CfgVehicles
     {
         scope = 1;
         author = MOD_NAME_BEAUTIFIED;
-        displayName = "S.T.O.R.M. Helper";
+        displayName = "S.T.O.R.M. Debug Helper";
         icon = PATH_TO_ADDON_3(data,icons,logo_256.paa);
     };
 };
