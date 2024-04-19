@@ -42,6 +42,7 @@ class CfgFunctions
 
             class cba_settings_initialized { postInit = 1; };
             class toggleDebugHelper {};
+            class postInit { PostInit = 1; };
         };
 	}; 
 };
