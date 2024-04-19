@@ -69,28 +69,29 @@ _arr set [3, _hashMap];
 if (isNil QPVAR(isActive)) then { missionNameSpace setVariable [ QPVAR(isActive), _arr, true] };
 
 ZRN_LOG_1(_hashMap);
-
 private _result = [];
 private "_var";
 
+// ServerSide - Mod_Skill
 _var = [_hashMap get "mod_skill_preset",  _duration, _intensity * (_hashMap get "mod_skill_coef") ]  call EFUNC(mod_skill,request);
 _result pushback [_var, _hashMap get "mod_skill_preset"];
 
-
+// ServerSide - FX Weather
 _var = [_hashMap get "fx_weather_preset", _duration, _intensity * (_hashMap get "fx_weather_coef") ] call EFUNC(fx_weather,request);
 _result pushback [_var, _hashMap get "fx_weather_preset"];
 
 
+// ClientSide - FX Sound
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_sound_coef")   ] call EFUNC(fx_sound,request);
    _result pushback [_var, _x];
 } forEach (_hashMap get "fx_sound_presets");
 
-
+// ClientSide - FX Particle
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_particle_coef") ] call EFUNC(fx_particle,request);
    _result pushback [_var, _x];
 } forEach (_hashMap get "fx_particle_presets");
 
-
+// ClientSide - FX Post
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_post_coef")    ] call EFUNC(fx_post,request);
    _result pushback [_var, _x];
 } forEach (_hashMap get "fx_post_presets");
@@ -106,7 +107,6 @@ _code = if (_intensity == 0 ) then {
    };
 };
 [_code, [], _duration * 60 ] call CBA_fnc_waitAndExecute;
-
 
 if (STORM_DEBUG) then {
    [ { systemChat "transition completed" } , [], _duration * 60] call CBA_fnc_waitAndExecute;
