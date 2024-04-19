@@ -23,7 +23,7 @@
 *
 */
 
-#define DELAY 0
+#define DELAY 0.1
 //private _delay = 1;
 
 if (!hasInterface) exitWith {};
