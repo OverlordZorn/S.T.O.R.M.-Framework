@@ -36,9 +36,8 @@ switch (_mode) do {
         // Add Debug Helper to newly created Objects
         _mEH_ID = addMissionEventHandler ["EntityCreated", {
         	params ["_entity"];
-            ZRN_LOG_MSG_2(EH_EntityCreated,_entity,typeOf _entity);
             if !(typeOf _entity in ["Storm_FX_Sound_Helper", "Storm_FX_Particle_Helper", "#particlesource"]) exitWith {};
-
+            ZRN_LOG_MSG_2(EH_EntityCreated,_entity,typeOf _entity);
             _debugObj = createVehicleLocal ["Storm_Debug_Helper",[0,0,0]];
             _debugObj attachTo [_entity, [0,0,1]];
         }];
@@ -47,7 +46,7 @@ switch (_mode) do {
         {   // Delete Event Handler
             _x addEventHandler ["Deleted", {
                 params ["_entity"];
-                private _attachedObjects = attachedObjects _entitity;
+                private _attachedObjects = attachedObjects _entity;
                 ZRN_LOG_MSG_2(EH Deleted,_entity,_attachedObjects);
                 _attachedObjects = _attachedObjects select { typeOf _x == "Storm_Debug_Helper" };
                 { deleteVehicle _x } forEach _attachedObjects;
@@ -58,7 +57,7 @@ switch (_mode) do {
     };
     case false: {
         private _mEH_ID   = missionNamespace getVariable [ QPVAR(Debug_mEH_ID) , -1];
-        if (_mEH_ID != -1) then { removeMissionEventHandler [EntityCreated,_mEH_ID]; };
+        if (_mEH_ID != -1) then { removeMissionEventHandler ["EntityCreated",_mEH_ID]; };
         { deleteVehicle _x } forEach (allMissionObjects "Storm_Debug_Helper");
 
         missionNamespace setVariable [QPVAR(Debug_mEH_ID), -1];
