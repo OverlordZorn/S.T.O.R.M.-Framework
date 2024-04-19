@@ -1,5 +1,8 @@
 #include "script_component.hpp"
 
+// CBA Addon Options
+
+
 [
     QSET(DEBUG),                                            // Internal setting name, should always contain a tag! This will be the global variable which takes the value of the setting.
     "CHECKBOX",                                             // setting type
@@ -15,3 +18,12 @@
 ] call CBA_fnc_addSetting;
 
 // TODO set debug default to false
+
+
+
+// Other stuff
+isAceLoaded = isClass (configFile >> "CfgPatches" >> "ace_common");
+if (!isAceLoaded) then {
+    ACE_player = objNull;
+    uiNamespace setVariable ["ACE_player", objNull];
+};

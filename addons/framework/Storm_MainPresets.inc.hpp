@@ -3,6 +3,8 @@ class PVAR(mainPresets)
     class PVAR(Default)
     {
         author = AUTHOR;
+        description = "";
+
         mod_skill_preset = ""; // QEGVAR(mod_skill,reducedVisibility)
         mod_skill_coef = 1;
 
@@ -25,7 +27,7 @@ class PVAR(mainPresets)
     class PVAR(Sandstorm) : PVAR(Default)
     {
         mod_skill_preset = QEGVAR(mod_skill,reducedVisibility);
-        mod_skill_coef = 1;
+        mod_skill_coef = 0.8;
 
         fx_weather_preset = QEGVAR(fx_weather,Sandstorm);
         fx_weather_coef = 1;
@@ -60,7 +62,7 @@ class PVAR(mainPresets)
     class PVAR(SnowStorm) : PVAR(Default)
     {
         mod_skill_preset = QEGVAR(mod_skill,reducedVisibility);
-        mod_skill_coef = 1;
+        mod_skill_coef = 0.8;
 
         fx_weather_preset = QEGVAR(fx_weather,SnowStorm);
         fx_weather_coef = 1;
