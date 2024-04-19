@@ -104,10 +104,9 @@ if (_hmo isEqualTo "404") then {
                 if  (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };
 
                 // Update Effects only during Transition
-                private "_intensityCurrent";
                 if (OGET(inTransition)) then {
                     // Establish Intensity
-                    _intensityCurrent = linearConversion [OGET(missionTimeStart), OGET(missionTimeEnd), CBA_missionTime, OGET(intensityStart), OGET(intensityTarget),true];
+                    private _intensityCurrent = linearConversion [OGET(missionTimeStart), OGET(missionTimeEnd), CBA_missionTime, OGET(intensityStart), OGET(intensityTarget),true];
 
                     OSET(intensityCurrent,_intensityCurrent);             
                     if ( _intensityCurrent == 0 && { CBA_missionTime > OGET(missionTimeEnd) } ) then { OSET(isActive,false) };
