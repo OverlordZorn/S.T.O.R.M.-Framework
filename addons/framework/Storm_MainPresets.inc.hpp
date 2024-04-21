@@ -77,6 +77,13 @@ class PVAR(mainPresets)
         fx_sound_coef = 1;
     };
 
+    class PVAR(SnowStorm_lessFog) : PVAR(SnowStorm)
+    {
+        mod_skill_coef = 0.5;
+        fx_weather_preset = QEGVAR(fx_weather,SnowStorm_lessFog);
+        fx_post_presets[] = {QEGVAR(fx_post,CC_ColdSnow), QEGVAR(fx_post,FG_Storm_10), QEGVAR(fx_post,DB_20)};
+    };
+
 
     class PVAR(SnowStorm_Bleak) : PVAR(SnowStorm)
     {
