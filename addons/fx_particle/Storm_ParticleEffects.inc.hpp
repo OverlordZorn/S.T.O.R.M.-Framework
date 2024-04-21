@@ -236,7 +236,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
 
     rotationVelocity = 1;
     weight = 0.000001;
-    volume = 0.0;
+    volume = 0.001;
     rubbing = 0.1;
 
     size[] = {0.2};
@@ -282,7 +282,7 @@ class GVAR(Branches) : GVAR(DEFAULT)
 // Snow
 class GVAR(Snow) : GVAR(DEFAULT)
 {
-	interval = 0.0005;
+	interval = 0.001;
 	intervalMin = 0.1;
 
 	circleRadius = 5;
@@ -296,7 +296,8 @@ class GVAR(Snow) : GVAR(DEFAULT)
 	particleType = "Billboard";
 	timerPeriod = 1;
 	lifeTime = 30;
-	moveVelocity[] = {0,0,5};
+	moveVelocity[] = {0,0,0};
+	moveVelocityVar[] = {5,5,0};
 	rotationVelocity = 0;
 	weight = 3.0;
 	volume = 1;
@@ -309,9 +310,8 @@ class GVAR(Snow) : GVAR(DEFAULT)
 	onTimerScript = "";
 	beforeDestroyScript = "";
 	lifeTimeVar = 0;
-	position[] = {-10,-10,1};
-	positionVar[] = {20,20,3};
-	moveVelocityVar[] = {5,5,5};
+	position[] = {-10,-10,3};
+	positionVar[] = {20,20,7};
 	rotationVelocityVar = 0;
 	sizeVar = 0.1;
 	colorVar[] = {0,0,0,0};
