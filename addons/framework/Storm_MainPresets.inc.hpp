@@ -67,10 +67,10 @@ class PVAR(mainPresets)
         fx_weather_preset = QEGVAR(fx_weather,SnowStorm);
         fx_weather_coef = 1;
 
-        fx_post_presets[] = {QEGVAR(fx_post,CC_ColdSnow), QEGVAR(fx_post,FG_Storm), QEGVAR(fx_post,DB_20)};
+        fx_post_presets[] = {QEGVAR(fx_post,CC_ColdSnow), QEGVAR(fx_post,FG_Storm_10), QEGVAR(fx_post,DB_15)};
         fx_post_coef = 1;
 
-        fx_particle_presets[] = {QEGVAR(fx_particle,Branches), QEGVAR(fx_particle,Snow)};               /// , QEGVAR(fx_particle,Snow_25)
+        fx_particle_presets[] = {QEGVAR(fx_particle,Snow)};               /// , QEGVAR(fx_particle,Snow_25)
         fx_particle_coef = 1;
         
         fx_sound_presets[] = {QEGVAR(fx_sound,3D_WindLong),QEGVAR(fx_sound,3D_WindBursts)};
@@ -87,7 +87,7 @@ class PVAR(mainPresets)
 
     class PVAR(SnowStorm_Bleak) : PVAR(SnowStorm)
     {
-        fx_post_presets[] = {QEGVAR(fx_post,CC_ColdSnow_Bleak), QEGVAR(fx_post,FG_Storm), QEGVAR(fx_post,DB_20)};
+        fx_post_presets[] = {QEGVAR(fx_post,CC_ColdSnow_Bleak), QEGVAR(fx_post,FG_Storm_10), QEGVAR(fx_post,DB_20)};
     };
 
     class PVAR(SnowStorm_Calm) : PVAR(SnowStorm)
