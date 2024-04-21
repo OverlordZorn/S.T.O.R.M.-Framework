@@ -104,8 +104,8 @@ _wp setWaypointStatements ["true", _statement];
                     {  vehicle (_this#0) limitSpeed 100; vehicle (_this#0) flyInHeight [20, true];
                         // systemChat "Heli - Within 1000 -> 100kph 20m";
                         
-                        [   { (vehicle (_this#0) distance2D (_this#1)) < 250 },
-                            {  vehicle (_this#0) limitSpeed 50; vehicle (_this#0) flyInHeight [10, true];
+                        [   { (vehicle (_this#0) distance2D (_this#1)) < 200 },
+                            {  vehicle (_this#0) limitSpeed 75; vehicle (_this#0) flyInHeight [10, true];
                                 // systemChat "Heli - Within 50 -> 50kph 10m";
                                 
                                     [   { (vehicle (_this#0) distance2D (_this#1)) < 30 },
@@ -115,7 +115,7 @@ _wp setWaypointStatements ["true", _statement];
                                             [   { (vehicle (_this#0) distance2D (_this#1)) < 15 },
                                             {  
                                                 // systemChat "Heli - Within 5 -> 30s to Take Off";
-                                                [{[_this#0] call STORM_fnc_randomWaypoint_heli;}, [_this#0], 60] call CBA_fnc_waitAndExecute;
+                                                [{[_this#0] call STORM_fnc_randomWaypoint_heli;}, [_this#0], 15 + round random 45] call CBA_fnc_waitAndExecute;
                                 
                                             },
                                             [_this#0, _this#1]] call CBA_fnc_waitUntilAndExecute;
