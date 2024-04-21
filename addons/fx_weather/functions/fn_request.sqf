@@ -305,7 +305,7 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
       default {
          _fog_target = [];
          _fog_target set [0, ( linearConversion [0,1,_intensity, _hashMap get "fog_value_min",_hashMap get "fog_value_max", true] )];
-         _fog_target set [1,_hashMap get "fog_dispersion"];
+         _fog_target set [1,_hashMap get "fog_decay"];
          _fog_target set [2,_hashMap get "fog_base"];
          _fog_Mode = _hashMap getOrDefault ["fog_mode", 0];
          ZRN_LOG_MSG_2(Intensity != 0,_fog_mode,_fog_target);

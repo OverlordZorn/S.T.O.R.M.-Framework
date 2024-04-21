@@ -118,7 +118,7 @@ if (_hmo isEqualTo "404") then {
                 };
 
                 //Establish Offset for attachTo based on PlayerMovementVector + WindSpeedVector
-                private _coefSpeed = [OGET(coefSpeed), OGET(CoefSpeedHeli)] select ((vehicle ace_player) isKindOf "Air");
+                private _coefSpeed = [OGET(coefSpeed), OGET(coefSpeedHeli)] select ((vehicle ace_player) isKindOf "Air");
                 private _relPos = (( velocityModelSpace (vehicle ace_player) ) vectorMultiply _coefSpeed) vectorDiff (( (vehicle ace_player) vectorWorldToModel wind ) vectorMultiply OGET(coefWind));
                 _relPos set [2, _relPos#2 + 1 + OGET(offsetHeight)];
 

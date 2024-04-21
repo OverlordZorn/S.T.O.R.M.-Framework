@@ -4,10 +4,18 @@
 #include "\z\storm\addons\based\script_version.hpp"
 #include "\z\storm\addons\based\script_mod.hpp"
 
-#define _CVO_DEBUG_
+#define _CVO_DEBUG_     // TODO Comment out before big release
 
 #define TRUE 1
 #define FALSE 0
+
+
+#ifdef _CVO_DEBUG_
+    #define _DEBUG_01_ 1
+#else
+    #define _DEBUG_01_ 0
+#endif
+
 
 // CBA Stuff
 #define RETDEF(VARIABLE,DEFAULT_VALUE) (if (isNil {VARIABLE}) then [{DEFAULT_VALUE}, {VARIABLE}])

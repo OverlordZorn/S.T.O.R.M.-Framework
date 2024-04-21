@@ -40,9 +40,13 @@ class CfgFunctions
             class randomWaypoint_Heli {};
             class randomWaypoint_Vehicle {};
 
-            class cba_settings_initialized { postInit = 1; };
-            class toggleDebugHelper {};
             class postInit { PostInit = 1; };
+            class cba_settings_initialized { postInit = 1; };
+
+            class toggleDebugHelper {};
+
+            class getCfgWorld_fog_data { preStart = _DEBUG_01_; };
+            class testing { PostInit = _DEBUG_01_; };
         };
 	}; 
 };

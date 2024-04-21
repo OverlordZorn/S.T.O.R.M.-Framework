@@ -9,6 +9,12 @@ class GVAR(DB_Default)
 	baseArray[] = {0};
 };
 
+class GVAR(DB_05) : GVAR(DB_Default)
+{
+	blurriness =   0.05;
+};
+
+
 class GVAR(DB_10) : GVAR(DB_Default)
 {
 	blurriness =   0.10;

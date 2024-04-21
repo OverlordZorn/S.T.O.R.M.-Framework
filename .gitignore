@@ -6,3 +6,4 @@ hemtt.exe
 .vscode
 *.bkp
 *.dtmp
+/releases/*
