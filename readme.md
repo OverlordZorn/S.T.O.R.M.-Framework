@@ -31,11 +31,15 @@ The following classnames are currently included as `MainPresets`:
 - `STORM_Sandstorm`
 - `STORM_Sandstorm_Light`
 - `STORM_Sandstorm_Green`
+
 - `STORM_Duststorm_Green`
+
 - `STORM_SnowStorm`
 - `STORM_SnowStorm_Bleak`
 - `STORM_SnowStorm_Calm`
 - `STORM_SnowStorm_Calm_Bleak`
+- `STORM_Snowstorm_lessFog`
+
 
 ### Weather Effects Module
 - Handles Execution of relevant Weather Systems, for example:
