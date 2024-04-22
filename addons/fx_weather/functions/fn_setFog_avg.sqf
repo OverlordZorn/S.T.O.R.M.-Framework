@@ -26,7 +26,7 @@
  */
  
 
-if (!isServer) exitWith {_this remoteExecCall [QFUNC(setFog_avg),2]};
+if (!isServer) exitWith {};
 
   params [
     ["_fog_target",         [0,0,0],    [[]],   [3] ],

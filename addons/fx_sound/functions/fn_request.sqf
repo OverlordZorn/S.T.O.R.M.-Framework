@@ -22,7 +22,7 @@
 */
 
 
-if (!isServer) exitWith { _this remoteExecCall [ QFUNC(request), 2, false]; };
+if (!isServer) exitWith {};
 
 params [
 	["_presetName",		"",		[""]	],

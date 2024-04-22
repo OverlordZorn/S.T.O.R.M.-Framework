@@ -21,7 +21,7 @@
  * Public: No
  */
 
-if (!isServer) exitWith {_this remoteExecCall [QFUNC(setWind),2]};
+if (!isServer) exitWith {};
 
 params [
     ["_wind_magnitude",          0,     [0]       ],

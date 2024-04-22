@@ -32,7 +32,12 @@
 * Public: Yes
 */
 
-if (!isServer) exitWith {_this call PFUNC(request_transition) };
+if (!isServer) exitWith {
+   ZRN_LOG_MSG(failed: storm_fnc_request_transition needs to be executed on the server!);
+   systemChat "Failed: storm_fnc_request_transition needs to be executed on the server!";
+   false
+};
+
 
 params [
    ["_stormPreset",        "",      [""]  ],
