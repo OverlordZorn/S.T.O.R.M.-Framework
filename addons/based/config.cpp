@@ -45,8 +45,8 @@ class CfgFunctions
 
             class toggleDebugHelper {};
 
-            class getCfgWorld_fog_data { preStart = _DEBUG_01_; };
-            class testing { PostInit = _DEBUG_01_; };
+            class getCfgWorld_fog_data { /*preStart = _DEBUG_01_;*/ };
+            class testing { /*PostInit = _DEBUG_01_;*/ };
         };
 	}; 
 };

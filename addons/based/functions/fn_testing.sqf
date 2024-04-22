@@ -1,3 +1,4 @@
+/*
 //["storm_Sandstorm", 1, 1] call storm_fnc_request_transition;
 //["storm_Sandstorm", 1, 0] call storm_fnc_request_transition;
 
@@ -27,3 +28,4 @@
 //["storm_SnowStorm_Bleak", 1, 0.7] call storm_fnc_request_transition;
 //["storm_SnowStorm_Bleak", 1, 0] call storm_fnc_request_transition;
 
+*/

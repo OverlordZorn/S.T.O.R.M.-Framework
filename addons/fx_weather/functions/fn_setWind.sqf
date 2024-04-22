@@ -21,10 +21,7 @@
  * Public: No
  */
 
-if (!isServer)                            exitWith {_this remoteExecCall [QFUNC(setWind),2]};
-// if (isNil QGVAR(isActiveTransition))   exitWith {false};
-// if (!GVAR(isActiveTransition))         exitWith {false};
-
+if (!isServer) exitWith {_this remoteExecCall [QFUNC(setWind),2]};
 
 params [
     ["_wind_magnitude",          0,     [0]       ],
