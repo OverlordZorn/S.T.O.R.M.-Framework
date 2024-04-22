@@ -40,7 +40,7 @@ if  ( _intensity == 0 && { !( [_presetName] call PFUNC(jipExists) ) } ) 								
 
 
 // Execute Remotely on the clients
-_presetName = [_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote_3d), [0,2] select isDedicated, _presetName];
+_presetName = [_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote_3d), [0,-2] select isDedicated, _presetName];
 if (isNil "_presetName") exitWith { ZRN_LOG_MSG(failed: remoteExec failed); false };
 
 // Hands of jipHandle to the jipMonitor

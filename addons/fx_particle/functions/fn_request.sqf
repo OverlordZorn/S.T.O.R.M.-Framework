@@ -43,7 +43,7 @@ if  ( _intensity == 0 && { !( [_presetName] call PFUNC(jipExists) ) } ) 								
 
 
 // Execute Remotely on the clients
-[_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote), [0,2] select isDedicated, _presetName];
+[_presetName, CBA_missionTime, _duration, _intensity] remoteExecCall [ QFUNC(remote), [0,-2] select isDedicated, _presetName];
 
 
 // handoff _jipHandle to jipMonitor

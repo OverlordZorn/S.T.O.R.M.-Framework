@@ -231,7 +231,7 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
             // If the RainParams Argument isSnow == true, it will set the Humidity to 0.25 do avoid the sound of "extremely drippingly wet footsteps"
             ZRN_LOG_MSG_2(CATCHME,_this,_this#15);
             if ( count _rainParams_target != 0 && {(_this select 15) isEqualTo true} ) then {
-               0.25 remoteExec ["setHumidity", [0,2] select isDedicated];
+               0.25 remoteExec ["setHumidity", [0,-2] select isDedicated];
             };
             _return = _this call BIS_fnc_setRain;
             ZRN_LOG_MSG_2(Soft bisFncsetRain,_return,_this);

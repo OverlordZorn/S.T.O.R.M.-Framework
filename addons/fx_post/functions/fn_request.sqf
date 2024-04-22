@@ -66,7 +66,7 @@ if (configName inheritsFrom _cfg isEqualTo "") then {
 
 
 // RemoteExec the request
-private _jipHandle = [_presetName, _resultArray, _duration, _intensity] remoteExecCall [QFUNC(remote), [0,2] select isDedicated, _jipHandle];
+private _jipHandle = [_presetName, _resultArray, _duration, _intensity] remoteExecCall [QFUNC(remote), [0,-2] select isDedicated, _jipHandle];
 if (isNil "_jipHandle") exitWith { ZRN_LOG_MSG(failed: remoteExec failed);    false };
 
 
