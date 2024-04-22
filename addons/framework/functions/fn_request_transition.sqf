@@ -32,7 +32,7 @@
 * Public: Yes
 */
 
-if (!isServer) exitWith {_this call PFUNC(request_transition) };
+if (!isServer) exitWith {_this remoteExec [QPFUNC(request_transition),2,false] };
 
 params [
    ["_stormPreset",        "",      [""]  ],
