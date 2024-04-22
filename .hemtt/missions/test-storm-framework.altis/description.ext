@@ -19,3 +19,5 @@ class Header
 	maxPlayers = 12;	// maximum number of players the mission supports
 };
 
+skipLobby = 1;
+briefing = 0;
