@@ -4,13 +4,13 @@
 #include "\z\storm\addons\based\script_version.hpp"
 #include "\z\storm\addons\based\script_mod.hpp"
 
-#define _CVO_DEBUG_     // TODO Comment out before big release
+#define _STORM_DEBUG_     // TODO Comment out before big release
 
 #define TRUE 1
 #define FALSE 0
 
 
-#ifdef _CVO_DEBUG_
+#ifdef _STORM_DEBUG_
     #define _DEBUG_01_ 1
 #else
     #define _DEBUG_01_ 0
@@ -99,7 +99,7 @@
 
 #define ZRN_LOG_MSG(MSG) diag_log (DEBUG_HEADER + QUOTE(MSG))
 
-#ifdef _CVO_DEBUG_
+#ifdef _STORM_DEBUG_
     #define ZRN_SCRIPTNAME(var1) _fnc_scriptName = Q(var1)
 
     #define ZRN_LOG_MSG_1(MSG,A) diag_log (DEBUG_HEADER + (format [' %1 - A: %2',QUOTE(MSG),RETNIL(A)]))

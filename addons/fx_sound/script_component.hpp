@@ -3,7 +3,6 @@
 
 #include "\z\storm\addons\based\script_macros.hpp"
 
-// #define _CVO_DEBUG_
 
 
 
