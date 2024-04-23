@@ -151,7 +151,7 @@ if (_hmo isEqualTo "404") then {
 
                 // Wait until _sayObj is objNull (once the sound is played), then execute a WaitAndExecute to call itself again.
                 _statement = {
-                    ZRN_LOG_MSG_1(WaitUntil condition done,_this#0);
+//                    ZRN_LOG_MSG_1(WaitUntil condition done,_this#0);
                     [ { _this#0 call ["Meth_Loop"] } , [_this#2], _this#1] call CBA_fnc_waitAndExecute;
                 };                                                          // Code to be executed once condition true
                 _condition = { _this#0 isEqualTo objNull };                 // condition - Needs to return bool

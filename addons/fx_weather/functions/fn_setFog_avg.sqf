@@ -33,7 +33,7 @@ if (!isServer) exitWith {};
     ["_duration",           0,          [0]         ],
     ["_boost",              true,       [true]      ]
 ];
-#define DELAY 5
+#define DELAY 15
 
 private _fog_start = fogParams;
 private _startTime = time;
@@ -58,10 +58,10 @@ private _codeToRun = {
 
     
     GVAR(S_fogParams) params ["_startTime", "_endTime", "_fog_start", "_fog_target", "_delay", "_boost"];
-    ZRN_LOG_1(GVAR(S_fogParams));
+    //ZRN_LOG_1(GVAR(S_fogParams));
 
     private _avg_ASL = round ([] call FUNC(get_AvgASL));
-    ZRN_LOG_MSG_1(Pre-Boost:,_avg_ASL);
+    //ZRN_LOG_MSG_1(Pre-Boost:,_avg_ASL);
 
     if _boost then {
         ////////////////////////////////////////////////////////////////////////////////
@@ -74,11 +74,11 @@ private _codeToRun = {
     };
 
 
-    ZRN_LOG_MSG_1(PostBoost:,_avg_ASL);
+    //ZRN_LOG_MSG_1(PostBoost:,_avg_ASL);
 
     private _currentParams = switch (time > _endTime) do {
         case true: {
-            ZRN_LOG_MSG_1(PFH after transitiion,time);
+            // ZRN_LOG_MSG_1(PFH after transitiion,time);
             // fog_target
             [
                 _fog_target#0,
@@ -87,7 +87,7 @@ private _codeToRun = {
             ]
         };
         case false: {
-            ZRN_LOG_MSG_1(PFH during transitiion,time);
+            // ZRN_LOG_MSG_1(PFH during transitiion,time);
             [
                 linearConversion [_startTime, _endTime, time, _fog_start#0, _fog_target#0,             true ],
                 linearConversion [_startTime, _endTime, time, _fog_start#1, _fog_target#1,             true ],
@@ -96,7 +96,7 @@ private _codeToRun = {
         };
     };
 
-    ZRN_LOG_1(_currentParams);
+    // ZRN_LOG_1(_currentParams);
     _delay setFog _currentParams;
 
 };
