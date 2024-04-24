@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project name="STORM FRAMEWORK">
+    <Package name="Based Module">
+        <Container name="CBA SETTINGS">
+            <Key ID="STR_STORM_Based_cat_debug">
+                <Original>Main - Debug</Original>
+                <English>Main - Debug</English>
+                <German>Main - Debug</German>
+            </Key>
+            <Key ID="STR_STORM_Based_debug">
+                <Original>Enable Debug</Original>
+                <English>Enable Debug</English>
+                <German>Debug Modus aktivieren</German>
+            </Key>
+            <Key ID="STR_STORM_Based_debug_desc">
+                <Original>Enables Debug Helper and Messages.</Original>
+                <English>Enables Debug Helper and Messages.</English>
+                <German>Aktiviert Debug Helfer und Nachrichten.</German>
+            </Key>
+        </Container>
+    </Package>
+</Project>

@@ -92,6 +92,12 @@
 #define QESET(var1,var2) Q(ESET(var1,var2))
 #define QQESET(var1,var2) QQ(ESET(var1,var2))
 
+// Stringtable.xml
+
+#define STR(var1) TRIPLES(STR,ADDON,var1)
+#define QSTR(var1) QSTR(var1)
+
+
 // Debug
 #define DEBUG_HEADER format [QUOTE([PREFIX][COMPONENT](%1)),_fnc_scriptName]
 
