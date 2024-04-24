@@ -44,3 +44,7 @@ class CfgFunctions
 class CfgCloudlets {
 	#include "Storm_ParticleEffects.inc.hpp"
 };
+
+
+
+#include "CfgEventHandlers.hpp"

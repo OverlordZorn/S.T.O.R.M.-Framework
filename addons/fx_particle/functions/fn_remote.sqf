@@ -23,7 +23,7 @@
 *
 */
 
-#define DELAY 0.1
+#define DELAY 1
 //private _delay = 1;
 
 if (!hasInterface) exitWith {};
@@ -113,7 +113,8 @@ if (_hmo isEqualTo "404") then {
                     if ( _intensityCurrent == OGET(intensityTarget) ) then {OSET(inTransition,false)}; 
 
                     // Establish and apply dropInterval
-                    private _dropInterval = linearConversion[0,1,_intensityCurrent,OGET(intervalMin),OGET(intervalMax),true];
+                    // playerCoef Intensity multiplied with current intensity will result in desired outcome.
+                    private _dropInterval = linearConversion[0,1, SET(PlayerCoef) * _intensityCurrent ,OGET(intervalMin),OGET(intervalMax),true];
                     OGET(helperObj) setDropInterval _dropInterval;
                 };
 
