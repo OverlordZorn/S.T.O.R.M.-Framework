@@ -86,7 +86,7 @@ if (_firstWeatherChange) then {
    0 setOvercast     overcast;
    0 setRain         rain;
    0 setLightnings   lightnings;
-   0 setFog          fogParams;
+//   0 setFog          fogParams;
      setWind         [wind#0, wind#1, true];
    0 setGusts        gusts;
    0 setWaves        waves;
@@ -272,7 +272,7 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
    };
 };
 
-
+/*
 // ##################################################
 // ################### fog params ################### 
 
@@ -336,6 +336,8 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
       };
    };
 };
+*/
+
 
 // ##################################################
 // ################### wind vector ################## 
