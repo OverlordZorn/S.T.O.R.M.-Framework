@@ -29,21 +29,33 @@
 
 if (!isServer) exitWith {};
 
-params ["_presetName","_duration", "_intensity"];
+params [
+    ["_presetName", "", [""]],
+    ["_duration",   5,  [0] ],
+    ["_intensity",  1,  [0] ]
+];
 
-private _varName = ["STORM","FX_Weather","Fog","HMO"] joinString "_";
+_intensity = _intensity max 0 min 1;
+_duration = 60 * (_duration max 1);
+
+// Check Fail conditions
+if  ( _presetName isEqualTo "" ) exitWith { ZRN_LOG_MSG(failed: effectName not provided); false };
+if !( _presetName in (configProperties [configFile >> QGVAR(FogParams), "true", true] apply { configName _x } ) ) exitWith { ZRN_LOG_MSG(failed: effectName not found); false };
+
+private _varName = "STORM_FX_Weather_Fog_HMO";
 private _hmo = missionNameSpace getVariable [_varName, "404"];
+if ( _intensity == 0 && { _hmo isEqualTo "404" } ) exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
+
+
 
 if (_hmo isEqualTo "404") then {
-    private _cfg = (configFile >> QGVAR(Presets) >> _presetName);
+    private _cfg = (configFile >> QGVAR(FogParams) >> _presetName);
     _hmo = createHashMapObject [
         [
             ["inTransition", true],
 
             ["varName", _varName],
             ["presetName", _presetName],
-
-            ["helperObj", ""],
 
             ["missionTimeStart", _startTime],
             ["missionTimeEnd", (_startTime + _duration)],
@@ -52,16 +64,15 @@ if (_hmo isEqualTo "404") then {
             ["intensityCurrent", 0.01],
             ["intensityTarget", _intensity],
 
-            ["soundArrayFull", getArray (_cfg >> "sounds")],
-            ["soundArrayCurrent", []],
+            ["fogMode", 0],
 
-            ["delayMin", getNumber (_cfg >> "delayMin")],
-            ["delayMax", getNumber (_cfg >> "delayMax")],
+            ["fogParamsPreviousWeather", fogParams],
+            ["fogParamsRestorePrevious", true],
+            ["fogParamsRestoreTime", 5*60],
 
-            ["distanceMin", getNumber (_cfg >> "DistanceMin")],
-            ["distanceMax", getNumber (_cfg >> "distanceMax")],
 
-            ["direction", [_cfg >> "Direction"] call BIS_fnc_getCfgData],
+            ["fogParamsPreset", []],
+            ["fogParamsTarget", []],
 
             ["#flags", ["noCopy","unscheduled"]],
 
@@ -73,21 +84,18 @@ if (_hmo isEqualTo "404") then {
 
             ["#delete", {
                 _fnc_scriptName = "#delete";
-                ZRN_LOG_MSG_1(Pre-Cleanup,OGET(HelperObj));
-                deleteVehicle OGET(HelperObj);
-                ZRN_LOG_MSG_1(PostCleanup,OGET(HelperObj));
+                if (fogParamsRestorePrevious) then {
+                    OGET(fogParamsRestoreTime) setFog OGET(fogParamsPreviousWeather);
+                };
             }],
 
             // Methods
-            ["Meth_Create_Helper",{
-                _fnc_scriptName = "Meth_Create_Helper";
-                _helperObj = createVehicleLocal ["Storm_FX_Sound_Helper", [0,0,0]];
-                OSET(helperObj,_helperObj);
-            }],
             ["Meth_Update", {
                 _fnc_scriptName = "Meth_Update";
 
-                params ["_presetName", "_startTime", "_duration", "_intensity"];
+                params ["_presetName", "_duration", "_intensity"];
+
+                private _startTime = CBA_missionTime;
 
                 OSET(missionTimeStart,_startTime);
                 OSET(missionTimeEnd,_startTime + _duration);
@@ -98,60 +106,6 @@ if (_hmo isEqualTo "404") then {
                 OSET(inTransition,true);
             }],
             ["Meth_Loop", {
-                _fnc_scriptName = "Meth_Loop";
-
-                if (!OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
-                if (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };
-
-                // Establish Intensity
-                private "_intensityCurrent";
-                if (OGET(inTransition)) then {
-                    _intensityCurrent = linearConversion [OGET(missionTimeStart), OGET(missionTimeEnd), CBA_missionTime, OGET(intensityStart), OGET(intensityTarget),true];
-                    OSET(intensityCurrent,_intensityCurrent);             
-                    if ( _intensityCurrent == 0 && { CBA_missionTime > OGET(missionTimeEnd) } ) then { OSET(isActive,false) };
-                    if ( _intensityCurrent == OGET(intensityTarget)) then { OSET(inTransition,false)};
-                } else {
-                    _intensityCurrent = OGET(intensityCurrent);
-                };
-                // Slightly Randomizes Intensity for the Effects
-                _intensityCurrent = _intensityCurrent + (selectRandom[-1,1] * _intensityCurrent * 0.2);
-
-                // Establish Delay
-                private _delay = linearConversion [0,1, _intensityCurrent, OGET(delayMax), OGET(delayMin), true];
-                // establishes Distance
-                private _distance = linearConversion [0,1,_intensityCurrent, OGET(distanceMax), OGET(distanceMin),true];
-
-                // Establishes Direction
-                private _direction =  switch (OGET(direction)) do {
-                    case "RAND": { round random 360 };
-                    case "WIND": { windDir + 180 };
-                    default {OGET(direction)};
-                };
-
-                // Establishes relative position from ace_player and move HelperObj to said position
-                private _pos = ace_player getPos [_distance, _direction];
-                _pos set [2,_pos#2 + ABOVEGROUND];
-
-                OGET(helperObj) setPos _pos;
-
-                // Establish Soundfile and Arrays
-                if (count (OGET(soundArrayCurrent)) == 0) then { OSET(soundArrayCurrent,+ OGET(soundArrayFull)); };
-                private _soundName = selectRandom OGET(soundArrayCurrent);
-                OSET(soundArrayCurrent,OGET(soundArrayCurrent) - [_soundName]);
-
-                // PLay the sound
-                private _range = (RANGE_MOD * OGET(distanceMax)) min ABSOLUTE_MAXRANGE;
-                private _sayObj = OGET(helperObj) say3D [_soundName,_range];
-
-                // Wait until _sayObj is objNull (once the sound is played), then execute a WaitAndExecute to call itself again.
-                _statement = {
-//                    ZRN_LOG_MSG_1(WaitUntil condition done,_this#0);
-                    [ { _this#0 call ["Meth_Loop"] } , [_this#2], _this#1] call CBA_fnc_waitAndExecute;
-                };                                                          // Code to be executed once condition true
-                _condition = { _this#0 isEqualTo objNull };                 // condition - Needs to return bool
-                _parameter = [_sayObj,_delay, _self];                       // arguments to be passed on -> _this
-                _timeout = 120;                                             // if condition isnt true within this time in S, _timecode will be executed.
-                [_condition, _statement, _parameter, _timeout,_statement] call CBA_fnc_waitUntilAndExecute;
             }]
         ]
     ];
