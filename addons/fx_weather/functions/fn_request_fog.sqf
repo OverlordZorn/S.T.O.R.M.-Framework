@@ -50,43 +50,79 @@ if ( _intensity == 0 && { _hmo isEqualTo "404" } ) exitWith { ZRN_LOG_MSG(failed
 
 if (_hmo isEqualTo "404") then {
     private _cfg = (configFile >> QGVAR(FogParams) >> _presetName);
+    private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
     _hmo = createHashMapObject [
         [
-            ["inTransition", true],
-
             ["varName", _varName],
             ["presetName", _presetName],
 
             ["missionTimeStart", _startTime],
             ["missionTimeEnd", (_startTime + _duration)],
 
-            ["intensityStart", 0],
-            ["intensityCurrent", 0.01],
-            ["intensityTarget", _intensity],
-
-            ["fogMode", 0],
-
             ["fogParamsPreviousWeather", fogParams],
             ["fogParamsRestorePrevious", true],
             ["fogParamsRestoreTime", 5*60],
 
+            ["fog_value_min" = _hash get "fog_value_min"],
+            ["fog_value_max" = _hash get "fog_value_max"],
+            ["fog_decay" = _hash get "fog_decay"],
+            ["fog_base" = _hash get "fog_base"],
+            ["fog_mode" = _hash get "fog_mode"],
+            ["fog_boost" = _hash get "fog_boost" > 0],
 
-            ["fogParamsPreset", []],
-            ["fogParamsTarget", []],
+            ["fogParamsTarget", [0,0,0]],
+
+            ["M2_inTransition", false],
+            ["M2_isActive", false],
+            ["M2_breakLoop", false],
+            ["M2_interval", 60],
+
+
+            ["intensityStart", 0],
+            ["intensityTarget", _intensity],
+            ["intensityCurrent", 0.01],
 
             ["#flags", ["noCopy","unscheduled"]],
 
             ["#create", {
                 _fnc_scriptName = "#create";
-                [ { _this#0 call ["Meth_Loop"]; } , [_self], 1] call CBA_fnc_waitAndExecute;
+
+                switch (OGET(fogMode)) do {
+                    case 0: { _self call ["Meth_Apply_Mode0"]; };
+                    case 1: { _self call ["Meth_Apply_Mode1"]; };
+                    case 2: {
+                        _self call ["Meth_Apply_Mode2"];
+                        
+                        OSET(M2_inTransition,true);
+                        OSET(M2_isActive,true);
+
+                    };
+                };
             }],
 
 
             ["#delete", {
+                // Handles return to pre-storm fogParams
                 _fnc_scriptName = "#delete";
                 if (fogParamsRestorePrevious) then {
                     OGET(fogParamsRestoreTime) setFog OGET(fogParamsPreviousWeather);
                 };
+            }],
+
+            ["Meth_UpdateData",{
+                _fnc_scriptName = "Meth_UpdateData";
+                private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
+                OSET(fog_value_min,_hash get "fog_value_min");
+                OSET(fog_value_max,_hash get "fog_value_max");
+                OSET(fog_decay,_hash get "fog_decay");
+                OSET(fog_base,_hash get "fog_base");
+                OSET(fog_mode,_hash get "fog_mode");
+                OSET(fog_boost,_hash get "fog_boost");
+            }],
+
+            ["Meth_updateTarget",{
+                _fnc_scriptName = "Meth_updateTarget";
+                OSET(fogParamsTarget,[linearConversion[0,1,OGET(intensityCurrent),OGET(fog_value_min),OGET(fog_value_max),true],OGET(fog_decay),OGET(fog_base)]);
             }],
 
             // Methods
@@ -96,17 +132,98 @@ if (_hmo isEqualTo "404") then {
                 params ["_presetName", "_duration", "_intensity"];
 
                 private _startTime = CBA_missionTime;
+                private _oldMode = OGET(fog_mode);
 
                 OSET(missionTimeStart,_startTime);
                 OSET(missionTimeEnd,_startTime + _duration);
 
+
+                if (_presetName != OGET(presetName)) then {
+                    OSET(presetName,_presetName);
+                    _self call ["Meth_UpdateData"];
+                };
+
                 OSET(intensityStart,OGET(intensityCurrent));
                 OSET(intensityTarget,_intensity);
 
-                OSET(inTransition,true);
+                if (_intensity == 0) then {
+                    OSET(fog_mode,0);
+                };
+               
+                private _newMode = OGET(fog_mode);
+
+
+                if ((_oldMode == 2) && (_newMode != 2)) then {
+                    // check if current mode == 2 and new mode is different, then break and wait for automatic 
+                    OSET(M2_breakLoop,true);
+                } else {
+                    _self call ["#create"];
+                };
             }],
-            ["Meth_Loop", {
-            }]
+
+
+
+
+
+
+            ["Meth_Apply_Mode0", {
+                _fnc_scriptName = "Meth_Apply_Mode0";
+                private _duration = OGET(missionTimeEnd) - CBA_missionTime;
+                
+                OSET(intensityCurrent,OGET(intensityTarget));
+                
+                if (OGET(intensityTarget == 0) && {OGET(fogParamsRestorePrevious)} ) then {
+                    _duration setFog OGET(fogParamsPreviousWeather);
+                } else {
+                    _self call ["Meth_updateTarget"];
+                    _duration setFog OGET(fogParamsTarget)
+                };
+            }],
+
+
+
+            ["Meth_Apply_Mode1", {
+                _fnc_scriptName = "Meth_Apply_Mode1";
+                private _duration = OGET(missionTimeEnd) - CBA_missionTime;
+                
+                OSET(intensityCurrent,OGET(intensityTarget));
+                _self call ["Meth_updateTarget"];
+
+                private _avg_ASL = round ([] call FUNC(get_AvgASL));
+                if (OGET(fog_boost)) then { _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 230,false]; };
+              
+                private _fogParams = + OGET(fogParamsTarget);
+                _fogParams set [2, _fogParams#2 + _avg_ASL ];
+
+                _duration setFog _fogParams;
+            }],
+
+
+
+            ["Meth_Apply_Mode2", {
+                _fnc_scriptName = "Meth_Apply_Mode2";                
+                if (OGET(M2_breakLoop)) exitWith { _self call ["#create"]; };
+
+                private _avg_ASL = round ([] call FUNC(get_AvgASL));                
+                if (OGET(fog_boost)) then { _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 230,false]; };
+
+                if (OGET(M2_inTransition)) then {
+                    // adjust params based on intensity
+                    OSET(intensityCurrent,linearConversion[OGET(missionTimeStart),OGET(MissionTimeEnd),CBA_missionTime,OGET(intensityStart),OGET(intensityTarget),true]);
+                    _self call ["Meth_updateTarget"];
+                    if (CBA_missionTime > OGET(missionTimeEnd)) then { OSET(M2_inTransition,false); };
+                };
+
+                //just retrieve AvgASL and adjust base
+                private _fogParams = + OGET(fogParamsTarget);
+
+                _fogParams set [2, _fogParams#2 + _avg_ASL ];
+
+                OGET(M2_interval) setFog _fogParams;
+
+                if ( !OGET(M2_inTransition) && {OGET(intensityCurrent) == 0} ) exitWith { missionNamespace setVariable [OGET(varName),nil] };
+                [ { _this call ["Meth_Apply_Mode2"] } , _self, OGET(M2_interval)] call CBA_fnc_waitAndExecute;
+            }],
         ]
     ];
 
@@ -117,17 +234,12 @@ if (_hmo isEqualTo "404") then {
 };
 
 
-//////////////////////////////////
-if (_firstWeatherChange) then {
-   0 setFog          fogParams;
-};
-
 // ##################################################
 // ################### fog params ################### 
 
 if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
   if (_firstWeatherChange) then {
- // Save Current
+    // Save Current
    GVAR(S_previousWeather) set ["change_fog", 1];
    GVAR(S_previousWeather) set ["fogParams", fogParams];
    };
@@ -135,9 +247,6 @@ if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
 
  // Establish _fog_target for the Transition
    private ["_fog_target", "_fog_Mode", "_fog_boost"];
-
-   _fog_boost = _hashMap getOrDefault ["fog_boost", 0];
-   _fog_boost = _fog_boost > 0;
 
    switch (_intensity) do {
       case 0: {

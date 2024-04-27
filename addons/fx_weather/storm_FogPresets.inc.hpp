@@ -16,11 +16,13 @@ class GVAR(FogParams)
         fog_value_max = 0;                              // 0..1   - Maximum Fog Level at 100% intensity
         fog_decay = 0;                                  // 0..1   - Recommend to stay within 0 .. 0.1 - Additional Info: fogDecay - how much the fog density decays with altitude. 0 = constant density, 0.0049333 = density halves every 500m
         fog_base = 0;                                   // number - meters +/- above Sea Level
-        fog_mode = 0;                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
+        fog_mode = 0;                                   // Fogmode: 0 - apply setFog with param once, ideal for static fog params.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
         fog_boost = 0;
     };
 
-    class GVAR(Fog_Static)    : GVAR(Fog_Default) { fog_value_max = 1.0; };
+    // Static Fog Presets have a decay value of 0, meaning they will be exactly the same, no matter the base or ASL.
+    // Ideally to be used with fog_mode 0 - simple, direct application
+    class GVAR(Fog_Static_100): GVAR(Fog_Default) { fog_value_max = 1.0; };
     class GVAR(Fog_Static_90) : GVAR(Fog_Default) { fog_value_max = 0.9; };
     class GVAR(Fog_Static_80) : GVAR(Fog_Default) { fog_value_max = 0.8; };
     class GVAR(Fog_Static_70) : GVAR(Fog_Default) { fog_value_max = 0.7; };
@@ -30,6 +32,7 @@ class GVAR(FogParams)
     class GVAR(Fog_Static_30) : GVAR(Fog_Default) { fog_value_max = 0.3; };
     class GVAR(Fog_Static_20) : GVAR(Fog_Default) { fog_value_max = 0.2; };
     class GVAR(Fog_Static_10) : GVAR(Fog_Default) { fog_value_max = 0.1; };
+
 
     class GVAR(Fog_Dynamic_Sandstorm) : GVAR(Fog_Default)
     {
