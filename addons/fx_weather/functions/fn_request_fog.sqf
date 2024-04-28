@@ -109,6 +109,7 @@ if (_hmo isEqualTo "404") then {
                 };
             }],
 
+
             ["Meth_UpdateData",{
                 _fnc_scriptName = "Meth_UpdateData";
                 private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
@@ -120,10 +121,12 @@ if (_hmo isEqualTo "404") then {
                 OSET(fog_boost,_hash get "fog_boost");
             }],
 
+
             ["Meth_updateTarget",{
                 _fnc_scriptName = "Meth_updateTarget";
                 OSET(fogParamsTarget,[linearConversion[0,1,OGET(intensityCurrent),OGET(fog_value_min),OGET(fog_value_max),true],OGET(fog_decay),OGET(fog_base)]);
             }],
+
 
             // Methods
             ["Meth_Update", {
@@ -160,10 +163,6 @@ if (_hmo isEqualTo "404") then {
                     _self call ["#create"];
                 };
             }],
-
-
-
-
 
 
             ["Meth_Apply_Mode0", {
@@ -207,6 +206,27 @@ if (_hmo isEqualTo "404") then {
                 private _avg_ASL = round ([] call FUNC(get_AvgASL));                
                 if (OGET(fog_boost)) then { _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 230,false]; };
 
+
+                private _currentParams = switch (time > _endTime) do {
+                    case true: {
+                        // ZRN_LOG_MSG_1(PFH after transitiion,time);
+                        // fog_target
+                        [
+                            _fog_target#0,
+                            _fog_target#1,
+                           (_fog_target#2) + _avg_ASL
+                        ]
+                    };
+                    case false: {
+                        // ZRN_LOG_MSG_1(PFH during transitiion,time);
+                        [
+                            linearConversion [_startTime, _endTime, time, _fog_start#0, _fog_target#0,             true ],
+                            linearConversion [_startTime, _endTime, time, _fog_start#1, _fog_target#1,             true ],
+                            linearConversion [_startTime, _endTime, time, _fog_start#2,(_fog_target#2) + _avg_ASL, true ]
+                        ]
+                    };
+                };
+
                 if (OGET(M2_inTransition)) then {
                     // adjust params based on intensity
                     OSET(intensityCurrent,linearConversion[OGET(missionTimeStart),OGET(MissionTimeEnd),CBA_missionTime,OGET(intensityStart),OGET(intensityTarget),true]);
@@ -221,6 +241,8 @@ if (_hmo isEqualTo "404") then {
 
                 OGET(M2_interval) setFog _fogParams;
 
+
+                // Final
                 if ( !OGET(M2_inTransition) && {OGET(intensityCurrent) == 0} ) exitWith { missionNamespace setVariable [OGET(varName),nil] };
                 [ { _this call ["Meth_Apply_Mode2"] } , _self, OGET(M2_interval)] call CBA_fnc_waitAndExecute;
             }],
