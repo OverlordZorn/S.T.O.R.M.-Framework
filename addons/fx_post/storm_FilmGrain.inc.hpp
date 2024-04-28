@@ -1,3 +1,5 @@
+// AVOID 0.0 for sharpness, potential engine issue for AMD GPU's -> Can cause fully black pixels
+
 class GVAR(FG_Default)
 {
 	ppEffectType = "FilmGrain";
@@ -37,7 +39,7 @@ class GVAR(FG_Storm) : GVAR(FG_Default)
 class GVAR(FG_Storm_10) : GVAR(FG_Default)
 {
 	intensity =   0.10;			// 0..1
-	sharpness =   0.0;			// 1..20
+	sharpness =   0.01;			// 1..20
 	grainSize =   1.0;			// 1..8
 	intensityX0 = 0.1;			// -x..0..+x
 	intensityX1 = 0.0;			// -x..0..+x
