@@ -1,3 +1,5 @@
+// AVOID 0.0 for sharpness, potential engine issue for AMD GPU's -> Can cause fully black pixels
+
 class GVAR(FG_Default)
 {
 	ppEffectType = "FilmGrain";
