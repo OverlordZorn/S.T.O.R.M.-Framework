@@ -113,7 +113,7 @@ _code = if (_intensity == 0 ) then {
 };
 [_code, [], _duration * 60 ] call CBA_fnc_waitAndExecute;
 
-if (STORM_DEBUG) then {
+if (missionNamespace [QPVAR(DEBUG), false]) then {
    [ { systemChat "transition completed" } , [], _duration * 60] call CBA_fnc_waitAndExecute;
 };
 
