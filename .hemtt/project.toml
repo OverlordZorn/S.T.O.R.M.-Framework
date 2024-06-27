@@ -136,6 +136,33 @@ workshop = [
 #    "1585582292", # Arma Debug Engine
 ]
 
+[hemtt.launch.Enoch]
+workshop = [
+    "450814997", # CBA_A3's Workshop ID
+    "463939057", # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+    "2018593688", # ZEN ACE Compat
+#    "1613905318", # Emitter 3Ditor
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
+]
+
+mission = "test-storm-framework.enoch"
+
+
+parameters = [
+    "-filePatching",
+    "-window",
+    "-noPause",
+    "-noPauseAudio",
+]
+dlc = [
+]
+optionals = [
+]
+
+
 [hemtt.launch.Stratis]
 workshop = [
     "450814997", # CBA_A3's Workshop ID
@@ -152,10 +179,6 @@ mission = "test-storm-framework.stratis"
 
 
 parameters = [
-    "-skipIntro",           # These parameters are passed to the Arma 3 executable
-    "-noSplash",            # They do not need to be added to your list
-    "-showScriptErrors",    # You can add additional parameters here
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -182,10 +205,6 @@ mission = "test-storm-framework.SefrouRamal"
 
 
 parameters = [
-    "-skipIntro",           # These parameters are passed to the Arma 3 executable
-    "-noSplash",            # They do not need to be added to your list
-    "-showScriptErrors",    # You can add additional parameters here
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -215,10 +234,6 @@ mission = "test-storm-framework.VTF_Korsac_Winter"
 
 
 parameters = [
-    "-skipIntro",           # These parameters are passed to the Arma 3 executable
-    "-noSplash",            # They do not need to be added to your list
-    "-showScriptErrors",    # You can add additional parameters here
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -247,10 +262,6 @@ mission = "test-storm-framework.VTF_Korsac"
 
 
 parameters = [
-    "-skipIntro",           # These parameters are passed to the Arma 3 executable
-    "-noSplash",            # They do not need to be added to your list
-    "-showScriptErrors",    # You can add additional parameters here
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -279,10 +290,6 @@ mission = "test-storm-framework.altis"
 
 
 parameters = [
-    "-skipIntro",           # These parameters are passed to the Arma 3 executable
-    "-noSplash",            # They do not need to be added to your list
-    "-showScriptErrors",    # You can add additional parameters here
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
