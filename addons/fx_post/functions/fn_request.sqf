@@ -36,8 +36,15 @@ ZRN_LOG_MSG_3(INIT,_presetName,_duration,_intensity);
 if  (_presetName isEqualTo "")                                                                               exitWith { ZRN_LOG_MSG(failed: effectName not provided); false};
 if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", true] apply { configName _x })) exitWith { ZRN_LOG_MSG(failed: effectName not found); false};
 
-private _cfg = (configFile >> QGVAR(Presets) >> _presetName ); 
-private _jipHandle = [QADDON, getText(_cfg >> "ppEffectType"), getNumber(_cfg >> "ppEffectLayer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
+private _cfg = (configFile >> QGVAR(Presets) >> _presetName );
+private _ppType = getText(_cfg >> "ppEffectType");
+private _jipHandle = [QADDON, _ppType, getNumber(_cfg >> "ppEffectLayer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
+
+
+// Adjust Color Corrections Minimum Intensity
+if (_ppType == "ColorCorrections") then {
+    _intensity = _intensity max 0.3;
+};
 
 
 // Check fail when _intensity == 0 while no Prev effect
