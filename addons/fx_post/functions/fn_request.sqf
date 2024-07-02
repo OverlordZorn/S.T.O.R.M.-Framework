@@ -38,12 +38,16 @@ if !(_presetName in (configProperties [configFile >> QGVAR(Presets), "true", tru
 
 private _cfg = (configFile >> QGVAR(Presets) >> _presetName );
 private _ppType = getText(_cfg >> "ppEffectType");
+private _ppEffectLayer = getNumber(_cfg >> "ppEffectLayer");
 private _jipHandle = [QADDON, _ppType, getNumber(_cfg >> "ppEffectLayer") ] joinString "_";  // dedicated jipHandle needed due to the nature of postEffects. There can be multiple of the same type, but they have to on seperate layers. jipHandle based on effectName is not enough. 
 
 
-// Adjust Color Corrections Minimum Intensity
-if (_ppType == "ColorCorrections") then {
-    _intensity = _intensity max 0.3;
+// Adjust Basic CC Effects for minimum Intensity
+if (
+        (_ppType == "ColorCorrections") &&
+        {_ppEffectLayer == 0}
+    ) then {
+    _intensity = _intensity max 0.5;
 };
 
 
