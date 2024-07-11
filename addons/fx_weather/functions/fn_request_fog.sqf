@@ -48,19 +48,16 @@ private _hmo = missionNameSpace getVariable [_varName, "404"];
 if ( _intensity == 0 && { _hmo isEqualTo "404" } ) exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
 
 
-
 if (_hmo isEqualTo "404") then {
 //    private _cfg = (configFile >> QGVAR(FogParams) >> _presetName); // not in use currently
     ZRN_LOG_MSG_1(creating new HMO,_hmo);
 
-
     private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
-
-
 
     _hmo = createHashMapObject [
         [
             ["isActive", true],
+            ["inTransition", true],
 
             ["varName", _varName],
             ["presetName", _presetName],
@@ -83,7 +80,7 @@ if (_hmo isEqualTo "404") then {
             ["fogParamsStart", fogParams],
             ["fogParamsTarget", [0,0,0]],
 
-            ["intensity_Start", 0],
+            ["intensity_Start", 0.01],
             ["intensity_Current", 0.01],
             ["intensity_Target", _intensity],
 
@@ -152,8 +149,6 @@ if (_hmo isEqualTo "404") then {
                     true
                 ];
                 OSET(intensity_Current,_int);
-
-                // When intensity of 0 has been reached
             }],
 
             ["Meth_currentFogParams", {
@@ -164,7 +159,7 @@ if (_hmo isEqualTo "404") then {
                     case "STATIC": {
                         linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
                     };
-/*                  case "DYNAMIC": {
+                    /*case "DYNAMIC": {
                         private _value = linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
                         private _dispersion = OGET(fog_decay);
                         private _base = switch (OGET(fog_useAvgASL)) do {
@@ -186,13 +181,20 @@ if (_hmo isEqualTo "404") then {
 
                 // if not active, stop the loop and delete the HMO
                 if (!OGET(isActive)) exitWith { missionNamespace setVariable [OGET(varName), nil] };
-
                 _self call ["Meth_CurrentIntensity"];
-                
+
                 private _fogParams = _self call ["Meth_currentFogParams"];
 
                 OGET(interval) setFog _fogParams;
-                
+
+                // When intensity of 0 has been reached, delete the HMO
+                if (OGET(intensity_Current) == 0) then {OSET(isActive,false);};
+                // When intensity == target, end Transition.
+                if (OGET(intensity_Current) == OGET(intensity_Target)) then {OSET(inTransition,false);};
+                // When transition ends and avgASL is not in use.
+                if (!OGET(inTransition)  && {! OGET(fog_useAvgASL)}) then {OSET(isActive,false);};
+
+
                 [{ _this#0 call ["Meth_Apply"] }, [_self], OGET(interval)] call CBA_fnc_waitAndExecute;
             }]
         ]
