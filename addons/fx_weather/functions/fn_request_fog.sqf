@@ -24,7 +24,7 @@
 *
 */
 
-// TODO - Continue here
+#define INTERVAL 60
 
 
 if (!isServer) exitWith {};
@@ -35,8 +35,6 @@ params [
     ["_intensity",  1,      [0]     ],
     ["_restore",    false,  [true]  ]
 ];
-
-ZRN_LOG_MSG_4(INIT,_presetName,_duration,_intensity,_restore);
 
 _intensity = _intensity max 0 min 1;
 _duration = 60 * (_duration max 1);
@@ -55,233 +53,148 @@ if (_hmo isEqualTo "404") then {
 //    private _cfg = (configFile >> QGVAR(FogParams) >> _presetName); // not in use currently
     ZRN_LOG_MSG_1(creating new HMO,_hmo);
 
+
     private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
+
 
 
     _hmo = createHashMapObject [
         [
+            ["isActive", true],
+
             ["varName", _varName],
             ["presetName", _presetName],
 
-            ["missionTimeStart", _startTime],
-            ["missionTimeEnd", (_startTime + _duration)],
+            ["time_start", CBA_missionTime],
+            ["time_end", (CBA_missionTime + _duration)],
 
-            ["fogParamsPreviousWeather", fogParams],
-            ["fogParamsRestorePrevious", _restore],
-            ["fogParamsRestoreTime", 5*60],
+            ["restore_willRestore", _restore],
+            ["restore_previousWeather", fogParams],
+            ["restore_duration", _duration],
 
             ["fog_value_min", _hash get "fog_value_min"],
             ["fog_value_max", _hash get "fog_value_max"],
             ["fog_decay", _hash get "fog_decay"],
             ["fog_base", _hash get "fog_base"],
+
             ["fog_mode", _hash get "fog_mode"],
-            ["fog_boost", (_hash get "fog_boost") > 0],
+            ["fog_useAvgASL", _hash get "fog_useAvgASL"],
 
             ["fogParamsStart", fogParams],
             ["fogParamsTarget", [0,0,0]],
 
-//            ["M2_inTransition", false],
-//            ["M2_isActive", false],
-//            ["M2_breakLoop", false],
-//            ["M2_interval", 60],
+            ["intensity_Start", 0],
+            ["intensity_Current", 0.01],
+            ["intensity_Target", _intensity],
 
-
-            ["intensityStart", 0],
-            ["intensityCurrent", 0.01],
-            ["intensityTarget", _intensity],
+            ["interval", INTERVAL],
 
             ["#flags", ["noCopy","unscheduled"]],
 
             ["#create", {
                 _fnc_scriptName = "#create";
 
-                ZRN_LOG_MSG_1(init,OGET(fog_mode));
-
-                switch (OGET(fog_mode)) do {
-                    case 0: { _self call ["Meth_Apply_Mode0"]; };
-                    /*
-                    case 1: { _self call ["Meth_Apply_Mode1"]; };
-                    case 2: {
-                        _self call ["Meth_Apply_Mode2"];
-                        
-                        OSET(M2_inTransition,true);
-                        OSET(M2_isActive,true);
-                    };
-                    */
-                };
-                ZRN_LOG_1(OGET(intensityCurrent));
+                _self call ["Meth_Apply"];
             }],
 
 
             ["#delete", {
                 // Handles return to pre-storm fogParams
                 _fnc_scriptName = "#delete";
-                if (fogParamsRestorePrevious) then {
-                    OGET(fogParamsRestoreTime) setFog OGET(fogParamsPreviousWeather);
+                if (OGET(restore_willRestore)) then {
+                    OGET(restore_duration) setFog OGET(restore_previousWeather);
                 };
             }],
 
-            ["Meth_updateTarget",{
-                _fnc_scriptName = "Meth_updateTarget";
-
-                private _arr = [
-                    linearConversion[0,1,OGET(intensityCurrent),OGET(fog_value_min),OGET(fog_value_max),true],
-                    OGET(fog_decay),
-                    OGET(fog_base)
-                ];
-                OSET(fogParamsTarget,_arr);
-                ZRN_LOG_MSG_1(Result,_arr);
-                ZRN_LOG_1(OGET(fogParamsTarget));
-            }],
-
-
             // Methods
             ["Meth_Update", {
+                // Updates the current
                 _fnc_scriptName = "Meth_Update";
 
-                params [
-                    ["_presetName", "",     [""]    ],
-                    ["_duration",   5,      [0]     ],
-                    ["_intensity",  1,      [0]     ],
-                    ["_restore",    false,  [true]  ]
-                ];
-                ZRN_LOG_MSG_1(x,OGET(intensityCurrent));
+                params ["_presetName", "_duration", "_intensity","_restore"];
 
-                private _oldMode = OGET(fog_mode);
+                if (_restore) then {
+                    OSET(restore_willRestore,_restore);
+                    OSET(restore_previousWeather,fogParams);
+                    OSET(restore_duration,_duraiton);
+                };
 
-                OSET(fogParamsRestorePrevious,_restore);
-                OSET(fogParamsStart,fogParams);
-
-                OSET(missionTimeStart,CBA_missionTime);
-                OSET(missionTimeEnd,CBA_missionTime + _duration);
-
+                OSET(time_start,CBA_missionTime);
+                OSET(time_end,CBA_missionTime + _duration);
 
                 if (_presetName != OGET(presetName)) then {
                     private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
                     OSET(presetName,_presetName);
+
                     OSET(fog_value_min,_hash get "fog_value_min");
                     OSET(fog_value_max,_hash get "fog_value_max");
+
                     OSET(fog_decay,_hash get "fog_decay");
                     OSET(fog_base,_hash get "fog_base");
+
                     OSET(fog_mode,_hash get "fog_mode");
-                    OSET(fog_boost,_hash get "fog_boost");
+                    OSET(fog_useAvgASL,_hash get "fog_useAvgASL");
                 };
 
-                OSET(intensityStart,OGET(intensityCurrent));
-                OSET(intensityTarget,_intensity);
+                OSET(intensity_Start,OGET(intensity_Current));
+                OSET(intensity_Target,_intensity);
+            }],
 
-                if (_intensity == 0) then {
-                    OSET(fog_mode,0);
-                };
-               
-                private _newMode = OGET(fog_mode);
+            ["Meth_CurrentIntensity", {
+                // calculates and stores current intensity.
+                _fnc_scriptName = "Meth_CurrentIntensity";
+                private _int = linearConversion [
+                    OGET(time_start),
+                    OGET(time_end),
+                    CBA_missionTime,
+                    OGET(intensity_Start),
+                    OGET(intensity_Target),
+                    true
+                ];
+                OSET(intensity_Current,_int);
 
+                // When intensity of 0 has been reached
+            }],
 
-                if ((_oldMode == 2) && (_newMode != 2)) then {
-                    // check if current mode == 2 and new mode is different, then break and wait for automatic 
-                    OSET(M2_breakLoop,true);
-                } else {
-                    _self call ["#create"];
+            ["Meth_currentFogParams", {
+                // calculates and returns current target fogParams, be it "simple value" (0..1) or paramArray.
+                _fnc_scriptName = "Meth_currentFogParams";
+
+                private _return = switch (OGET(fog_mode)) do {
+                    case "STATIC": {
+                        linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
+                    };
+/*                  case "DYNAMIC": {
+                        private _value = linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
+                        private _dispersion = OGET(fog_decay);
+                        private _base = switch (OGET(fog_useAvgASL)) do {
+                            case 0: { OGET(fog_base) };
+                            case 1: { OGET(fog_base) + [] call FUNC(get_AvgASL) };
+                        };
+                        [
+                            _value,
+                            _dispersion,
+                            _base
+                        ]
+                    };*/
+                    default { 0 };
                 };
             }],
 
+            ["Meth_Apply", {
+                _fnc_scriptName = "Meth_Apply";
 
-            ["Meth_Apply_Mode0", {
-                _fnc_scriptName = "Meth_Apply_Mode0";
-                ZRN_LOG_MSG(Mode0 init);
+                // if not active, stop the loop and delete the HMO
+                if (!OGET(isActive)) exitWith { missionNamespace setVariable [OGET(varName), nil] };
 
-
-                private _duration = OGET(missionTimeEnd) - CBA_missionTime;
+                _self call ["Meth_CurrentIntensity"];
                 
-                OSET(intensityCurrent,OGET(intensityTarget));
+                private _fogParams = _self call ["Meth_currentFogParams"];
+
+                OGET(interval) setFog _fogParams;
                 
-                if (OGET(intensityTarget == 0) && {OGET(fogParamsRestorePrevious)} ) then {
-                    _duration setFog OGET(fogParamsPreviousWeather);
-                } else {
-                    _self call ["Meth_updateTarget"];
-                    _duration setFog OGET(fogParamsTarget);
-                };
-            }]/*,          
-// Mode 1 is currently on hold, dont really see any need or application for it
-            ["Meth_Apply_Mode1", {
-                _fnc_scriptName = "Meth_Apply_Mode1";
-                private _duration = OGET(missionTimeEnd) - CBA_missionTime;
-                
-                ZRN_LOG_MSG_1(x,OGET(intensityCurrent));
-                ZRN_LOG_MSG_1(x,OGET(intensityTarget));
-
-                OSET(intensityCurrent,OGET(intensityTarget));
-
-                ZRN_LOG_MSG_1(x,OGET(intensityCurrent));
-                ZRN_LOG_MSG_1(x,OGET(intensityTarget));
-
-                _self call ["Meth_updateTarget"];
-
-                private _avg_ASL = round ([] call FUNC(get_AvgASL));
-                if (OGET(fog_boost)) then { _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 230,false]; };
-              
-                private _fogParams = + OGET(fogParamsTarget);
-                _fogParams set [2, _fogParams#2 + _avg_ASL ];
-
-                _duration setFog _fogParams;
-            }],
-*/
-
-/*
-            ["Meth_Apply_Mode2", {
-                _fnc_scriptName = "Meth_Apply_Mode2";                
-                if (OGET(M2_breakLoop)) exitWith { _self call ["#create"]; };
-
-                private _avg_ASL = round ([] call FUNC(get_AvgASL));                
-                if (OGET(fog_boost)) then { _avg_ASL = _avg_ASL + linearConversion [0, 900, _avg_ASL, 0, 230,false]; };
-
-                private _fog_target = OGET(fogParamsTarget);
-                private _fog_start = OGET(fogParamsStart);
-
-
-                private _currentParams = switch (time > _endTime) do {
-                    case true: {
-                        ZRN_LOG_MSG_1(PFH after transitiion,time);
-                        // fog_target
-                        [
-                            _fog_target#0,
-                            _fog_target#1,
-                           (_fog_target#2) + _avg_ASL
-                        ]
-                    };
-                    case false: {
-                        ZRN_LOG_MSG_1(PFH during transitiion,time);
-                        [
-                            linearConversion [OGET(missionTimeStart), OGET(missionTimeEnd), time, _fog_start#0, _fog_target#0,             true ],
-                            linearConversion [OGET(missionTimeStart), OGET(missionTimeEnd), time, _fog_start#1, _fog_target#1,             true ],
-                            linearConversion [OGET(missionTimeStart), OGET(missionTimeEnd), time, _fog_start#2,(_fog_target#2) + _avg_ASL, true ]
-                        ]
-                    };
-                };
-                ZRN_LOG_1(_currentParams);
-
-                if (OGET(M2_inTransition)) then {
-                    // adjust params based on intensity
-                    private _value = linearConversion[OGET(missionTimeStart), OGET(MissionTimeEnd), CBA_missionTime, OGET(intensityStart), OGET(intensityTarget), true];
-                    ZRN_LOG_MSG_2(pre-,OGET(intensityCurrent),_value);
-                    OSET(intensityCurrent,_value);
-                    ZRN_LOG_MSG_1(post,OGET(intensityCurrent));
-                    _self call ["Meth_updateTarget"];
-                    if (CBA_missionTime > OGET(missionTimeEnd)) then { OSET(M2_inTransition,false); };
-                };
-
-                //just retrieve AvgASL and adjust base
-                private _fogParams = + OGET(fogParamsTarget);
-
-                _fogParams set [2, _fogParams#2 + _avg_ASL ];
-
-                OGET(M2_interval) setFog _fogParams;
-
-
-                // Final
-                if ( !OGET(M2_inTransition) && {OGET(intensityCurrent) == 0} ) exitWith { missionNamespace setVariable [OGET(varName),nil] };
-                [ { _this call ["Meth_Apply_Mode2"] } , _self, OGET(M2_interval)] call CBA_fnc_waitAndExecute;
-            }]*/
+                [{ _this#0 call ["Meth_Apply"] }, [_self], OGET(interval)] call CBA_fnc_waitAndExecute;
+            }]
         ]
     ];
 
@@ -292,69 +205,3 @@ if (_hmo isEqualTo "404") then {
 };
 
 true
-
-
-/*
-
-old code
-// ##################################################
-// ################### fog params ################### 
-
-if ((_hashMap getOrDefault ["change_fog", 0]) > 0) then {
-  if (_firstWeatherChange) then {
-    // Save Current
-   GVAR(S_previousWeather) set ["change_fog", 1];
-   GVAR(S_previousWeather) set ["fogParams", fogParams];
-   };
-
-
- // Establish _fog_target for the Transition
-   private ["_fog_target", "_fog_Mode", "_fog_boost"];
-
-   switch (_intensity) do {
-      case 0: {
-         // Handles reset to pre-request weather
-         _fog_target = _hashMap getOrDefault ["fogParams", [0,0,0]];
-         _fog_Mode = 1;
-         ZRN_LOG_MSG_2(Reset of Fog - Intensity == 0,_fog_mode,_fog_target);
-
-         [ { GVAR(S_fogParams) = nil; } , [], _duration * 1.1] call CBA_fnc_waitAndExecute;
-
-
-      };
-      default {
-         _fog_target = [];
-         _fog_target set [0, ( linearConversion [0,1,_intensity, _hashMap get "fog_value_min",_hashMap get "fog_value_max", true] )];
-         _fog_target set [1,_hashMap get "fog_decay"];
-         _fog_target set [2,_hashMap get "fog_base"];
-         _fog_Mode = _hashMap getOrDefault ["fog_mode", 0];
-         ZRN_LOG_MSG_2(Intensity != 0,_fog_mode,_fog_target);
-      };
-   };
-
-    // Executes Transition based on Mode
-   switch (_fog_Mode) do {
-      case 0: {
-
-         if (!isNil QGVAR(fogParams)) then {GVAR(fogParams) = nil};
-
-         [ { _this#0 setFog _this#1 } , [_duration, _fog_target], 5] call CBA_fnc_waitAndExecute;
-         _duration setFog _fog_target;
-
-         // No fogBase via AvgASL needed. Terminate perFrameHandler if active.
-         _return pushback ["fog reset to 0", true];
-
-      };
-      default {
-         // fogBase via AvgASL requested.
-         [_fog_target, _duration, _fog_boost] call FUNC(setFog_avg);
-         ZRN_LOG_MSG_3(setFog_avg-call,_duration,_fog_target,_intensity);
-
-         // If fogBase via AvgASL is requested only during initial Tranistion, (Mode=1), perFrameHandler will be terminated after transition.
-         _isContinous = [false, true] select (_fog_Mode - 1);
-         if (!_isContinous) then { [ { GVAR(fogParams) = nil; } , [], _duration * 1.1] call CBA_fnc_waitAndExecute;};
-         _return pushback ["fog", true];
-      };
-   };
-};
-*/
