@@ -89,7 +89,7 @@ if (_hmo isEqualTo "404") then {
             ["#flags", ["noCopy","unscheduled"]],
 
             ["#create", {
-                _fnc_scriptName = "#create";
+                private _fnc_scriptName = "#create";
 
                 _self call ["Meth_Apply"];
             }],
@@ -97,7 +97,7 @@ if (_hmo isEqualTo "404") then {
 
             ["#delete", {
                 // Handles return to pre-storm fogParams
-                _fnc_scriptName = "#delete";
+                private _fnc_scriptName = "#delete";
                 if (OGET(restore_willRestore)) then {
                     OGET(restore_duration) setFog OGET(restore_previousWeather);
                 };
@@ -106,7 +106,7 @@ if (_hmo isEqualTo "404") then {
             // Methods
             ["Meth_Update", {
                 // Updates the current
-                _fnc_scriptName = "Meth_Update";
+                private _fnc_scriptName = "Meth_Update";
 
                 params ["_presetName", "_duration", "_intensity","_restore"];
 
@@ -139,7 +139,7 @@ if (_hmo isEqualTo "404") then {
 
             ["Meth_CurrentIntensity", {
                 // calculates and stores current intensity.
-                _fnc_scriptName = "Meth_CurrentIntensity";
+                private _fnc_scriptName = "Meth_CurrentIntensity";
                 private _int = linearConversion [
                     OGET(time_start),
                     OGET(time_end),
@@ -153,9 +153,9 @@ if (_hmo isEqualTo "404") then {
 
             ["Meth_currentFogParams", {
                 // calculates and returns current target fogParams, be it "simple value" (0..1) or paramArray.
-                _fnc_scriptName = "Meth_currentFogParams";
 
                 private _return = switch (OGET(fog_mode)) do {
+                private _fnc_scriptName = "Meth_currentFogParams";
                     case "STATIC": {
                         linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
                     };
@@ -177,7 +177,7 @@ if (_hmo isEqualTo "404") then {
             }],
 
             ["Meth_Apply", {
-                _fnc_scriptName = "Meth_Apply";
+                private _fnc_scriptName = "Meth_Apply";
 
                 // if not active, stop the loop and delete the HMO
                 if (!OGET(isActive)) exitWith { missionNamespace setVariable [OGET(varName), nil] };

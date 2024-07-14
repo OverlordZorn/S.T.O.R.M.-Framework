@@ -72,13 +72,13 @@ if (_hmo isEqualTo "404") then {
             ["#flags", ["noCopy","unscheduled"]],
 
             ["#create", {
-                _fnc_scriptName = "#create";
+                private _fnc_scriptName = "#create";
                 [ { _this#0 call ["Meth_Loop"]; } , [_self], 1] call CBA_fnc_waitAndExecute;
             }],
 
 
             ["#delete", {
-                _fnc_scriptName = "#delete";
+                private _fnc_scriptName = "#delete";
                 ZRN_LOG_MSG_1(Pre-Cleanup,OGET(HelperObj));
                 deleteVehicle OGET(HelperObj);
                 ZRN_LOG_MSG_1(PostCleanup,OGET(HelperObj));
@@ -86,12 +86,12 @@ if (_hmo isEqualTo "404") then {
 
             // Methods
             ["Meth_Create_Helper",{
-                _fnc_scriptName = "Meth_Create_Helper";
+                private _fnc_scriptName = "Meth_Create_Helper";
                 _helperObj = createVehicleLocal ["Storm_FX_Sound_Helper", [0,0,0]];
                 OSET(helperObj,_helperObj);
             }],
             ["Meth_Update", {
-                _fnc_scriptName = "Meth_Update";
+                private _fnc_scriptName = "Meth_Update";
 
                 params ["_presetName", "_startTime", "_duration", "_intensity"];
 
@@ -104,7 +104,7 @@ if (_hmo isEqualTo "404") then {
                 OSET(inTransition,true);
             }],
             ["Meth_Loop", {
-                _fnc_scriptName = "Meth_Loop";
+                private _fnc_scriptName = "Meth_Loop";
 
                 if (!OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
                 if (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };
