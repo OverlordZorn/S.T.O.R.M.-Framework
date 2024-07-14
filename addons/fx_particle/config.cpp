@@ -7,7 +7,7 @@ class CfgPatches {
 		ADDON_CONFIG_HEADER;		// see based/script_mod.hpp
 
         // Minimum compatible version. When the game's version is lower, pop-up warning will appear when launching the game.
-        requiredVersion = 2.02;
+        requiredVersion = 2.10;
 
         // Required addons, used for setting load order.
         // When any of the addons is missing, pop-up warning will appear when launching the game.
