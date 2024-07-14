@@ -92,6 +92,8 @@ if (_hmo isEqualTo "404") then {
                 private _fnc_scriptName = "#create";
 
                 _self call ["Meth_Apply"];
+
+                ZRN_LOG_MSG(done);
             }],
 
 
@@ -120,6 +122,7 @@ if (_hmo isEqualTo "404") then {
                 OSET(time_end,CBA_missionTime + _duration);
 
                 if (_presetName != OGET(presetName)) then {
+                    ZRN_LOG_MSG_2(Different Preset - updating Data and Intensity,_presetName,_intensity);
                     private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
                     OSET(presetName,_presetName);
 
@@ -131,15 +134,21 @@ if (_hmo isEqualTo "404") then {
 
                     OSET(fog_mode,_hash get "fog_mode");
                     OSET(fog_useAvgASL,_hash get "fog_useAvgASL");
+                } else {
+                    ZRN_LOG_MSG_2(Same Preset - Updating Intensity,_presetName,_intensity);
                 };
 
                 OSET(intensity_Start,OGET(intensity_Current));
                 OSET(intensity_Target,_intensity);
+
+                //  OSET(isActive,true); // this shouldnt be needed i think.
+                OSET(inTransition,true);
             }],
 
             ["Meth_CurrentIntensity", {
                 // calculates and stores current intensity.
                 private _fnc_scriptName = "Meth_CurrentIntensity";
+                
                 private _int = linearConversion [
                     OGET(time_start),
                     OGET(time_end),
@@ -148,16 +157,25 @@ if (_hmo isEqualTo "404") then {
                     OGET(intensity_Target),
                     true
                 ];
+                
+                ZRN_LOG_1(OGET(time_start));
+                ZRN_LOG_1(OGET(time_end));
+                ZRN_LOG_1(CBA_missionTime);
+                ZRN_LOG_1(OGET(intensity_Start));
+                ZRN_LOG_1(OGET(intensity_Target));
+                
                 OSET(intensity_Current,_int);
+                ZRN_LOG_MSG_1(result:,_int);
             }],
 
             ["Meth_currentFogParams", {
                 // calculates and returns current target fogParams, be it "simple value" (0..1) or paramArray.
-
-                private _return = switch (OGET(fog_mode)) do {
                 private _fnc_scriptName = "Meth_currentFogParams";
+                private _fog_mode = OGET(fog_mode);
+                private _return = switch (_fog_mode) do {
                     case "STATIC": {
                         linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
+                        ZRN_LOG_3(OGET(intensity_Current),OGET(fog_value_min),OGET(fog_value_max));
                     };
                     /*case "DYNAMIC": {
                         private _value = linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
@@ -172,28 +190,43 @@ if (_hmo isEqualTo "404") then {
                             _base
                         ]
                     };*/
-                    default { 0 };
+                    default { 
+                        ZRN_LOG_MSG_1(failed: invalid fog_mode - fallback to 0,_fog_mode);
+                        0
+                    };
                 };
+                ZRN_LOG_1(_return);
+                _return
             }],
 
             ["Meth_Apply", {
                 private _fnc_scriptName = "Meth_Apply";
 
+                ZRN_LOG_MSG(start);
+
                 // if not active, stop the loop and delete the HMO
-                if (!OGET(isActive)) exitWith { missionNamespace setVariable [OGET(varName), nil] };
+                if (!OGET(isActive)) exitWith {
+                    ZRN_LOG_MSG_1(Exit: HMO reference deleted,OGET(isActive));
+                    missionNamespace setVariable [OGET(varName), nil];
+                };
                 _self call ["Meth_CurrentIntensity"];
 
                 private _fogParams = _self call ["Meth_currentFogParams"];
 
+                ZRN_LOG_MSG_2(FogExecution,OGET(interval),_fogParams);
                 OGET(interval) setFog _fogParams;
 
                 // When intensity of 0 has been reached, delete the HMO
-                if (OGET(intensity_Current) == 0) then {OSET(isActive,false);};
+                if (OGET(intensity_Current) == 0) then {
+                    OSET(isActive,false);
+                    ZRN_LOG_MSG_1(isActive set to false: Intensity Current reached 0,OGET(intensity_Current));
+                };
                 // When intensity == target, end Transition.
-                if (OGET(intensity_Current) == OGET(intensity_Target)) then {OSET(inTransition,false);};
-                // When transition ends and avgASL is not in use.
-                if (!OGET(inTransition)  && {! OGET(fog_useAvgASL)}) then {OSET(isActive,false);};
+                if (OGET(intensity_Current) == OGET(intensity_Target)) then {
+                    OSET(inTransition,false);
+                    ZRN_LOG_MSG_1(inTransition set to false: intensity_Current equals intensity_Target,OGET(intensity_Target));
 
+                };
 
                 [{ _this#0 call ["Meth_Apply"] }, [_self], OGET(interval)] call CBA_fnc_waitAndExecute;
             }]
@@ -207,3 +240,16 @@ if (_hmo isEqualTo "404") then {
 };
 
 true
+
+
+/*
+
+For storm with long duration, it might be needed to reapply the fog after a while, or when skipTime is being used, as this will cause the environment simulation to (prepare) a new natural weatherchange.
+
+Just re-apply the fog on an interval? Is it performance heavy?
+
+Alternative: Implement a system that detects weather changes?
+
+
+Problem 2: 
+*/
