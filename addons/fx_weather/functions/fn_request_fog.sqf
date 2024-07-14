@@ -75,7 +75,7 @@ if (_hmo isEqualTo "404") then {
             ["fog_base", _hash get "fog_base"],
 
             ["fog_mode", _hash get "fog_mode"],
-            ["fog_useAvgASL", _hash get "fog_useAvgASL"],
+            ["fog_useAvgASL", _hash get "fog_useAvgASL" > 0],
 
             ["fogParamsStart", fogParams],
             ["fogParamsTarget", [0,0,0]],
