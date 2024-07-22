@@ -43,7 +43,7 @@ class GVAR(FogParams)
         fog_decay = 0.013;                              // 0..1   - Recommend to stay within 0 .. 0.1 - Additional Info: fogDecay - how much the fog density decays with altitude. 0 = constant density, 0.0049333 = density halves every 500m
         fog_base = 180;                                 // number - meters +/- above Sea Level
         fog_mode = "DYNAMIC";                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on - fogDecay of 0 recommended! | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
-        fog_useAvgASL = 0;                              // 
+        fog_useAvgASL = 1;                              // 
     };
 
     class GVAR(Fog_Dynamic_lessFog) : GVAR(Fog_Dynamic_Sandstorm)

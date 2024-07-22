@@ -12,8 +12,11 @@
 
 #ifdef _STORM_DEBUG_
     #define _DEBUG_01_ 1
+    #define _DEBUG_ true
 #else
     #define _DEBUG_01_ 0
+    #define _DEBUG_ false
+
 #endif
 
 
@@ -106,7 +109,7 @@
 #define ZRN_LOG_MSG(MSG) diag_log (DEBUG_HEADER + QUOTE(MSG))
 
 #ifdef _STORM_DEBUG_
-    #define ZRN_SCRIPTNAME(var1) _fnc_scriptName = Q(var1)
+    #define ZRN_SCRIPTNAME(var1) private _fnc_scriptName = Q(var1)
 
     #define ZRN_LOG_MSG_1(MSG,A) diag_log (DEBUG_HEADER + (format [' %1 - A: %2',QUOTE(MSG),RETNIL(A)]))
     #define ZRN_LOG_MSG_2(MSG,A,B) diag_log (DEBUG_HEADER + (format [' %1 - A: %2 - B: %3',QUOTE(MSG),RETNIL(A),RETNIL(B)]))
