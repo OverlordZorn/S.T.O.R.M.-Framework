@@ -114,42 +114,55 @@ if (_hmo isEqualTo "404") then {
             ["Meth_Apply", {
                 private _fnc_scriptName = "Meth_Apply";
 
-                ZRN_LOG_MSG(start);
 
                 // if not active, stop the loop and delete the HMO
                 if (!OGET(isActive)) exitWith {
                     ZRN_LOG_MSG_1(Exit: deleting HMO reference...,OGET(isActive));
                     missionNamespace setVariable [OGET(varName), nil];
                 };
-                _self call ["Meth_CurrentIntensity"];
 
-                private _fogParams = _self call ["Meth_currentFogParams"];
-
-                ZRN_LOG_MSG_2(FogExecution,OGET(interval),_fogParams);
-                OGET(interval) setFog _fogParams;
-
-                // When intensity of 0 has been reached, delete the HMO
-                if (OGET(intensity_Current) == 0) then {
-                    OSET(isActive,false);
-                    ZRN_LOG_MSG_1(isActive set to false: Intensity Current reached 0,OGET(intensity_Current));
+                private _needSetFog = false;
+                if (OGET(inTransition)) then {
+                    _needSetFog = true;
+                } else {
+                    if !(_self call ["Meth_Compare"]) then { _needSetFog = true };
                 };
-                // When intensity == target, end Transition.
-                if (OGET(intensity_Current) == OGET(intensity_Target)) then {
-                    OSET(inTransition,false);
-                    OSET(interval,60);
+                
+                ZRN_LOG_1(_needSetFog);
+                if (_needSetFog) then {
+                    _self call ["Meth_CurrentIntensity"];
+                    private _fogParams = _self call ["Meth_currentFogParams"];
+                    private _interval = OGET(interval);
+                    _interval setFog _fogParams;
 
-                    ZRN_LOG_MSG_1(inTransition set to false: intensity_Current equals intensity_Target,OGET(intensity_Target));
+                    ZRN_LOG_MSG_2(setting Fog:,_interval,_fogParams);
 
+                    // When intensity of 0 has been reached, delete the HMO
+                    if (OGET(intensity_Current) == 0) then {
+                        OSET(isActive,false);
+                        ZRN_LOG_MSG_1(isActive set to false: Intensity Current reached 0,OGET(intensity_Current));
+                    };
+                    // When intensity == target, end Transition.
+                    if (OGET(intensity_Current) == OGET(intensity_Target)) then {
+                        OSET(inTransition,false);
+                        OSET(interval,60);
+                        ZRN_LOG_MSG_1(inTransition set to false: intensity_Current equals intensity_Target,OGET(intensity_Target));
+                    };
                 };
-
-                [{  }, [_self], OGET(interval)] call CBA_fnc_waitAndExecute;
 
                 [
                     { _this#0 get "needUpdate" },                                           // condition - Needs to return bool
-                    { _this#0 set ["needUpdate", false]; _this#0 call ["Meth_Apply"]; },    // Code to be executed once condition true
+                    {                                                                       // Code to be executed once condition true
+                        _this#0 set ["needUpdate", false];
+                        ZRN_LOG_MSG(WuAE - Need Update triggered);
+                        _this#0 call ["Meth_Apply"];
+                    },
                     [_self],                                                                // arguments to be passed on -> _this
-                    OGET(interval),                                                         // if condition isnt true within this time in S, _timecode will be executed.
-                    { _this#0 call ["Meth_Apply"]; }                                        // code to be executed if timeout
+                    OGET(interval),                                                         // if condition isnt true within this time in S, _timecode will be executed instead.
+                    {                                                                       // Code to be executed once condition true
+                        _this#0 call ["Meth_Apply"];
+                    }
+                    
                 ] call CBA_fnc_waitUntilAndExecute;
 
             }],
@@ -175,16 +188,23 @@ if (_hmo isEqualTo "404") then {
                 //ZRN_LOG_1(OGET(intensity_Target));
                 
                 OSET(intensity_Current,_int);
-                ZRN_LOG_MSG_1(result:,_int);
+                //ZRN_LOG_MSG_1(result:,_int);
             }],
 
-            /*["Meth_compare", {
-                private _current = fogParams;
-                private _
-            }],*/
+            ["Meth_Compare", {
+                private _fnc_scriptName = "Meth_Compare";
+                private _rounding = {
+                    private _div = 1000;
+                    (1/_div) * round (_x * _div);
+                };
+                // returns true if rounded "supposed to be(fogParams_Current)" is same as rounded "actually current(fogParams)"
+                private _return = (OGET(fogParams_Current) apply _rounding) isEqualTo (fogParams apply _rounding);
+                ZRN_LOG_1(_return);
+                _return
+            }],
 
             ["Meth_currentFogParams", {
-                // calculates and returns current target fogParams, be it "simple value" (0..1) or paramArray.
+                // calculates and returns current target fogParams(always as array)
                 private _fnc_scriptName = "Meth_currentFogParams";
                 private _fog_mode = OGET(fog_mode);
                 //ZRN_LOG_1(_fog_mode);
@@ -196,7 +216,7 @@ if (_hmo isEqualTo "404") then {
                             0
                         ]
                     };
-                    /*case "DYNAMIC": {
+                    case "DYNAMIC": {
                         private _value = linearConversion [0,1,OGET(intensity_Current), OGET(fog_value_min), OGET(fog_value_max), true];
                         private _dispersion = OGET(fog_decay);
                         private _base = switch (OGET(fog_useAvgASL)) do {
@@ -208,13 +228,14 @@ if (_hmo isEqualTo "404") then {
                             _dispersion,
                             _base
                         ]
-                    };*/
+                    };
                     default { 
-                        ZRN_LOG_MSG_1(failed: invalid fog_mode - fallback to 0,_fog_mode);
+                        ZRN_LOG_MSG_1(failed: invalid fog_mode - fallback to 000,_fog_mode);
                         [0,0,0]
                     };
                 };
                 //ZRN_LOG_1(_return);
+                OSET(fogParams_Current,_return);
                 _return
             }],
 
@@ -263,7 +284,7 @@ if (_hmo isEqualTo "404") then {
                 OSET(interval,_interval);
 
                 //triggers Meth_Apply immediately
-                OSET(updateNeeded,true);
+                OSET(needUpdate,true);
             }]
         ]
     ];

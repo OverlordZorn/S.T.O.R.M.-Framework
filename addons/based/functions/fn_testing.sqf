@@ -37,14 +37,40 @@ if !(_DEBUG_) exitWith {};
 
 
 // Test Fog Request
-systemChat "Waiting 10 secounds";
-5 setFog [1,0.1,50];
+systemChat "Waiting 5 secounds";
+
+// 5 setFog [0.15,0.02,50];
+
 [ { 
     ["STORM_FX_Weather_Fog_Static_70", 1, 0.7, true] call Storm_fx_weather_fnc_request_fog;
-    systemChat "10s passed - starting Fog Transition";
- } , [], 10] call CBA_fnc_waitAndExecute;
-[ { 
-    ["STORM_FX_Weather_Fog_Static_70", 1, 0] call Storm_fx_weather_fnc_request_fog;
-    systemChat "70s passed - setting Fog to 0";
- } , [], 70] call CBA_fnc_waitAndExecute;
+    
+    systemChat "5s passed - starting Fog Transition";
+ } , [], 5] call CBA_fnc_waitAndExecute;
 
+[ {
+    [] spawn {
+
+        {
+        diag_log "#########################";
+        diag_log "#########################";
+        diag_log format ["SkipTime: %1", _x];
+        diag_log "#########################";
+        diag_log "#########################";
+            for "_i" from 0 to 20 do {
+                diag_log "#########################";
+                diag_log  ("PRE - " + str fogParams);
+                skipTime _x;
+                diag_log  ("POST- " + str fogParams);
+                sleep 1;
+            };
+        } forEach [0.1,1,6,24];
+    };
+} , [], 100] call CBA_fnc_waitAndExecute;
+
+[ { 
+    ["STORM_FX_Weather_Fog_Static_50", 1, 0.5] call Storm_fx_weather_fnc_request_fog;
+ } , [], 300] call CBA_fnc_waitAndExecute;
+
+[ { 
+    ["STORM_FX_Weather_Fog_Static_50", 1, 0] call Storm_fx_weather_fnc_request_fog;
+ } , [], 600] call CBA_fnc_waitAndExecute;
