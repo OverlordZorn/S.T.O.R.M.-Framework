@@ -33,13 +33,11 @@ class CfgFunctions
 		{
 			file = PATH_TO_FNC;
 			class request {};
-
-//			class get_WeatherPreset_as_Hash {}; Not in use anymore, using storm_fnc_hashFromConfig instead.
 			class get_rainParams_as_Array {};
-
 			class get_AvgASL {};
-
 			class setWind {};
+
+			class request_fog {};
 			class setFog_avg {};
 		};
 	}; 
@@ -47,3 +45,4 @@ class CfgFunctions
 
 #include "storm_RainParams.inc.hpp"
 #include "storm_WeatherPresets.inc.hpp"
+#include "storm_FogPresets.inc.hpp"

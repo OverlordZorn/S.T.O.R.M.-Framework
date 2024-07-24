@@ -19,11 +19,11 @@
  * [_fogParams_Target, _setFog, 120 ] call storm_fxWeather_fnc_setFog_avg;
  * 
  * Public: No
-  *
+ *
  * GVARS
  *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY];
  *
- */
+*/
  
 
 if (!isServer) exitWith {};
@@ -63,7 +63,7 @@ private _codeToRun = {
     private _avg_ASL = round ([] call FUNC(get_AvgASL));
     //ZRN_LOG_MSG_1(Pre-Boost:,_avg_ASL);
 
-    if _boost then {
+    if (_boost) then {
         ////////////////////////////////////////////////////////////////////////////////
         // Problem: On Maps with a very high base elevation, fog sometimes wont be as intensive as on sea-level, where tested.
         // When increasing templates base value, the expierence on sea level will be to soupy

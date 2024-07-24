@@ -69,16 +69,16 @@ if (_hmo isEqualTo "404") then {
             ["#flags", ["noCopy","unscheduled"]],
 
             ["#create", {
-                _fnc_scriptName = "#create";
+                private _fnc_scriptName = "#create";
                 [ { _this#0 call ["Meth_Loop"]; } , [_self], 1] call CBA_fnc_waitAndExecute;
             }],
 
             ["#delete", {
-                _fnc_scriptName = "#delete";
+                private _fnc_scriptName = "#delete";
                 deleteVehicle OGET(helperObj);
             }],
             ["Meth_Create_Helper",{
-                _fnc_scriptName = "Meth_Create_Helper";
+                private _fnc_scriptName = "Meth_Create_Helper";
                 _helperObj = createVehicleLocal ["#particlesource", [0,0,0]];
                 _helperObj setPos getPos player;
                 _helperObj setParticleClass OGET(presetName);
@@ -86,7 +86,7 @@ if (_hmo isEqualTo "404") then {
             }],
 
             ["Meth_Update", {
-                _fnc_scriptName = "Meth_Update";
+                private _fnc_scriptName = "Meth_Update";
                 params ["_presetName", "_startTime", "_duration", "_intensity"];
                 OSET(missionTimeStart,_startTime);
                 OSET(missionTimeEnd,_startTime + _duration);
@@ -98,7 +98,7 @@ if (_hmo isEqualTo "404") then {
             }],
 
             ["Meth_Loop",{
-                _fnc_scriptName = "Meth_Loop";
+                private _fnc_scriptName = "Meth_Loop";
                 //default header
                 if !(OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
                 if  (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };

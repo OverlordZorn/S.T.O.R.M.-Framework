@@ -55,7 +55,7 @@ if (_hmo isEqualTo "404") then {
 
 // Meth_Exists
     	["Meth_Exists", {
-            _fnc_scriptName = "Meth_Exists";
+            private _fnc_scriptName = "Meth_Exists";
             params ["_jipHandle"];
 
             // Checks if _jipHandle already exists within ether of the arrays, if so, return true
@@ -69,7 +69,7 @@ if (_hmo isEqualTo "404") then {
         }],
 // Meth_Update
         ["Meth_Update", {
-            _fnc_scriptName = "Meth_Update";
+            private _fnc_scriptName = "Meth_Update";
 
             params ["_expiry","_jipHandle"];
 
@@ -105,7 +105,7 @@ if (_hmo isEqualTo "404") then {
 
 // Meth_NewActiveEntry
         ["Meth_NewActiveEntry",{
-            _fnc_scriptName = "Meth_NewActiveEntry";
+            private _fnc_scriptName = "Meth_NewActiveEntry";
 
             ZRN_LOG_MSG_1(Init,_this);
 
@@ -126,7 +126,7 @@ if (_hmo isEqualTo "404") then {
 
 // Meth_pfH_Start
         ["Meth_pfH_Start", {
-            _fnc_scriptName = "Meth_pfH_Start";
+            private _fnc_scriptName = "Meth_pfH_Start";
             // entry = [expiry, handle]
             if (OGET(pfHHandle) != -1) exitWith {ZRN_LOG_MSG(pfH not started - already active);};
 
@@ -145,7 +145,7 @@ if (_hmo isEqualTo "404") then {
 
 // Meth_pfH_Stop
         ["Meth_pfH_Stop", {
-            _fnc_scriptName = "Meth_pfH_Stop";
+            private _fnc_scriptName = "Meth_pfH_Stop";
             private _fnc_scriptName = "Meth_pfH_Stop";
             private _handle = OGET(pfHHandle);
             if (_handle isNotEqualTo -1) then { [_handle] call CBA_fnc_removePerFrameHandler };
