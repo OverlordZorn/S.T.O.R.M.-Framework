@@ -19,11 +19,11 @@
  * [_fogParams_Target, _setFog, 120 ] call storm_fxWeather_fnc_setFog_avg;
  * 
  * Public: No
-  *
+ *
  * GVARS
  *  	GVAR(S_fogParams) = [_startTime, _endTime, _fog_start, _fog_target, DELAY];
  *
- */
+*/
  
 
 if (!isServer) exitWith {};

@@ -37,10 +37,12 @@ if !(_DEBUG_) exitWith {};
 
 
 // Test Fog Request
+
+/*
 systemChat "Waiting 5 secounds";
 
 // 5 setFog [0.15,0.02,50];
-
+ 
 [ { 
     ["STORM_FX_Weather_Fog_Static_70", 1, 0.7, true] call Storm_fx_weather_fnc_request_fog;
     
@@ -74,3 +76,5 @@ systemChat "Waiting 5 secounds";
 [ { 
     ["STORM_FX_Weather_Fog_Static_50", 1, 0] call Storm_fx_weather_fnc_request_fog;
  } , [], 600] call CBA_fnc_waitAndExecute;
+
+ */

@@ -106,7 +106,7 @@
 
 
 
-#define ZRN_LOG_MSG(MSG) diag_log (DEBUG_HEADER + QUOTE(MSG))
+#define ZRN_LOG_MSG(MSG) diag_log (DEBUG_HEADER + " " + QUOTE(MSG))
 
 #ifdef _STORM_DEBUG_
     #define ZRN_SCRIPTNAME(var1) private _fnc_scriptName = Q(var1)
