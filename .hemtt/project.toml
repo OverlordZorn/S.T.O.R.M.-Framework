@@ -143,7 +143,6 @@ mission = "test-storm-framework.enoch"
 
 
 parameters = [
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -171,7 +170,6 @@ mission = "test-storm-framework.stratis"
 
 
 parameters = [
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -199,7 +197,6 @@ mission = "test-storm-framework.SefrouRamal"
 
 
 parameters = [
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -229,7 +226,6 @@ mission = "test-storm-framework.VTF_Korsac_Winter"
 
 
 parameters = [
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -258,7 +254,6 @@ mission = "test-storm-framework.VTF_Korsac"
 
 
 parameters = [
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",
@@ -287,7 +282,6 @@ mission = "test-storm-framework.altis"
 
 
 parameters = [
-    "-debug",
     "-filePatching",
     "-window",
     "-noPause",

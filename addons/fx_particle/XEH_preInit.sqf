@@ -9,11 +9,6 @@
     [MOD_NAME_BEAUTIFIED, localize "STR_STORM_FX_Particle_cat_Clientside"],                         //     _category    - Category for the settings menu + optional sub-category <STRING, ARRAY>
     [0.1,1,1,0,true],                                                           //     _valueInfo   - Extra properties of the setting depending of _settingType. See examples below <ANY> - data for this setting: [min, max, default, number of shown trailing decimals]
     2,                                                                          //     _isGlobal    - 1: all clients share the same setting, 2: setting can't be overwritten (optional, default: 0) <NUMBER> 
-    {
-        missionNameSpace setVariable [QPVAR(DEBUG), _this];
-        [_this] call PFUNC(toggleDebugHelper);
-    },                                                      // function that will be executed once on mission start and every time the setting is changed.
+    {},                                                                         // function that will be executed once on mission start and every time the setting is changed.
     false                                                   
 ] call CBA_fnc_addSetting;
-
-

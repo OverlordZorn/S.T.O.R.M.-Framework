@@ -35,7 +35,11 @@ DC and reconnect before transition to 0 completed.
 - Individual Modules
 -- Server Side
 --- FX_Weather
+---- Weather itself
+---- Fog Seperated
+
 --- MOD_SKill
+
 -- Client Side
 --- FX_Post
 --- FX_Particle

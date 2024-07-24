@@ -198,4 +198,4 @@ https://www.bohemia.net/community/licenses/arma-public-license-share-alike
 ## Especially to Everyone in the 24th Chorni Voron
 <p align="center">Thanks for enduring my absense while i was working nonstop on this mod
 <p align="center">
-<img alt="STORM Framework Logo" src="extras\branding\voron.png" width="300" height="300" href="http://discord.chornivoron.net">
+<img alt="CVO Logo" src="extras\branding\cvo\voron.png" width="300" height="300" href="http://discord.chornivoron.net">
