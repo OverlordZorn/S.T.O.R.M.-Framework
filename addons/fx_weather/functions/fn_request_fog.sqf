@@ -76,7 +76,7 @@ if (_hmo isEqualTo "404") then {
             ["fog_base", _hash get "fog_base"],
 
             ["fog_mode", _hash get "fog_mode"],
-            ["fog_useAvgASL", _hash get "fog_useAvgASL" > 0],
+            ["fog_useAvgASL", _hash get "fog_useAvgASL"],
 
             ["fogParams_Start", fogParams],
             ["fogParams_Current", fogParams],
@@ -221,7 +221,7 @@ if (_hmo isEqualTo "404") then {
                         private _dispersion = OGET(fog_decay);
                         private _base = switch (OGET(fog_useAvgASL)) do {
                             case 0: { OGET(fog_base) };
-                            case 1: { OGET(fog_base) + [] call FUNC(get_AvgASL) };
+                            case 1: { OGET(fog_base) + (call FUNC(get_AvgASL)) };
                         };
                         [
                             _value,
