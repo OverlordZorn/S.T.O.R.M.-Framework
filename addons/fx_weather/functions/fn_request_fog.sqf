@@ -194,8 +194,8 @@ if (_hmo isEqualTo "404") then {
             ["Meth_Compare", {
                 private _fnc_scriptName = "Meth_Compare";
                 private _rounding = {
-                    private _div = 1000;
-                    (1/_div) * round (_x * _div);
+                    #define DIV 1000
+                    (1/DIV) * round (_x * DIV);
                 };
                 // returns true if rounded "supposed to be(fogParams_Current)" is same as rounded "actually current(fogParams)"
                 private _return = (OGET(fogParams_Current) apply _rounding) isEqualTo (fogParams apply _rounding);
