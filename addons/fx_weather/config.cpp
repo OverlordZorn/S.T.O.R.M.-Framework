@@ -38,7 +38,7 @@ class CfgFunctions
 			class setWind {};
 
 			class request_fog {};
-			class setFog_avg {};
+//			class setFog_avg {};
 		};
 	}; 
 };
