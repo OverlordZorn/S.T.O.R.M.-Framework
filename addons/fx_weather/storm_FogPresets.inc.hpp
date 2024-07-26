@@ -22,8 +22,10 @@ class GVAR(FogParams)
 
     // MODE 0 PRESETS
 
+    // STATIC FOG
     // Static Fog Presets have a decay value of 0, meaning they will be exactly the same, no matter the base or ASL.
-    // Ideally to be used with fog_mode 0 - simple, direct application
+    // With Decay/Dispersion set to 0, Base will have no effect, therefore fog_useAvgASL will have no effect.
+
     class GVAR(Fog_Static_100): GVAR(Fog_Default) { fog_value_max = 1.0; };
     class GVAR(Fog_Static_90) : GVAR(Fog_Default) { fog_value_max = 0.9; };
     class GVAR(Fog_Static_80) : GVAR(Fog_Default) { fog_value_max = 0.8; };
@@ -35,7 +37,12 @@ class GVAR(FogParams)
     class GVAR(Fog_Static_20) : GVAR(Fog_Default) { fog_value_max = 0.2; };
     class GVAR(Fog_Static_10) : GVAR(Fog_Default) { fog_value_max = 0.1; };
 
-    /*
+
+
+    // DYNAMIC FOG
+    // Dynamic Fog Presets take use of  decay and fogbase.
+    // Can take advantage of useAvgASL
+
     class GVAR(Fog_Dynamic_Sandstorm) : GVAR(Fog_Default)
     {
         fog_value_min = 0.01;                            // 0..1   - Minimum Fog, even with 1% intensity                              
@@ -59,5 +66,4 @@ class GVAR(FogParams)
         fog_base = 50;                                  // number - meters +/- above Sea Level
         fog_mode = "DYNAMIC";                                   // Fogmode: 0 - apply setFog with param once, nothing else fancy going on.  | 1 - Gets Players Average ASL once and adds that to the fog_base Value. | 2 - Continously adapts fogbase based on player AvgAVL.
     };
-    */
 };
