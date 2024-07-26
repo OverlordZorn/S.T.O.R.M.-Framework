@@ -44,7 +44,8 @@ private _jipHandle = [QADDON, _ppType, getNumber(_cfg >> "ppEffectLayer") ] join
 
 // Adjust Basic CC Effects for minimum Intensity
 if (
-        (_ppType == "ColorCorrections") &&
+        (_intensity != 0) &&
+        {_ppType == "ColorCorrections"} &&
         {_ppEffectLayer == 0}
     ) then {
     _intensity = _intensity max 0.5;
