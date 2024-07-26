@@ -221,7 +221,7 @@ if (_hmo isEqualTo "404") then {
                         private _dispersion = OGET(fog_decay);
                         private _base = switch (OGET(fog_useAvgASL)) do {
                             case 0: { OGET(fog_base) };
-                            case 1: { OGET(fog_base) + (call FUNC(get_AvgASL)) };
+                            case 1: { OGET(fog_base) + ([] call FUNC(get_AvgASL)) };
                         };
                         [
                             _value,
