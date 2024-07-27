@@ -2,7 +2,7 @@
 
 /*
  * Author: [Zorn]
- * Executes a gradual application of setWind [x,y, forced] over the duration as a recursive function. 
+ * Executes a gradual application of setWind [x,y, forced] with a looped HashMapObject Method. 
  *
  * Arguments:
  * 0: _wind_magnitude               <Number> - Magnitute of desired target        of the transition.
@@ -16,7 +16,7 @@
  * Note: 
  *
  * Example:
- * [_wind_magnitude, _duration] call storm_fxWeather_fnc_setWind;
+ * [_magnitude, _duration, _forceWindEnd, _azimuth] call storm_fxWeather_fnc_setWind;
  * 
  * Public: No
  */
@@ -28,7 +28,7 @@
 if (!isServer) exitWith {};
 
 params [
-    ["_magnitude",          0,     [0]       ],
+    ["_magnitude",              0,     [0]       ],
     ["_duration",                0,     [0]       ],
     ["_forceWindEnd",        false, [false]       ],
     ["_azimuth",            "PREV",  ["",0]       ]
@@ -66,10 +66,10 @@ if (_hmo isEqualTo "404") then {
             ["magnitude", _magnitude],
             ["forceWindEnd", _forceWindEnd],
 
-            ["start", wind],
-            ["target", [0,0,0]],
+            ["wind_start", wind],
+            ["wind_target", [0,0,0]],
 
-            ["interval", 1],
+            ["interval", 0.1],
 
             ["#flags", ["noCopy","unscheduled"]],
 
@@ -95,11 +95,12 @@ if (_hmo isEqualTo "404") then {
 
             ["Meth_DefineTarget", {
                 // Define Target Vector
-                OSET(target,[sin OGET(azimuth), cos OGET(azimuth), 0] vectorMultiply OGET(magnitude));
+                private _target = [sin OGET(azimuth), cos OGET(azimuth), 0] vectorMultiply OGET(magnitude);
+                OSET(wind_target,_target);
             }],
 
             ["Meth_returnCurrent", {
-                private _newWind = vectorLinearConversion [OGET(time_start),OGET(time_end), CBA_missionTime, OGET(start), OGET(target), true];
+                private _newWind = vectorLinearConversion [OGET(time_start),OGET(time_end), CBA_missionTime, OGET(wind_start), OGET(wind_target), true];
                 _newWind = [_newWind#0, _newWind#1, true];
                 _newWind
             }],
@@ -110,10 +111,12 @@ if (_hmo isEqualTo "404") then {
 
                 if !(OGET(isActive)) exitWith { missionNamespace setVariable [OGET(varName), nil] };
 
-                _newWind = _self call ["Meth_returnCurrent"];
-                setWind _finalWind;
+                private _wind = _self call ["Meth_returnCurrent"];
+                setWind _wind;
+                ZRN_LOG_1(_wind);
 
                 [ { _this#0 call ["Meth_Loop"] } , [_self], OGET(interval)] call CBA_fnc_waitAndExecute;
+
                 if (CBA_missionTime > OGET(time_end)) then { OSET(isActive,false); };
             }],
 
@@ -130,6 +133,7 @@ if (_hmo isEqualTo "404") then {
                 OSET(magnitude,_magnitude);
                 OSET(forceWindEnd,_forceWindEnd);
 
+                OSET(wind_start,wind);
                 _self call ["Meth_DefineTarget"];
             }]
         ]
