@@ -7,8 +7,8 @@
  * Arguments:
  * 0: _wind_magnitude               <Number> - Magnitute of desired target        of the transition.
  * 1: _duration                     <Number> in Secounds - Total time of Transition
- * 2: _direction        <Optional>  <Number> 0..360 Targeted Winddirection in Degrees - "PREV" takes current wind direction. 
- * 3: _forceWindEnd     <Optional>  <Boolean> <PREV: false> locks wind in place at the end of the recursive loop. (setWind [x,y, forced]) 
+ * 2: _forceWindEnd     <Optional>  <Boolean> <PREV: false> locks wind in place at the end of the recursive loop. (setWind [x,y, forced]) 
+ * 3: _azimuth          <Optional>  <Number> 0..360 Targeted Winddirection in Degrees - "PREV" takes current wind direction. 
  *
  * Return Value:
  * none 
@@ -21,15 +21,20 @@
  * Public: No
  */
 
+
+
+
+
 if (!isServer) exitWith {};
 
 params [
-    ["_wind_magnitude",          0,     [0]       ],
+    ["_magnitude",          0,     [0]       ],
     ["_duration",                0,     [0]       ],
     ["_forceWindEnd",        false, [false]       ],
     ["_azimuth",            "PREV",  ["",0]       ]
 ];
 
+// Check Fail conditions
 if (_duration isEqualTo 0) exitWith { ZRN_LOG_MSG(failed: duration == 0); false};
 
 // apply Mode
@@ -39,42 +44,101 @@ switch (_azimuth) do {
 };
 if ( _azimuth isEqualTo 0 ) then { _azimuth = 360 };
 
+private _varName = "STORM_FX_Weather_Wind_HMO";
+private _hmo = missionNameSpace getVariable [_varName, "404"];
 
-// Define Target Vector
-private _wind_target = [sin _azimuth, cos _azimuth, 0] vectorMultiply _wind_magnitude;
+if (_hmo isEqualTo "404") then {
 
-private _startTime = time;
-private _endTime = time + _duration;
-private _wind_start = + wind;
+    ZRN_LOG_MSG_1(creating new HMO,_hmo);
+
+    private _hash = [configFile >> QGVAR(FogParams), _presetName] call PFUNC(hashFromConfig);
+
+    _hmo = createHashMapObject [
+        [
+            ["varName", _varName],
+
+            ["isActive", true],
+
+            ["time_start", CBA_missionTime],
+            ["time_end", (CBA_missionTime + _duration)],
+
+            ["azimuth", _azimuth],
+            ["magnitude", _magnitude],
+            ["forceWindEnd", _forceWindEnd],
+
+            ["start", wind],
+            ["target", [0,0,0]],
+
+            ["interval", 1],
+
+            ["#flags", ["noCopy","unscheduled"]],
+
+            ["#create", {
+                private _fnc_scriptName = "#create";
+
+                _self call ["Meth_DefineTarget"];
+                _self call ["Meth_Loop"];
+
+                ZRN_LOG_MSG(done);
+            }],
 
 
-private _parameters = [ _startTime, _endTime, _wind_start, _wind_target, _forceWindEnd];
+            ["#delete", {
+                // Handles return to pre-storm fogParams
+                private _fnc_scriptName = "#delete";
+                private _wind = OGET(target);
 
-private _codeToRun = {
-    _newWind = vectorLinearConversion [_this#0,_this#1, time, _this#2, _this#3, true];
-    _newWind = [_newWind#0, _newWind#1, true];
-    setWind _newWind;
+                setWind [_wind#0,_wind#1,OGET(forceWindEnd)];
+
+                ZRN_LOG_MSG(HMO deletion complete);
+            }],
+
+            ["Meth_DefineTarget", {
+                // Define Target Vector
+                OSET(target,[sin OGET(azimuth), cos OGET(azimuth), 0] vectorMultiply OGET(magnitude));
+            }],
+
+            ["Meth_returnCurrent", {
+                private _newWind = vectorLinearConversion [OGET(time_start),OGET(time_end), CBA_missionTime, OGET(start), OGET(target), true];
+                _newWind = [_newWind#0, _newWind#1, true];
+                _newWind
+            }],
+
+            // Methods
+            ["Meth_Loop", {
+                private _fnc_scriptName = "Meth_Loop";
+
+                if !(OGET(isActive)) exitWith { missionNamespace setVariable [OGET(varName), nil] };
+
+                _newWind = _self call ["Meth_returnCurrent"];
+                setWind _finalWind;
+
+                [ { _this#0 call ["Meth_Loop"] } , [_self], OGET(interval)] call CBA_fnc_waitAndExecute;
+                if (CBA_missionTime > OGET(time_end)) then { OSET(isActive,false); };
+            }],
+
+            ["Meth_Update", {
+                // Updates the current
+                private _fnc_scriptName = "Meth_Update";
+
+                params ["_wind_magnitude", "_duration", "_forceWindEnd","_azimuth"];
+
+                OSET(time_start,CBA_missionTime);
+                OSET(time_end,CBA_missionTime + _duration);
+
+                OSET(azimuth,_azimuth);
+                OSET(magnitude,_magnitude);
+                OSET(forceWindEnd,_forceWindEnd);
+
+                _self call ["Meth_DefineTarget"];
+            }]
+        ]
+    ];
+
+    missionNamespace setVariable [_varName, _hmo];
+
+} else {
+    _hmo call ["Meth_Update", _this];
 };
-
-private _exitCode = {
-    _finalWind = + _this#3;
-    _finalWind = [_finalWind#0, _finalWind#1, _this#4];
-    setWind _finalWind;
-};
-
-private _condition = { _this#1 > time };
-private _delay = 0.1;
-
-[{
-    params ["_args", "_handle"];
-    _args params ["_codeToRun", "_parameters", "_exitCode", "_condition"];
-
-    if (_parameters call _condition) then {
-        _parameters call _codeToRun;
-    } else {
-        _handle call CBA_fnc_removePerFrameHandler;
-        _parameters call _exitCode;
-    };
-}, _delay, [_codeToRun, _parameters, _exitCode, _condition]] call CBA_fnc_addPerFrameHandler;
 
 true
