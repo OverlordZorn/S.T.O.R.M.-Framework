@@ -16,20 +16,19 @@
  * Note: 
  *
  * Example:
- * [_magnitude, _duration, _forceWindEnd, _azimuth] call storm_fxWeather_fnc_setWind;
+ * [_magnitude, _duration, _forceWindEnd, _azimuth] call storm_fx_weather_fnc_setWind;
  * 
  * Public: No
  */
 
-
-
-
-
 if (!isServer) exitWith {};
 
+#define INTERVAL 0.25
+
 params [
-    ["_magnitude",              0,     [0]       ],
+    ["_magnitude",              0,     [0]        ],
     ["_duration",                0,     [0]       ],
+    ["_intensity",               0,     [0]       ],
     ["_forceWindEnd",        false, [false]       ],
     ["_azimuth",            "PREV",  ["",0]       ]
 ];
@@ -42,12 +41,15 @@ switch (_azimuth) do {
     case "PREV": { _azimuth = ceil windDir };
     case "RAND": { _azimuth = ceil random 360 };
 };
+
 if ( _azimuth isEqualTo 0 ) then { _azimuth = 360 };
 
 private _varName = "STORM_FX_Weather_Wind_HMO";
 private _hmo = missionNameSpace getVariable [_varName, "404"];
 
 if (_hmo isEqualTo "404") then {
+
+    missionNamespace setVariable ["ace_weather_disableWindSimulation", true];
 
     ZRN_LOG_MSG_1(creating new HMO,_hmo);
 
@@ -66,10 +68,12 @@ if (_hmo isEqualTo "404") then {
             ["magnitude", _magnitude],
             ["forceWindEnd", _forceWindEnd],
 
+            ["intensity", _intensity],
+
             ["wind_start", wind],
             ["wind_target", [0,0,0]],
 
-            ["interval", 0.1],
+            ["interval", INTERVAL],
 
             ["#flags", ["noCopy","unscheduled"]],
 
@@ -86,9 +90,10 @@ if (_hmo isEqualTo "404") then {
             ["#delete", {
                 // Handles return to pre-storm fogParams
                 private _fnc_scriptName = "#delete";
-                private _wind = OGET(target);
 
-                setWind [_wind#0,_wind#1,OGET(forceWindEnd)];
+                if (OGET(intensity) == 0) then {
+                missionNamespace setVariable ["ace_weather_disableWindSimulation", nil];                        
+                };
 
                 ZRN_LOG_MSG(HMO deletion complete);
             }],
@@ -109,11 +114,18 @@ if (_hmo isEqualTo "404") then {
             ["Meth_Loop", {
                 private _fnc_scriptName = "Meth_Loop";
 
-                if !(OGET(isActive)) exitWith { missionNamespace setVariable [OGET(varName), nil] };
+                if !(OGET(isActive)) exitWith {
+                    private _wind = OGET(wind_target);
+                    _wind set [2,OGET(forceWindEnd)];
+                    ZRN_LOG_MSG_1(Exit: setWind,_wind);
+                    setWind _wind;
+
+                    missionNamespace setVariable [OGET(varName), nil];
+                };
 
                 private _wind = _self call ["Meth_returnCurrent"];
                 setWind _wind;
-                ZRN_LOG_1(_wind);
+                ZRN_LOG_MSG_1(loop: setWind,_wind);
 
                 [ { _this#0 call ["Meth_Loop"] } , [_self], OGET(interval)] call CBA_fnc_waitAndExecute;
 
@@ -124,10 +136,18 @@ if (_hmo isEqualTo "404") then {
                 // Updates the current
                 private _fnc_scriptName = "Meth_Update";
 
-                params ["_wind_magnitude", "_duration", "_forceWindEnd","_azimuth"];
+                params [
+                    ["_magnitude",              0,     [0]        ],
+                    ["_duration",                0,     [0]       ],
+                    ["_intensity",               0,     [0]       ],
+                    ["_forceWindEnd",        false, [false]       ],
+                    ["_azimuth",            "PREV",  ["",0]       ]
+                ];
 
                 OSET(time_start,CBA_missionTime);
                 OSET(time_end,CBA_missionTime + _duration);
+
+                OSET(intensity,_intensity);
 
                 OSET(azimuth,_azimuth);
                 OSET(magnitude,_magnitude);
@@ -142,7 +162,7 @@ if (_hmo isEqualTo "404") then {
     missionNamespace setVariable [_varName, _hmo];
 
 } else {
-    _hmo call ["Meth_Update", _this];
+    _hmo call ["Meth_Update", [_magnitude,_duration,_intensity,_forceWindEnd,_azimuth]];
 };
 
 true

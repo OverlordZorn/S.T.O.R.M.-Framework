@@ -278,13 +278,11 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
 if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 
-
+   
    if (_firstWeatherChange) then {
       // Save Current
       GVAR(S_previousWeather) set ["change_wind", 1];
       GVAR(S_previousWeather) set ["wind_value", vectorMagnitude wind];
-
-      missionNamespace setVariable ["ace_weather_disableWindSimulation", true];
 
    };
 
@@ -297,15 +295,11 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
       default { false};
    };
    
-   [_target_magnitude, _duration, _forceWindEnd] call FUNC(setWind);
+   [_target_magnitude, _duration,_intensity, _forceWindEnd] call FUNC(setWind);
 
    _return pushback ["wind", true];
    ZRN_LOG_MSG_2(setWind--------,_duration,_target_magnitude);
 
-
-   if (_intensity == 0) then {
-      [{ace_weather_disableWindSimulation = nil}, [], _duration] call CBA_fnc_waitAndExecute;
-   };
 };
 
 // ##########################################################
