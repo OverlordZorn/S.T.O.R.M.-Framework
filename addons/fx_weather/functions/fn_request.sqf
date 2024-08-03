@@ -13,7 +13,7 @@
 * true if successful
 *
 * Example:
-* ["storm_fx_weather_RainParams_Snow"] call STORM_FX_WEATHER_fnc_get_rainParams_as_Array;
+* ["storm_fx_weather_RainParams_Snow"] call STORM_FX_WEATHER_fnc_request;
 * 
 * Public: No
 *
