@@ -20,7 +20,9 @@
 #endif
 
 
-// CBA Stuff
+// mostly CBA Stuff
+
+// Checks if variable is defined, if not, use default value
 #define RETDEF(VARIABLE,DEFAULT_VALUE) (if (isNil {VARIABLE}) then [{DEFAULT_VALUE}, {VARIABLE}])
 #define RETNIL(VARIABLE) RETDEF(VARIABLE,nil)
 
@@ -37,13 +39,15 @@
 
 #define QADDON Q(ADDON)
 
+// Internal Function
 #define FUNC(var1) TRIPLES(ADDON,fnc,var1)
 #define QFUNC(var1) QUOTE(FUNC(var1))
 
+// Prefix Function
 #define PFUNC(var1) TRIPLES(PREFIX,fnc,var1)
 #define QPFUNC(var1) QUOTE(FUNC(var1))
 
-
+// External Function
 #define FUNC_INNER(var1,var2) TRIPLES(DOUBLES(PREFIX,var1),fnc,var2)
 #define EFUNC(var1,var2) FUNC_INNER(var1,var2)
 #define QEFUNC(var1,var2) Q(EFUNC(var1,var2))
@@ -52,6 +56,7 @@
 
 #define VERSION_CONFIG version = VERSION; versionStr = QUOTE(VERSION_STR); versionAr[] = {VERSION_AR}
 
+// Global Variables
 #define GVAR(var1) DOUBLES(ADDON,var1)
 #define QGVAR(var1) QUOTE(GVAR(var1))
 #define QQGVAR(var1) QUOTE(QGVAR(var1))
@@ -72,6 +77,12 @@
 #define PVAR(var1) DOUBLES(PREFIX,var1)
 #define QPVAR(var1) QUOTE(PVAR(var1))
 #define QQPVAR(var1) QUOTE(PVAR(var1))
+
+// Component Variables
+#define CVAR(var1) DOUBLES(COMPONENT,var1)
+#define QCVAR(var1) QUOTE(CVAR(var1))
+#define QQCVAR(var1) QUOTE(QCVAR(var1))
+
 
 #define P_CFG_COMP TRIPLES(PREFIX,CFG,COMPONENT)
 
@@ -96,9 +107,8 @@
 #define QQESET(var1,var2) QQ(ESET(var1,var2))
 
 // Stringtable.xml
-
 #define STR(var1) TRIPLES(STR,ADDON,var1)
-#define QSTR(var1) QSTR(var1)
+#define QSTR(var1) Q(STR(var1))
 
 
 // Debug
