@@ -192,7 +192,7 @@ https://www.bohemia.net/community/licenses/arma-public-license-share-alike
 ## Thanks to
 - Bohemia Interactive for creating not only Arma3 but a game Series that good me hooked since OFP showed up in my live via a Demo and Video in a Games Magazine
 - Everyone in the ACE3 Discord for sharing their wealth of knowledge and experience
-- Alias for creating his Stom Scripts, which have been a great inspiration
+- Alias for creating his Storm Scripts, which have been a great inspiration
 
 
 ## Especially to Everyone in the 24th Chorni Voron
