@@ -38,7 +38,7 @@ jobs:
             itemId: '3224327412'
             contentPath: './@STORM-Framework-${{ env.VERSION }}'
             changelog: |
-              https://github.com/OverlordZorn/CVO-Auxiliary/releases/tag/v${{ env.VERSION }}
+              https://github.com/OverlordZorn/S.T.O.R.M.-Framework/releases/tag/v${{ env.VERSION }}
 
               ${{ github.event.release.body }}
           env:
