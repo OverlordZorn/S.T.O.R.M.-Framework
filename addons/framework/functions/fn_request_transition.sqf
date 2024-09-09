@@ -42,8 +42,7 @@ if (!isServer) exitWith {
 params [
    ["_stormPreset",        "",      [""]  ],
    ["_duration",           5,       [0]   ],
-   ["_intensity",          0.5,     [0]   ],
-   ["_chainTransitions",   false,   [true]]     // currently not in use
+   ["_intensity",          0.5,     [0]   ]
 ];
 
 ZRN_LOG_4(_stormPreset,_duration,_intensity,_chainTransitions);

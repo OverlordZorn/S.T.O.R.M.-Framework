@@ -97,8 +97,12 @@
 #define PATH_TO_ADDON_3(var1,var2,var3) QUOTE(\MAINPREFIX\PREFIX\addons\COMPONENT\var1\var2\var3)
 
 
-// CBA Settings
 
+
+
+#define _STORM_DEBUG_     // TODO Comment out before big release
+
+// CBA Settings
 #define SET(var1) TRIPLES(ADDON,SET,var1)
 #define QSET(var1) Q(SET(var1))
 #define QQSET(var1) QQ(SET(var1))
@@ -110,11 +114,14 @@
 #define STR(var1) TRIPLES(STR,ADDON,var1)
 #define QSTR(var1) Q(STR(var1))
 
+// hashMapObjects
+#define OGET(var1) (_self get Q(var1))
+#define OSET(var1,var2) (_self set [Q(var1), var2])
+
+
 
 // Debug
 #define DEBUG_HEADER format [QUOTE([PREFIX][COMPONENT](%1)),_fnc_scriptName]
-
-
 
 #define ZRN_LOG_MSG(MSG) diag_log (DEBUG_HEADER + " " + QUOTE(MSG))
 
@@ -166,11 +173,3 @@
     #define ZRN_LOG_HMO(var1)
     #define ZRN_LOG_MSG_HMO(MSG,var1)
 #endif
-
-
-
-// hashMapObjects
-
-#define OGET(var1) (_self get Q(var1))
-#define OSET(var1,var2) (_self set [Q(var1), var2])
-
