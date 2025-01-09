@@ -1,31 +1,23 @@
-<!--
-
-###### REMOVE COMMENTS WHEN USING ######
-
 <?xml version="1.0" encoding="utf-8"?>
-<Project name="~PREFIX~">
-    <Package name="~TEMPLATE_ADDON~">
+<Project name="Storm">
+    <Package name="framework">
         <Container name="common">
-            <Key ID="STR_~TEMPLATE_ADDON~_author">
-                <Original>OverlordZorn[CVO]</Original>
+            <Key ID="STR_framework_author">
                 <English>OverlordZorn[CVO]</English>
             </Key>
         </Container>
         <Container name="CBA_Settings_Categories">
-            <Key ID="STR_~PREFIX~_~TEMPLATE_ADDON~_set_cat_main">
-                <Original>~PREFIX~ - ~TEMPLATE_ADDON~</Original>
-                <English>~PREFIX~ - ~TEMPLATE_ADDON~</English>
+            <Key ID="STR_STORM_framework_set_cat_main">
+                <English>STORM - Framework</English>
             </Key>
         </Container>
         <Container name="CBA_Settings">
-            <Key ID="STR_~PREFIX~_~TEMPLATE_ADDON~_set_cat_enable">
-                <Original>Enable</Original>
+            <Key ID="STR_STORM_framework_set_cat_enable">
+                <English>Enable</English>
             </Key>
-            <Key ID="STR_~PREFIX~_~TEMPLATE_ADDON~_set_cat_enable_desc">
-                <English>Will Enable the ~TEMPLATE_ADDON~ System.</English>
+            <Key ID="STR_STORM_framework_set_cat_enable_desc">
+                <English>Will Enable the framework System.</English>
             </Key>
         </Container>
     </Package>
 </Project>
-
--->
