@@ -13,3 +13,7 @@
 - no functions or anything inside main
 - import my macros
 
+
+
+- fx_wind
+  - integrate ace goggles' windeffects
