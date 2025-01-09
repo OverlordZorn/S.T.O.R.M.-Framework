@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project name="STORM FRAMEWORK">
-    <Package name="FX Particle Module">
+<Project name="STORM">
+    <Package name="FX_Particle">
         <Container name="CBA SETTINGS">
-            <Key ID="STR_STORM_FX_Particle_cat_clientside">
-                <Original>FX Particles - Clientside</Original>
-                <English>FX Particles - Clientside</English>
-                <German>FX Partikel - Spielerseitig</German>
+            <Key ID="STR_STORM_FX_Particle_cat_particle">
+                <English>FX Particles</English>
+                <German>FX Partikel</German>
             </Key>
             <Key ID="STR_STORM_FX_Particle_playerCoef">
-                <Original>Particle Coefficient</Original>
-                <English>Particle Coefficient</English>
-                <German>Partikel Koeffizient</German>
+                <English>Clientside Coefficient</English>
+                <German>Clientside Koeffizient</German>
             </Key>
             <Key ID="STR_STORM_FX_Particle_playerCoef_desc">
-                <Original>Playerside Coefficient which controls the amount of particles being spawned by the FX Particles Module.\nIntended to help with performance issues on older systems.</Original>
                 <English>Playerside Coefficient which controls the amount of particles being spawned by the FX Particles Module.\nIntended to help with performance issues on older systems.</English>
                 <German>Spielerseitiger Partikel Koeffizient, welcher die Anzahl der, durch das FX Partikel Modul generiden, Partikel modifiziert.\nZiel ist es, Spielern mit schwächeren Systemen bei Leistungsproblemen, Abhilfe zu ermöglichen.</German>
             </Key>
