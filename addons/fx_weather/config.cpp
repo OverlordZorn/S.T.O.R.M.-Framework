@@ -1,18 +1,25 @@
 #include "script_component.hpp"
 
 class CfgPatches {
-	class ADDON
-	{
-		// Meta information for editor
-		ADDON_CONFIG_HEADER;		// see based/script_mod.hpp
+	class ADDON {
 
+        // Meta information for editor
+		name = ADDON_NAME;
+		author = "$STR_mod_author";
+        authors[] = {"OverlordZorn [CVO]"};
+		
+        url = "$STR_mod_URL";
+
+		VERSION_CONFIG;
+
+        // Addon Specific Information
         // Minimum compatible version. When the game's version is lower, pop-up warning will appear when launching the game.
-        requiredVersion = REQUIRED_VERSION;
+        requiredVersion = 2.02;
 
         // Required addons, used for setting load order.
         // When any of the addons is missing, pop-up warning will appear when launching the game.
-		requiredAddons[] = {"cba_common","A3_Misc_F_Helpers", "storm_based", "storm_framework"};
-		
+        requiredAddons[] = {QPVAR(main), QPVAR(storm_framework), "cba_main", "A3_Misc_F_Helpers"};
+
 		// Optional. If this is 1, if any of requiredAddons[] entry is missing in your game the entire config will be ignored and return no error (but in rpt) so useful to make a compat Mod (Since Arma 3 2.14)
 		skipWhenMissingDependencies = 1;
         
@@ -25,23 +32,9 @@ class CfgPatches {
 	};
 };
 
-class CfgFunctions
-{
-	class ADDON          // Tag
-	{
-		class COMPONENT   // Category
-		{
-			file = PATH_TO_FNC;
-			class request {};
-			class get_rainParams_as_Array {};
-			class get_AvgASL {};
-			class setWind {};
+#include "CfgFunctions.hpp"
+#include "XEH\CfgXEH.hpp"
 
-			class request_fog {};
-//			class setFog_avg {};
-		};
-	}; 
-};
 
 #include "storm_RainParams.inc.hpp"
 #include "storm_WeatherPresets.inc.hpp"
