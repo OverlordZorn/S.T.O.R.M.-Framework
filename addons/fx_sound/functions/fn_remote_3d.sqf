@@ -33,7 +33,7 @@ if (!hasInterface) exitWith {};
 params ["_presetName", "_startTime", "_duration", "_intensity"];
 
 private _varName =[_presetName,"HMO"] joinString "_";
-private _hmo = missionNameSpace getVariable [_varName, "404"];
+private _hmo = missionNamespace getVariable [_varName, "404"];
 
 if (_hmo isEqualTo "404") then {
 
@@ -107,7 +107,7 @@ if (_hmo isEqualTo "404") then {
                 private _fnc_scriptName = "Meth_Loop";
 
                 if (!OGET(isActive)) exitWith { ZRN_LOG_MSG_1(is not active anymore,OGET(presetName)); missionNamespace setVariable [OGET(varName), nil]; };
-                if (OGET(helperObj) isEqualto objNull || OGET(helperObj) isEqualto "" ) then { _self call ["Meth_Create_Helper"]; };
+                if (OGET(helperObj) isEqualTo objNull || OGET(helperObj) isEqualTo "" ) then { _self call ["Meth_Create_Helper"]; };
 
                 // Establish Intensity
                 private "_intensityCurrent";

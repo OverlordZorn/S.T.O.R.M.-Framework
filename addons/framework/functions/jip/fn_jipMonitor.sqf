@@ -1,4 +1,4 @@
-#include "../script_component.hpp"
+#include "..\../script_component.hpp"
 
 /*
 * Author: Zorn
@@ -38,7 +38,7 @@ params [
     ["_jipHandle",  "",     [""]    ]
 ];
 
-private _hmo = missionNameSpace getVariable [QPVAR(jipMonitor_HMO), "404"];
+private _hmo = missionNamespace getVariable [QPVAR(jipMonitor_HMO), "404"];
 
 ZRN_LOG_MSG_1(INIT,_hmo);
 

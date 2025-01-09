@@ -8,7 +8,7 @@ class CfgFunctions
         };
         class COMPONENT
 		{
-			file = PATH_TO_FNC;
+			file = PATH_TO_FUNC;
 			class request_transition {};
 		};
         class jip

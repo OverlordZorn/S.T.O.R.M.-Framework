@@ -28,10 +28,6 @@ QSET(test) -> "ADDON_set_test"
 ] call CBA_fnc_addSetting;
 */
 
-
-#include "script_component.hpp"
-
-// CBA Addon Options
 [
     QSET(PlayerCoef),                                                           //     _setting     - Unique setting name. Matches resulting variable name <STRING>// Internal setting name, should always contain a tag! This will be the global variable which takes the value of the setting.
     "SLIDER",                                                                   //     _settingType - Type of setting. Can be "CHECKBOX", "EDITBOX", "LIST", "SLIDER" or "COLOR" <STRING>

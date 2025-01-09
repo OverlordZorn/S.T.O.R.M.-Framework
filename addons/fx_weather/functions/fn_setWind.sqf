@@ -45,7 +45,7 @@ switch (_azimuth) do {
 if ( _azimuth isEqualTo 0 ) then { _azimuth = 360 };
 
 private _varName = "STORM_FX_Weather_Wind_HMO";
-private _hmo = missionNameSpace getVariable [_varName, "404"];
+private _hmo = missionNamespace getVariable [_varName, "404"];
 
 if (_hmo isEqualTo "404") then {
 

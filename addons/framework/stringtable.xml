@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project name="Storm">
-    <Package name="framework">
+    <Package name="Framework">
         <Container name="common">
             <Key ID="STR_framework_author">
                 <English>OverlordZorn[CVO]</English>

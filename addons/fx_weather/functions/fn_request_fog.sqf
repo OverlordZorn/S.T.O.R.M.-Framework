@@ -43,7 +43,7 @@ if !( toLowerANSI _presetName in (configProperties [configFile >> QGVAR(FogParam
 // Problem here cause HMO gets recreated constantly, why? figure out lül
 
 private _varName = "STORM_FX_Weather_Fog_HMO";
-private _hmo = missionNameSpace getVariable [_varName, "404"];
+private _hmo = missionNamespace getVariable [_varName, "404"];
 if ( _intensity == 0 && { _hmo isEqualTo "404" } ) exitWith { ZRN_LOG_MSG(failed: _intensity == 0 while no previous effect of this Type); false };
 
 

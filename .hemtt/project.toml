@@ -27,8 +27,7 @@ exclude = [
 ]
 
 [version]
-path = "addons/based/script_version.hpp"
-
+path = "addons/main/script_version.hpp"
 #major = 0 # Overrides path when set
 #minor = 1
 #patch = 0

@@ -4,7 +4,7 @@ class CfgFunctions
 	{
 		class COMPONENT   // Category
 		{
-			file = PATH_TO_FNC;
+			file = PATH_TO_FUNC;
 
 			class request {};
 
