@@ -1,7 +1,7 @@
 #define COMPONENT fx_weather
 #define COMPONENT_BEAUTIFIED Weather Effects Module
 
-#include "\zrn\storm\addons\based\script_macros.hpp"
+#include "\zrn\storm\addons\main\script_macros.hpp"
 
 
 // #define DEBUG_MODE_FULL

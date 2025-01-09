@@ -1,7 +1,7 @@
 #define COMPONENT mod_skill
 #define COMPONENT_BEAUTIFIED AI SubSkill Modifier Module
 
-#include "\zrn\storm\addons\based\script_macros.hpp"
+#include "\zrn\storm\addons\main\script_macros.hpp"
 
 
 // #define DEBUG_MODE_FULL

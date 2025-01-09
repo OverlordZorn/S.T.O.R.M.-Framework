@@ -1,7 +1,7 @@
 #define COMPONENT fx_post
 #define COMPONENT_BEAUTIFIED Post Processing Effects Module
 
-#include "\zrn\storm\addons\based\script_macros.hpp"
+#include "\zrn\storm\addons\main\script_macros.hpp"
 
 
 // #define DEBUG_MODE_FULL
