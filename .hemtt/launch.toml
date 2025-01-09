@@ -1,0 +1,92 @@
+
+[default]
+workshop = [
+    "450814997",  # CBA_A3's Workshop ID
+    "463939057",  # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+#    "1613905318", # Emitter 3Ditor
+#    "1645973522", # Intercept Minimal Dev
+#    "1585582292", # Arma Debug Engine
+]
+
+dlc = [
+]
+
+optionals = [
+]
+
+parameters = [
+    "-debug",
+    "-filePatching",
+    "-window",
+    "-noPause",
+    "-noPauseAudio",
+]
+
+executable = "arma3_x64"        # Default: "arma3_x64"
+
+[Altis]
+extends = "default"
+mission = "test-storm-framework.altis"
+
+
+[Debugger]
+extends = "default"
+mission = "test-storm-framework.altis"
+workshop = [
+    "450814997", # CBA_A3's Workshop ID
+    "463939057", # ACE3
+    "2369477168", # Advanced Developer Tools
+    "1779063631", # Zeus Enhanced
+#    "1613905318", # Emitter 3Ditor
+    "1645973522", # Intercept Minimal Dev
+    "1585582292", # Arma Debug Engine
+]
+
+
+[Emitter]
+extends = "default"
+workshop = [
+    "1613905318", # Emitter 3Ditor
+]
+
+[Enoch]
+extends = "default"
+mission = "test-storm-framework.enoch"
+
+[Stratis]
+extends = "default"
+mission = "test-storm-framework.stratis"
+
+[SefrouRamal]
+extends = "default"
+mission = "test-storm-framework.SefrouRamal"
+dlc = ["ws"]
+
+[KorsacWinter]
+extends = "default"
+mission = "test-storm-framework.VTF_Korsac_Winter"
+workshop = [
+#    "1613905318", # Emitter 3Ditor
+    "3043043427", # Korsac
+    "3043678553", # Korsac, Sullen Skies
+]
+
+[Korsac]
+extends = "default"
+mission = "test-storm-framework.VTF_Korsac"
+workshop = [
+#    "1613905318", # Emitter 3Ditor
+    "3043043427", # Korsac
+    "3043678553", # Korsac, Sullen Skies
+]
+
+[Dependency]
+extends = "default"
+mission = "test-storm-framework.altis"
+workshop = [
+    "450814997", # CBA_A3's Workshop ID
+#    "463939057", # ACE3
+    "2369477168", # Advanced Developer Tools
+]

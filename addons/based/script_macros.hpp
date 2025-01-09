@@ -1,8 +1,8 @@
 //#include '\x\cba\addons\main\script_macros_common.hpp'
 //#include '\x\cba\addons\xeh\script_xeh.hpp'
 
-#include "\z\storm\addons\based\script_version.hpp"
-#include "\z\storm\addons\based\script_mod.hpp"
+#include "\zrn\storm\addons\based\script_version.hpp"
+#include "\zrn\storm\addons\based\script_mod.hpp"
 
 #define _STORM_DEBUG_     // TODO Comment out before big release
 

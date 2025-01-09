@@ -2,7 +2,7 @@
 #define COMPONENT_BEAUTIFIED Based (Main Addon)
 
 
-#include "\z\storm\addons\based\script_macros.hpp"
+#include "\zrn\storm\addons\based\script_macros.hpp"
 
 
 // #define DEBUG_MODE_FULL

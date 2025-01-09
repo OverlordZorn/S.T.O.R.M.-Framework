@@ -1,7 +1,7 @@
 #define COMPONENT framework
 #define COMPONENT_BEAUTIFIED Storm Framework
 
-#include "\z\storm\addons\based\script_macros.hpp"
+#include "\zrn\storm\addons\based\script_macros.hpp"
 
 
 // #define DEBUG_MODE_FULL

@@ -95,7 +95,7 @@ class GVAR(RainParams)
 	{
 		// Parameters for the new particle rain
 		// texture of the particle (r = alpha; g = normalX; b = normalY; a = color;)
-		rainDropTexture="z\storm\addons\based\data\Raven_Voron_256.paa";
+		rainDropTexture="zrn\storm\addons\based\data\Raven_Voron_256.paa";
 		// dropsInTexture - the number of drops that are present in the drop texture
 		texDropCount=1;
 		// minimum rain strength when the effect starts to be rendered
