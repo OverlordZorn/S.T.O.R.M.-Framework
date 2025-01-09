@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project name="Storm">
+    <Package name="Main">
+        <Key ID="STR_storm_main_URL">
+            <English>https://github.com/OverlordZorn/STORM-Framework</English>
+        </Key>
+        <Key ID="STR_storm_main_author">
+            <English>OverlordZorn</English>
+        </Key>
+        <Key ID="STR_storm_main_author_team">
+            <English>STORM Team</English>
+        </Key>
+    </Package>
+</Project>

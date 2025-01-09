@@ -2,7 +2,7 @@ class PVAR(mainPresets)
 {
     class PVAR(Default)
     {
-        author = AUTHOR;
+        author = ECSTRING(main,author_team);
         description = "";
 
         mod_skill_preset = ""; // QEGVAR(mod_skill,reducedVisibility)

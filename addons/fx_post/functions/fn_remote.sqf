@@ -46,8 +46,8 @@ if (isNil QGVAR(C_activeEffects)) then {
 
 
 // Defines custom Variablename as String 
-// missionNameSpace has only lowercase letters
-private _varName = toLower ([ADDON,_ppEffectType,_ppEffectLayer,handle]joinstring "_");
+// missionNamespace has only lowercase letters
+private _varName = toLower ([ADDON,_ppEffectType,_ppEffectLayer,handle]joinString "_");
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _varName : %1", _varName];
 
@@ -56,13 +56,13 @@ _existsVar = missionNamespace getVariable [_varName, false];
 
 // diag_log format ["[CVO][STORM](LOG)(fnc_remote_ppEffect) - _existsVar : %1", _existsVar];
 
-if (_existsVar isEqualto false && {_intensity == 0} ) exitWith {};
+if (_existsVar isEqualTo false && {_intensity == 0} ) exitWith {};
 
-if (_existsVar isEqualto false) then {
+if (_existsVar isEqualTo false) then {
     missionNamespace setVariable [_varName, (ppEffectCreate [_ppEffectType, _ppEffectPrio]) ];
 
     // adds the name of the variable as a string to the array  
-    GVAR(C_activeEffects) pushback _varName;
+    GVAR(C_activeEffects) pushBack _varName;
 
     (missionNamespace getVariable _varname) ppEffectEnable true;
 };

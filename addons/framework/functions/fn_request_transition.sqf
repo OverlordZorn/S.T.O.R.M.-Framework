@@ -45,7 +45,7 @@ params [
    ["_intensity",          0.5,     [0]   ]
 ];
 
-ZRN_LOG_4(_stormPreset,_duration,_intensity,_chainTransitions);
+ZRN_LOG_3(_stormPreset,_duration,_intensity);
 
 private _configPath = (configFile >> QPVAR(mainPresets));
 _test = (configProperties [_configPath, "true", true] apply { toLowerANSI configName _x });
@@ -53,7 +53,7 @@ _test = (configProperties [_configPath, "true", true] apply { toLowerANSI config
 
 if  (_stormPreset == "")                                                                                             exitWith { ZRN_LOG_MSG(failed: Preset not provided); false };
 if !(toLowerANSI _stormPreset in (configProperties [_configPath, "true", true] apply { toLowerANSI configName _x })) exitWith { ZRN_LOG_MSG(failed: Preset not found); false };
-if (!isNil QPVAR(isActive) && {PVAR(isActive) # 2 == true && {_chainTransitions == false}} )                         exitWith { ZRN_LOG_MSG(failed: Transition is already taking place); false };
+if (!isNil QPVAR(isActive) && {PVAR(isActive) # 2 == true} )                         exitWith { ZRN_LOG_MSG(failed: Transition is already taking place); false };
 // TODO: ADD CHAIN TRANSITION FUNCTION 
 if (_intensity == 0 && {isNil QPVAR(isActive) } )                                                                    exitWith { ZRN_LOG_MSG(failed: Cannot transition to 0 without previous Storm Transition); false };
 
@@ -70,7 +70,7 @@ _arr set [0, _stormPreset];
 _arr set [1, _intensity];
 _arr set [2, true];
 _arr set [3, _hashMap];
-if (isNil QPVAR(isActive)) then { missionNameSpace setVariable [ QPVAR(isActive), _arr, true] };
+if (isNil QPVAR(isActive)) then { missionNamespace setVariable [ QPVAR(isActive), _arr, true] };
 
 ZRN_LOG_1(_hashMap);
 private _result = [];
@@ -78,36 +78,36 @@ private "_var";
 
 // ServerSide - FX Weather
 _var = [_hashMap get "fx_weather_preset", _duration, _intensity * (_hashMap get "fx_weather_coef") ] call EFUNC(fx_weather,request);
-_result pushback [_var, _hashMap get "fx_weather_preset"];
+_result pushBack [_var, _hashMap get "fx_weather_preset"];
 
 _var = [_hashMap get "fx_weather_fog_preset", _duration, _intensity * (_hashMap get "fx_weather_fog_coef") ] call EFUNC(fx_weather,request_fog);
-_result pushback [_var, _hashMap get "fx_weather_fog_preset"];
+_result pushBack [_var, _hashMap get "fx_weather_fog_preset"];
 
 // ServerSide - Mod_Skill
 _var = [_hashMap get "mod_skill_preset",  _duration, _intensity * (_hashMap get "mod_skill_coef") ]  call EFUNC(mod_skill,request);
-_result pushback [_var, _hashMap get "mod_skill_preset"];
+_result pushBack [_var, _hashMap get "mod_skill_preset"];
 
 
 // ClientSide - FX Sound
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_sound_coef")   ] call EFUNC(fx_sound,request);
-   _result pushback [_var, _x];
+   _result pushBack [_var, _x];
 } forEach (_hashMap get "fx_sound_presets");
 
 // ClientSide - FX Particle
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_particle_coef") ] call EFUNC(fx_particle,request);
-   _result pushback [_var, _x];
+   _result pushBack [_var, _x];
 } forEach (_hashMap get "fx_particle_presets");
 
 // ClientSide - FX Post
 {   _var = [_x, _duration, _intensity * (_hashMap get "fx_post_coef")    ] call EFUNC(fx_post,request);
-   _result pushback [_var, _x];
+   _result pushBack [_var, _x];
 } forEach (_hashMap get "fx_post_presets");
 
 
 
 _code = if (_intensity == 0 ) then {
     {
-      missionNameSpace setVariable [QPVAR(isActive), nil, true];
+      missionNamespace setVariable [QPVAR(isActive), nil, true];
     }
 } else {
    {

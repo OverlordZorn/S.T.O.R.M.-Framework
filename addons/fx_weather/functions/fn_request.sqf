@@ -202,14 +202,14 @@ if ((_hashMap getOrDefault ["change_rainParams", 0]) > 0) then {
 
    ZRN_LOG_MSG_1(rain Params Retrieved,_rainParams_target);
 
-   _rainParams_current = missionNameSpace getVariable [QGVAR(S_current_rainParams), [] ];
+   _rainParams_current = missionNamespace getVariable [QGVAR(S_current_rainParams), [] ];
 
    private _transition = "SOFT";
 // if (_rainParams_current isEqualTo []) then { _transition = "SOFT" };
    if (_rainParams_current isEqualTo _rainParams_target ) then { _transition = "DIRECT"};
 
 
-   missionNameSpace setVariable [QGVAR(S_current_rainParams), _rainParams_target];
+   missionNamespace setVariable [QGVAR(S_current_rainParams), _rainParams_target];
    // If current RainParams isNotEqualTo the Incoming RainParams, pause the rain, apply new Params and restart.
    switch (_transition) do {
       case "DIRECT": {
@@ -309,7 +309,7 @@ if ((_hashMap getOrDefault ["change_wind",0]) > 0) then {
 // ##########################################################
 // ############## ace_weather_temperatureShift ##############
 
-if (!isNil "ace_weather_temperatureShift" && {_hashmap getorDefault ["ace_temp_shift", 0] != 0}) then {
+if (!isNil "ace_weather_temperatureShift" && {_hashmap getOrDefault ["ace_temp_shift", 0] != 0}) then {
    if !( ace_weather_temperatureShift in GVAR(S_previousWeather) ) then { GVAR(S_previousWeather) set ["ace_weather_temperatureShift", ace_weather_temperatureShift]; };
    _tempShift = linearConversion [0,1,_intensity, 0,_hashMap get "ace_temp_shift"];
    [ { ace_weather_temperatureShift = _this#0; } , [_tempShift], _duration/2] call CBA_fnc_waitAndExecute;

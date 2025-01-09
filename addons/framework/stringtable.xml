@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project name="Storm">
+    <Package name="Framework">
+        <Container name="common">
+            <Key ID="STR_framework_author">
+                <English>OverlordZorn[CVO]</English>
+            </Key>
+        </Container>
+        <Container name="CBA_Settings_Categories">
+            <Key ID="STR_STORM_framework_set_cat_main">
+                <English>STORM - Framework</English>
+            </Key>
+        </Container>
+        <Container name="CBA_Settings">
+            <Key ID="STR_STORM_framework_set_cat_enable">
+                <English>Enable</English>
+            </Key>
+            <Key ID="STR_STORM_framework_set_cat_enable_desc">
+                <English>Will Enable the framework System.</English>
+            </Key>
+        </Container>
+    </Package>
+</Project>

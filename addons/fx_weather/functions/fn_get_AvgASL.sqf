@@ -23,7 +23,7 @@ params [
 ];
 
 private _arr = [];
-{_arr pushback (name _x) } forEach allPlayers;
+{_arr pushBack (name _x) } forEach allPlayers;
 
 private _allPlayers = call BIS_fnc_listPlayers;
 private _allASL = [];
